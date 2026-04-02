@@ -1,56 +1,72 @@
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MapPin, Clock } from "lucide-react";
-
-const details = [
-  { icon: Phone, label: "Phone", value: "+1 (555) 123-4567" },
-  { icon: Mail, label: "Email", value: "hello@pawwl.com" },
-  { icon: MapPin, label: "Address", value: "123 Pet Lane, Suite 100" },
-  { icon: Clock, label: "Working Hours", value: "Mon-Sat: 9AM-7PM" },
-];
+import petShopImg from "@/assets/pet_shop.png";
 
 const ScheduleSession = () => (
-  <section className="py-20 bg-muted">
-    <div className="container mx-auto px-4">
-      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary text-center">
+  <section className="py-24 bg-white">
+    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
+      <h2 className="text-5xl md:text-6xl font-heading font-black text-[#1A4B6B] text-center mb-6">
         Schedule a session with Pawwl
       </h2>
-      <p className="text-center text-sm text-muted-foreground mt-3 max-w-lg mx-auto">
-        Whether it's grooming, vet check-ups, or training — book a session and let our experts take care of your best friend.
+      <p className="text-center text-gray-400 font-medium text-lg mb-16 max-w-2xl mx-auto leading-relaxed">
+        Let's make every meow and wag a celebration. Let's make every moment count for your pet.
       </p>
 
-      <div className="mt-12 grid md:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
         {/* Store image */}
-        <div className="relative rounded-2xl overflow-hidden">
+        <div className="relative rounded-[48px] overflow-hidden min-h-[500px] shadow-2xl">
           <img
-            src="https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=600&h=450&fit=crop"
+            src={petShopImg}
             alt="Pet shop storefront"
-            className="w-full h-80 object-cover rounded-2xl"
+            className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
             loading="lazy"
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A4B6B]/60 to-transparent"></div>
+          <div className="absolute bottom-10 left-10 text-white">
+            <h3 className="text-3xl font-heading font-black mb-2">Visit Our Store</h3>
+            <p className="text-white/80 font-medium">123 Pet Lane, Suite 100, New York</p>
+          </div>
         </div>
 
-        {/* Service info card */}
-        <div className="bg-background rounded-2xl p-6 md:p-8 shadow-sm">
-          <h3 className="font-heading font-bold text-xl text-primary">Pawwl Pet Services</h3>
-          <p className="text-xs text-muted-foreground mt-2">
-            Full-service pet care including grooming, health check-ups, training sessions, and more.
-          </p>
-
-          <div className="mt-6 space-y-4">
-            {details.map((d) => (
-              <div key={d.label} className="flex items-start gap-3">
-                <d.icon size={16} className="text-secondary mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-xs font-semibold text-primary">{d.label}</p>
-                  <p className="text-xs text-muted-foreground">{d.value}</p>
-                </div>
+        {/* Booking Form */}
+        <div className="bg-white border-2 border-[#E9F7FB] rounded-[48px] p-8 md:p-12 shadow-sm flex flex-col justify-center">
+          <h3 className="text-3xl font-heading font-black text-[#1A4B6B] mb-8">Book Pet Session</h3>
+          
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#1A4B6B] uppercase tracking-wider ml-1">First Name</label>
+                <input type="text" placeholder="John" className="w-full bg-[#F8FDFF] border-2 border-[#E9F7FB] rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#67B5D5] transition-colors" />
               </div>
-            ))}
-          </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#1A4B6B] uppercase tracking-wider ml-1">Last Name</label>
+                <input type="text" placeholder="Doe" className="w-full bg-[#F8FDFF] border-2 border-[#E9F7FB] rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#67B5D5] transition-colors" />
+              </div>
+            </div>
 
-          <Button className="mt-6 w-full rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90 text-sm font-semibold">
-            Book a Session
-          </Button>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-[#1A4B6B] uppercase tracking-wider ml-1">Phone Number</label>
+              <input type="tel" placeholder="+1 (555) 000-0000" className="w-full bg-[#F8FDFF] border-2 border-[#E9F7FB] rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#67B5D5] transition-colors" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#1A4B6B] uppercase tracking-wider ml-1">Date</label>
+                <input type="date" className="w-full bg-[#F8FDFF] border-2 border-[#E9F7FB] rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#67B5D5] transition-colors" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[#1A4B6B] uppercase tracking-wider ml-1">Category</label>
+                <select className="w-full bg-[#F8FDFF] border-2 border-[#E9F7FB] rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#67B5D5] transition-colors appearance-none">
+                  <option>Grooming</option>
+                  <option>Vet Check-up</option>
+                  <option>Training</option>
+                </select>
+              </div>
+            </div>
+
+            <Button className="w-full rounded-full bg-[#1A4B6B] hover:bg-[#153a54] text-white py-8 text-lg font-bold shadow-xl transform active:scale-95 transition-all mt-4">
+              Submit Now
+            </Button>
+          </form>
         </div>
       </div>
     </div>

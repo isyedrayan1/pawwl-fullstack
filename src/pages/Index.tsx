@@ -1,27 +1,25 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import FeaturedProducts from "@/components/FeaturedProducts";
+import Services from "@/components/Services";
 import WhyPawwl from "@/components/WhyPawwl";
 import Blogs from "@/components/Blogs";
 import BornFromLove from "@/components/BornFromLove";
 import ScheduleSession from "@/components/ScheduleSession";
 import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
-import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 const Index = () => (
-  <div className="min-h-screen">
+  <div className="min-h-screen bg-white">
     <Navbar />
     <Hero />
-    <FeaturedProducts />
+    <Services />
     <WhyPawwl />
     <Blogs />
     <BornFromLove />
     <ScheduleSession />
     <PetGallery />
     <Testimonials />
-    <CTASection />
     <Footer />
   </div>
 );

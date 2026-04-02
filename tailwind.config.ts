@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Playfair Display"', 'serif'],
+        heading: ['"Outfit"', 'sans-serif'],
         body: ['Poppins', 'sans-serif'],
       },
       colors: {

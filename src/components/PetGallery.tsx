@@ -1,38 +1,51 @@
 import { Button } from "@/components/ui/button";
-
-const images = [
-  "https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=350&fit=crop",
-  "https://images.unsplash.com/photo-1477884213360-7e9d7dcc8f9b?w=400&h=350&fit=crop",
-  "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=350&fit=crop",
-  "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=350&fit=crop",
-];
+import { Instagram } from "lucide-react";
 
 const PetGallery = () => (
-  <section className="py-20 bg-background">
-    <div className="container mx-auto px-4 text-center">
-      <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary leading-tight">
-        Whiskers, Tails, and Joyful Eyes A<br />Gallery Full of Love
+  <section className="py-24 bg-white">
+    <div className="container mx-auto px-4 md:px-6 max-w-7xl text-center">
+      <h2 className="text-4xl md:text-6xl font-heading font-black text-[#1A4B6B] leading-[1.1] mb-8 max-w-4xl mx-auto">
+        Whiskers, Tails, and Joyful Eyes<br className="hidden md:block" /> A Gallery Full of Love
       </h2>
-      <p className="mt-3 text-sm text-muted-foreground max-w-lg mx-auto">
+      <p className="text-base md:text-lg text-gray-400 font-medium mb-16 max-w-2xl mx-auto leading-relaxed">
         Join thousands of heartwarming moments captured. Every frame, every wagging tail is a reminder of the love that connects us.
       </p>
 
-      <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 relative">
-        {images.map((src, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-[600px] md:h-[700px]">
+        {/* Tall Left Image */}
+        <div className="rounded-[48px] overflow-hidden group shadow-xl h-full">
           <img
-            key={i}
-            src={src}
-            alt={`Pet gallery ${i + 1}`}
-            className="rounded-2xl w-full h-48 md:h-56 object-cover hover:scale-105 transition-transform duration-300"
+            src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&h=1200&fit=crop"
+            alt="Dog in water"
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             loading="lazy"
           />
-        ))}
-      </div>
-      <div className="mt-6 inline-flex items-center gap-3 bg-primary rounded-full px-6 py-3">
-        <span className="text-primary-foreground text-sm font-medium">Join our pack</span>
-        <Button size="sm" variant="outline" className="rounded-full border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-xs h-7 px-3">
-          Join Us
-        </Button>
+        </div>
+
+        {/* Right Column */}
+        <div className="flex flex-col gap-8 h-full">
+          {/* Top Horizontal Image */}
+          <div className="rounded-[40px] overflow-hidden group shadow-xl flex-1">
+            <img
+              src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800&h=600&fit=crop"
+              alt="Dog in city"
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Bottom Navy Card */}
+          <div className="bg-[#1A4B6B] rounded-[40px] p-10 flex flex-col items-center justify-center text-white text-center group hover:bg-[#153a54] transition-all flex-1">
+            <div className="bg-white/10 p-4 rounded-2xl mb-6 group-hover:rotate-12 transition-transform">
+              <Instagram size={32} />
+            </div>
+            <h4 className="text-2xl font-black mb-2">Follow us on Instagram</h4>
+            <p className="text-white/60 mb-8 font-medium">@pawwl_official</p>
+            <Button className="rounded-full border-2 border-white/30 bg-transparent hover:bg-white hover:text-[#1A4B6B] text-white px-10 py-6 text-sm font-bold transition-all">
+              Join Our Pack
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
