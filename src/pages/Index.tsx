@@ -8,7 +8,6 @@ import ScheduleSession from "@/components/ScheduleSession";
 import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
-import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 
 const Index = () => (
@@ -23,7 +22,6 @@ const Index = () => (
     <PetGallery />
     <Testimonials />
     <CTASection />
-    <Newsletter />
     <Footer />
   </div>
 );
