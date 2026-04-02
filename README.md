@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# Pixel Perfect Pixels — Pawwl
 
-TODO: Document your project here
+Premium pet care products, grooming, training, and vet services.
