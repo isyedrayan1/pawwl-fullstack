@@ -8,41 +8,54 @@ const stats = [
 ];
 
 const BornFromLove = () => (
-  <section className="py-24 bg-white">
-    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <div className="relative group">
-          <div className="absolute -inset-4 bg-[#BDE9F2] rounded-[48px] rotate-2 -z-10 opacity-50 group-hover:rotate-0 transition-transform duration-500"></div>
-          <img
-            src={bornFromLoveImg}
-            alt="Cat being pet"
-            className="rounded-[40px] w-full aspect-square object-cover shadow-2xl relative z-10 scale-95 group-hover:scale-100 transition-transform duration-500"
-            loading="lazy"
+  <section className="py-12 bg-white">
+    <div className="section-container">
+      <div className="flex flex-col lg:flex-row items-center gap-10 bg-white">
+        
+        {/* Left Image Section */}
+        <div className="w-full lg:w-[430px] h-[584px] rounded-[28px] overflow-hidden">
+          <img 
+            src={bornFromLoveImg} 
+            alt="Born from Love" 
+            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
           />
         </div>
-        
-        <div className="text-left">
-          <span className="bg-[#BDE9F2] text-[#1A4B6B] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest inline-block mb-6 shadow-sm">
-            About Us
-          </span>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#1A4B6B] mb-8 leading-[1.1]">Born from Love.</h2>
-          <p className="text-base md:text-lg text-gray-400 font-medium mb-10 leading-relaxed max-w-xl">
-            Every pet deserves love, care, and the best quality products. We started Pawwl because we believe your pets are family — and family deserves the very best.
-          </p>
-          
-          <Button className="rounded-full bg-[#1A4B6B] hover:bg-[#153a54] text-white px-10 py-7 text-base font-bold shadow-xl mb-12 transform hover:-translate-y-1 transition-all">
-            Learn More
-          </Button>
 
-          <div className="grid grid-cols-3 gap-8 border-t border-gray-100 pt-12">
-            {stats.map((s) => (
-              <div key={s.label} className="text-left">
-                <span className="text-4xl md:text-5xl font-heading font-black text-[#1A4B6B] block mb-2">{s.value}</span>
-                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">{s.label}</p>
+        {/* Right Content Section */}
+        <div className="flex flex-col gap-8 flex-1">
+          <div className="w-full flex flex-col justify-center bg-white border border-border-design rounded-3xl p-12">
+            <div className="flex flex-col gap-6">
+              <div className="w-fit bg-brand-light px-4 py-1.5 rounded-full border border-brand-accent">
+                <span className="font-medium text-xs text-brand-accent">About Pawwl</span>
+              </div>
+              <h2 className="font-black text-[32px] md:text-[40px] lg:text-[52px] leading-tight text-[#212529]">Born from Love.</h2>
+              <p className="font-normal text-[16px] leading-[26.4px] text-[#788796] max-w-md">
+                Since 2018, we've grown from a small grooming studio to a full-spectrum pet care platform serving thousands of families.
+              </p>
+              <Button className="w-fit bg-brand-accent text-white px-8 py-3 h-auto rounded-full font-semibold text-sm hover:bg-brand-dark transition-colors flex items-center gap-2 shadow-none">
+                Learn About Us
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Button>
+            </div>
+          </div>
+
+          {/* Stats Row - Always horizontal, optimized for mobile */}
+          <div className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0">
+            {[
+              { label: "Years", val: "8+" },
+              { label: "Experts", val: "50+" },
+              { label: "Families", val: "10K+" }
+            ].map((stat) => (
+              <div key={stat.label} className="h-[90px] sm:h-[165px] flex-1 flex flex-col justify-center items-center bg-white rounded-2xl sm:rounded-[20px] border border-border-design hover:shadow-md transition-shadow">
+                <span className="font-black text-[22px] sm:text-[44px] leading-none text-brand-accent mb-1">{stat.val}</span>
+                <span className="font-normal text-[10px] sm:text-[14px] leading-tight text-[#788796]">{stat.label}</span>
               </div>
             ))}
           </div>
         </div>
+
       </div>
     </div>
   </section>

@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import puppyInBox from "@/assets/puppy_box_treats.png";
 import catWithToy from "@/assets/cat_blue_toy.png";
 import kittenPlaying from "@/assets/kitten_toy_string.png";
@@ -7,143 +8,130 @@ import petAccessories from "@/assets/pet_accessories.png";
 
 const Services = () => {
   return (
-    <section className="bg-white py-24">
-      <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <section className="bg-white py-12">
+      <div className="section-container">
+        <div className="flex flex-col gap-8">
           
-          {/* Large Left Card: Super Chewer Treats */}
-          <div className="md:col-span-12 lg:col-span-4 bg-[#67B5D5] rounded-[48px] p-8 md:p-12 relative overflow-visible flex flex-col min-h-[500px] md:min-h-[600px] shadow-sm transform hover:scale-[1.01] transition-transform duration-300">
-            <div className="relative z-20">
-              <h3 className="text-3xl md:text-5xl font-heading font-black text-[#1A4B6B] mb-2 leading-tight">Super Chewer</h3>
-              <p className="text-[#1A4B6B] font-bold text-lg mb-4">Get Durable Pet Toys @ 50%off</p>
-            </div>
-            
-            <div className="absolute inset-x-0 bottom-0 pointer-events-none z-10 p-4">
-              <img 
-                src={puppyInBox} 
-                alt="Puppy with treats" 
-                className="w-full object-contain scale-[1.15] origin-bottom translate-y-4 filter drop-shadow-2xl"
-              />
-            </div>
-            
-            <div className="mt-auto relative z-20 flex justify-end">
-              <a href="#" className="flex items-center gap-2 text-[#1A4B6B] font-bold text-lg group">
-                Learn More 
-                <div className="bg-[#1A4B6B] p-1.5 rounded-full group-hover:scale-110 transition-transform shadow-md">
-                  <ArrowUpRight size={20} className="text-[#67B5D5]" />
+          {/* Top Bento Row: Main Large Card + Two Wide Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            {/* Left Main Card: Super Chewer */}
+            <div className="lg:col-span-5 h-[450px] sm:h-[520px] lg:h-[600px] bg-brand-light-blue rounded-3xl p-6 sm:p-10 relative overflow-hidden flex flex-col group transition-all duration-500 hover:shadow-xl border border-border-accent/30 shadow-inner">
+              <div className="relative z-20 space-y-3">
+                <div className="w-fit bg-white/40 backdrop-blur px-3 py-1 rounded-full border border-brand-accent/20 text-[10px] font-bold text-brand-dark uppercase tracking-wider">Most Popular</div>
+                <h3 className="text-[32px] sm:text-[42px] font-black text-brand-dark leading-none">Super Chewer</h3>
+                <p className="text-brand-dark text-sm sm:text-lg font-medium opacity-80 max-w-[240px]">Get Durable Pet Toys @ 50%off</p>
+              </div>
+              
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-center pointer-events-none mb-16 sm:mb-12">
+                <div className="w-[220px] sm:w-[350px] h-[260px] sm:h-[380px] relative">
+                  <img src={puppyInBox} alt="Puppy" className="w-full h-full object-contain scale-125 sm:scale-110 drop-shadow-2xl" />
                 </div>
-              </a>
+              </div>
+
+              <div className="mt-auto relative z-20">
+                <a href="#" className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-2xl text-[#003459] font-bold text-[15px] sm:text-[18px] hover:bg-brand-light transition-all shadow-lg hover:shadow-xl active:scale-95">
+                  Learn More
+                  <ArrowUpRight size={20} />
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Two wide white cards */}
+            <div className="lg:col-span-7 flex flex-col gap-6 lg:gap-8">
+              {/* Top Case */}
+              <div className="w-full h-auto min-h-[240px] lg:h-[284px] bg-white border-2 border-border-accent rounded-3xl p-6 sm:p-10 relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center group transition-all hover:shadow-xl hover:border-brand-blue/30">
+                <div className="w-full sm:w-1/2 space-y-3 sm:space-y-5 relative z-10 mb-4 sm:mb-0">
+                   <div className="w-fit bg-brand-light px-3 py-1 rounded-full text-[10px] font-bold text-brand-blue uppercase">New Arrival</div>
+                  <h3 className="text-[26px] sm:text-[34px] lg:text-[40px] font-black text-brand-dark leading-tight">Chewy Treats</h3>
+                  <p className="text-brand-dark text-xs sm:text-[16px] font-normal leading-relaxed opacity-70 line-clamp-2">
+                    High-quality treats and durable toys for your aggressive chewers.
+                  </p>
+                  <button className="bg-brand-blue text-white px-5 py-3 rounded-xl text-[12px] font-black flex items-center gap-2 hover:bg-brand-dark transition-all shadow-md hover:shadow-lg active:scale-95">
+                    Select Product
+                    <ArrowUpRight size={14} />
+                  </button>
+                </div>
+                <div className="absolute sm:relative ml-auto right-0 bottom-0 sm:bottom-auto w-[130px] sm:w-[200px] h-[150px] sm:h-[290px] opacity-40 sm:opacity-100 group-hover:scale-110 transition-transform duration-700">
+                  <img src={catWithToy} alt="Cat" className="w-full h-full object-contain object-bottom sm:object-right-bottom" />
+                </div>
+              </div>
+
+              {/* Bottom Case */}
+              <div className="w-full h-auto min-h-[240px] lg:h-[284px] bg-white border-2 border-border-accent rounded-3xl p-6 sm:p-10 relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center group transition-all hover:shadow-xl hover:border-brand-blue/30">
+                <div className="w-full sm:w-1/2 space-y-3 sm:space-y-5 relative z-10 mb-4 sm:mb-0">
+                  <div className="w-fit bg-teal-light px-3 py-1 rounded-full text-[10px] font-bold text-secondary uppercase">Best Seller</div>
+                  <h3 className="text-[26px] sm:text-[34px] lg:text-[100%] font-black text-brand-dark leading-tight" style={{fontSize: "clamp(26px, 4vw, 40px)"}}>Kitten Kits</h3>
+                  <p className="text-brand-dark text-xs sm:text-[16px] font-normal leading-relaxed opacity-70 line-clamp-2">
+                    Specifically designed play-kits for kittens and young cats.
+                  </p>
+                  <button className="bg-brand-blue text-white px-5 py-3 rounded-xl text-[12px] font-black flex items-center gap-2 hover:bg-brand-dark transition-all shadow-md hover:shadow-lg active:scale-95">
+                    Select Product
+                    <ArrowUpRight size={14} />
+                  </button>
+                </div>
+                <div className="absolute sm:relative ml-auto right-0 bottom-0 sm:bottom-auto w-[130px] sm:w-[210px] h-[150px] sm:h-[290px] opacity-40 sm:opacity-100 group-hover:scale-110 transition-transform duration-700">
+                  <img src={kittenPlaying} alt="Kitten" className="w-full h-full object-contain object-bottom sm:object-right-bottom" />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Right Column Grid */}
-          <div className="md:col-span-12 lg:col-span-8 flex flex-col gap-8">
-            
-            {/* Top Right Card: Super Chewer Shop */}
-            <div className="bg-white border-2 border-[#E9F7FB] rounded-[48px] p-8 md:p-10 relative overflow-hidden flex flex-col md:flex-row md:items-center min-h-[350px] md:min-h-[285px] group hover:shadow-lg transition-all duration-300 gap-6">
-              <div className="w-full md:w-2/3 relative z-10 space-y-4">
-                <h3 className="text-3xl md:text-5xl font-heading font-black text-[#1A4B6B] leading-tight">Super Chewer</h3>
-                <p className="text-gray-500 text-sm max-w-[320px] font-medium leading-relaxed">Lorem ipsum dolor sit amet consectetur. Semper tristique ornare cursus tempor quis arcu commodo aliquam.</p>
-                <button className="bg-[#1A4B6B] text-white px-8 py-3.5 rounded-full text-sm font-bold flex items-center justify-center gap-3 w-fit hover:bg-[#153a54] transition-all shadow-md">
-                  Pawwl Select Product
-                  <ArrowUpRight size={18} />
-                </button>
+          {/* Middle Row: 4 Small Cards for a more "Complete" Bento Look */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
+            {[
+              { title: "Tasty Treats", desc: "Healthy dog food.", color: "bg-white" },
+              { title: "Fun Fetch", desc: "Interactive toys.", color: "bg-white" },
+              { title: "Cozy Beds", desc: "Premium comfort.", color: "bg-white" },
+              { title: "Grooming", desc: "Stay fresh.", color: "bg-white" }
+            ].map((item, i) => (
+              <div key={i} className={`w-full h-[150px] sm:h-[180px] ${item.color} border-2 border-border-accent rounded-3xl p-4 sm:p-6 relative overflow-hidden flex flex-col justify-between transition-all hover:shadow-xl hover:border-brand-blue/20 hover:-translate-y-1 group`}>
+                <div className="relative z-10 flex flex-col gap-2">
+                  <button className="bg-brand-blue/10 text-brand-blue p-2 rounded-xl w-fit group-hover:bg-brand-blue group-hover:text-white transition-all">
+                    <ArrowUpRight size={14} />
+                  </button>
+                  <div className="space-y-1">
+                    <h4 className="text-[16px] sm:text-[22px] font-black text-brand-dark leading-none">{item.title}</h4>
+                    <p className="text-gray-400 text-[10px] sm:text-[14px] font-bold uppercase tracking-widest">{item.desc}</p>
+                  </div>
+                </div>
+                <div className="absolute right-[-10px] bottom-[-10px] w-[70px] sm:w-[100px] h-[70px] sm:h-[100px] opacity-20 sm:opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                   <img src="https://images.unsplash.com/photo-1583336663277-620dc1996580?w=200&h=200&fit=crop" alt={item.title} className="w-full h-full object-contain" />
+                </div>
               </div>
-              <div className="absolute right-[-20px] bottom-[-20px] md:bottom-[-10px] w-full md:w-1/2 h-48 md:h-full">
-                <img 
-                  src={catWithToy} 
-                  alt="Cat with toy" 
-                  className="w-full h-full object-contain object-bottom scale-110 md:scale-125 transform group-hover:rotate-3 transition-transform duration-500"
-                />
+            ))}
+          </div>
+
+          {/* Bottom Row: Varied Cards for better density */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            {/* Accessories Card - Medium */}
+            <div className="lg:col-span-4 w-full h-auto min-h-[160px] bg-white border-2 border-border-accent rounded-3xl p-6 relative overflow-hidden flex flex-col justify-between transition-all hover:shadow-xl hover:border-brand-blue/20 group">
+              <div className="flex flex-col gap-4 relative z-10">
+                <div className="w-fit bg-brand-light px-3 py-1 rounded-full text-[10px] font-black text-brand-blue uppercase">Trending</div>
+                <h4 className="text-[22px] sm:text-[26px] font-black text-brand-dark leading-tight">Premium <br /> Accessories</h4>
+              </div>
+              <div className="absolute right-0 bottom-0 w-[140px] h-[120px] group-hover:scale-110 transition-transform duration-700">
+                <img src={petAccessories} alt="Accessories" className="w-full h-full object-contain object-bottom sm:object-right-bottom" />
               </div>
             </div>
 
-            {/* Bottom Right Card: Super Chewer Kitten */}
-            <div className="bg-white border-2 border-[#E9F7FB] rounded-[48px] p-8 md:p-10 relative overflow-hidden flex flex-col md:flex-row md:items-center min-h-[350px] md:min-h-[285px] group hover:shadow-lg transition-all duration-300 gap-6">
-              <div className="w-full md:w-2/3 relative z-10 space-y-4">
-                <h3 className="text-3xl md:text-5xl font-heading font-black text-[#1A4B6B] leading-tight">Super Chewer</h3>
-                <p className="text-gray-500 text-sm max-w-[320px] font-medium leading-relaxed">Lorem ipsum dolor sit amet consectetur. Semper tristique ornare cursus tempor quis arcu commodo aliquam.</p>
-                <button className="bg-[#1A4B6B] text-white px-8 py-3.5 rounded-full text-sm font-bold flex items-center justify-center gap-3 w-fit hover:bg-[#153a54] transition-all shadow-md">
-                  Pawwl Select Product
-                  <ArrowUpRight size={18} />
-                </button>
+            {/* Day Care Card - Wide */}
+            <div className="lg:col-span-8 w-full h-auto min-h-[160px] bg-[#1b4965] rounded-3xl p-6 sm:p-10 relative overflow-hidden flex items-center transition-all hover:shadow-2xl group border border-white/10">
+              <div className="w-full md:w-1/2 space-y-4 sm:space-y-6 relative z-10">
+                <h4 className="text-[28px] sm:text-[36px] font-black text-white leading-tight">Best Day Care <br className="hidden sm:block" /> in Town!</h4>
+                <div className="flex items-center gap-4">
+                  <Button className="bg-white hover:bg-brand-light text-brand-dark px-6 py-4 rounded-full font-black text-[13px] shadow-lg flex items-center gap-2 group-hover:scale-105 transition-transform h-auto">
+                    Explore Services
+                    <ArrowUpRight size={16} />
+                  </Button>
+                </div>
               </div>
-              <div className="absolute right-0 bottom-[-15px] md:bottom-[-5px] w-full md:w-2/5 h-40 md:h-full">
-                <img 
-                  src={kittenPlaying} 
-                  alt="Kitten playing" 
-                  className="w-full h-full object-contain object-bottom transform group-hover:-translate-y-2 transition-transform duration-500"
-                />
+              <div className="absolute right-4 bottom-0 w-[160px] sm:w-[240px] h-[180px] sm:h-[220px] group-hover:scale-110 transition-transform duration-700">
+                <img src={puppyGroup} alt="Day care" className="w-full h-full object-contain object-bottom" />
               </div>
             </div>
           </div>
 
         </div>
-
-        {/* Third Row: 3 smaller food cards - 2 columns on mobile */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mt-8">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className={`bg-white border-2 border-[#E9F7FB] rounded-[32px] md:rounded-[40px] p-5 md:p-8 relative overflow-hidden flex flex-col md:flex-row md:items-center h-[280px] md:h-[200px] hover:shadow-md transition-all group ${i === 3 ? 'col-span-2 md:col-span-1' : 'col-span-1'}`}>
-              <div className="w-full md:w-2/3 relative z-10 space-y-3">
-                <h4 className="text-base md:text-xl font-black text-[#1A4B6B] leading-tight">Tasty Cat & Dog Food</h4>
-                <p className="text-gray-500 text-[10px] md:text-xs font-medium leading-snug">Lorem ipsum dolor sit amet consectetur.</p>
-                <button className="bg-[#1A4B6B] text-white px-4 py-2 rounded-full text-[10px] font-bold flex items-center justify-center gap-2 w-fit">
-                  Pawwl Select
-                  <ArrowUpRight size={12} />
-                </button>
-              </div>
-              <div className="absolute right-2 bottom-2 w-full md:w-1/3 h-24 md:h-full">
-                <img 
-                  src="https://images.unsplash.com/photo-1548767791-514d3ecfd0df?w=400&h=400&fit=crop" 
-                  alt="Food bag" 
-                  className="w-full h-full object-contain object-bottom scale-[1.2] transition-transform duration-300 group-hover:scale-[1.3]"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Fourth Row: Wide cards */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mt-8">
-          {/* Left Wide Card: Accessories */}
-          <div className="md:col-span-5 bg-white border-2 border-[#E9F7FB] rounded-[40px] p-8 md:p-10 relative overflow-hidden flex flex-col md:flex-row md:items-center min-h-[350px] md:min-h-[220px] group hover:shadow-md transition-shadow">
-            <div className="w-full md:w-2/3 relative z-10 space-y-4">
-              <h4 className="text-2xl font-black text-[#1A4B6B] leading-tight-tight">Wide Range of Accessories for Pets</h4>
-              <p className="text-gray-400 text-xs max-w-[180px]">Lorem ipsum dolor sit amet consectetur.</p>
-              <button className="bg-[#1A4B6B] text-white px-6 py-2.5 rounded-full text-xs font-bold flex items-center justify-center gap-2 w-fit hover:opacity-90 transition-opacity">
-                Pawwl Select Product
-                <ArrowUpRight size={14} />
-              </button>
-            </div>
-            <div className="absolute right-0 bottom-[-10px] w-full md:w-1/2 h-44 md:h-full">
-              <img 
-                src={petAccessories} 
-                alt="Accessories" 
-                className="w-full h-full object-contain object-bottom transform group-hover:scale-105 transition-transform duration-500 opacity-90"
-              />
-            </div>
-          </div>
-
-          {/* Right Extra Wide Card: Day Care - Top Image / Bottom Content for Mobile */}
-          <div className="md:col-span-7 bg-white border-2 border-[#E9F7FB] rounded-[40px] p-8 md:p-10 relative overflow-hidden flex flex-col md:flex-row items-center md:items-center min-h-[400px] md:min-h-[220px] group hover:shadow-md transition-shadow">
-            <div className="w-full md:w-3/5 h-48 md:absolute md:right-0 md:bottom-0 md:h-full flex items-end mb-8 md:mb-0 order-first md:order-last">
-              <img 
-                src={puppyGroup} 
-                alt="Day care" 
-                className="w-full h-full object-contain scale-[1.5] md:scale-100 md:translate-y-4 group-hover:translate-y-0 transition-transform duration-500"
-              />
-            </div>
-            <div className="w-full md:w-1/2 relative z-10 space-y-4">
-              <h4 className="text-2xl md:text-3xl font-black text-[#1A4B6B] leading-tight">Best Day Care in Town!</h4>
-              <p className="text-gray-400 text-sm max-w-[280px]">Lorem ipsum dolor sit amet consectetur. Aliquam enim nullam et arcu dui.</p>
-              <button className="bg-[#1A4B6B] text-white px-8 py-3 rounded-full text-sm font-bold flex items-center justify-center gap-3 w-fit hover:bg-[#153a54] transition-all shadow-sm active:scale-95">
-                Pawwl Select Product
-                <ArrowUpRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   );

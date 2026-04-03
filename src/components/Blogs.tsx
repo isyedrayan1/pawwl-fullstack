@@ -19,7 +19,7 @@ const blogs = [
 
 const Blogs = () => (
   <section className="py-24 bg-white">
-    <div className="container mx-auto px-4 md:px-6 max-w-7xl text-center">
+    <div className="section-container text-center">
       <h2 className="text-4xl md:text-6xl font-heading font-black text-[#1A4B6B] mb-6 leading-[1.1]">Blogs</h2>
       <p className="text-base md:text-lg text-gray-400 font-medium max-w-2xl mx-auto mb-16 leading-relaxed">
         Expert advice and inspiration to help you and your feline friends thrive together.

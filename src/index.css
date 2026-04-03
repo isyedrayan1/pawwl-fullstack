@@ -58,9 +58,18 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body overflow-x-hidden w-full;
+  }
+  html {
+    @apply overflow-x-hidden w-full scroll-smooth;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply mx-auto max-w-[1128px] w-full px-6 lg:px-0;
   }
 }

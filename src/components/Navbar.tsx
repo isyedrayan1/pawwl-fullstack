@@ -17,61 +17,85 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-      <div className="container mx-auto max-w-7xl flex items-center justify-between py-4 px-4 md:px-6">
-        <span className="text-3xl font-heading font-black text-[#1A4B6B] tracking-tight">Pawwl</span>
+    <nav className="sticky top-0 z-50 bg-white border-b border-border-design h-[75px] flex items-center">
+      <div className="section-container flex items-center justify-between">
+        {/* Logo Section */}
+        <div className="flex items-center gap-2">
+          <span className="text-[28px] font-bold text-brand-accent leading-[42px]">Pawwl</span>
+        </div>
 
-        {/* Desktop links */}
-        <ul className="hidden xl:flex items-center gap-8">
+        {/* Desktop Navigation Links */}
+        <div className="hidden xl:flex items-center gap-[40px]">
           {navLinks.map((link) => (
-            <li key={link.name}>
-              <a 
-                href={link.href} 
-                className="text-[15px] font-semibold text-gray-600 hover:text-[#1A4B6B] transition-colors flex items-center gap-1"
-              >
-                {link.name}
-                {link.hasDropdown && (
-                  <svg className="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                )}
-              </a>
-            </li>
+            <a
+              key={link.name}
+              href={link.href}
+              className={`text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                link.name === "Home" ? "text-brand-accent" : "text-foreground"
+              } hover:text-brand-blue`}
+            >
+              {link.name}
+              {link.hasDropdown && (
+                <svg
+                  className="w-3 h-3 opacity-60"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2.5"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              )}
+            </a>
           ))}
-        </ul>
+        </div>
 
+        {/* Icons and Action Button */}
         <div className="hidden md:flex items-center gap-6">
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-gray-700 hover:bg-gray-50 rounded-full transition-colors relative">
-              <ShoppingBasket size={22} strokeWidth={2} />
+          <div className="flex items-center gap-3">
+            <button className="p-2.5 text-brand-accent hover:bg-brand-light rounded-full transition-colors">
+              <ShoppingBasket size={24} strokeWidth={2} />
             </button>
-            <button className="p-2 text-gray-700 hover:bg-gray-50 rounded-full transition-colors">
-              <Heart size={22} strokeWidth={2} />
+            <button className="p-2.5 text-brand-accent hover:bg-brand-light rounded-full transition-colors">
+              <Heart size={24} strokeWidth={2} />
             </button>
           </div>
-          <Button className="rounded-full bg-[#1A4B6B] hover:bg-[#153a54] text-white px-8 py-6 text-base font-bold shadow-sm">
+          <Button className="bg-brand-blue hover:bg-brand-dark text-white px-5 py-3 rounded-xl text-[16px] font-bold leading-[20px] shadow-none h-auto transition-all active:scale-95">
             Contact Us
           </Button>
         </div>
 
-        <button className="md:hidden p-2" onClick={() => setMobileOpen(!mobileOpen)}>
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden p-2 text-brand-accent"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
           {mobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
+      {/* Mobile Design Overlay */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-6 shadow-xl animate-in slide-in-from-top duration-300">
-          <ul className="flex flex-col gap-4 py-4">
+        <div className="absolute top-[75px] left-0 w-full bg-white border-b border-border-design p-6 md:hidden shadow-xl animate-in slide-in-from-top duration-300">
+          <ul className="flex flex-col gap-5">
             {navLinks.map((link) => (
               <li key={link.name}>
-                <a href={link.href} className="text-lg font-bold text-gray-800 flex items-center justify-between">
+                <a
+                  href={link.href}
+                  className="text-lg font-bold text-brand-dark flex items-center justify-between"
+                  onClick={() => setMobileOpen(false)}
+                >
                   {link.name}
-                  {link.hasDropdown && <span className="text-gray-400">+</span>}
+                  {link.hasDropdown && <span className="opacity-40 text-sm">▼</span>}
                 </a>
               </li>
             ))}
           </ul>
-          <Button className="w-full rounded-full bg-[#1A4B6B] text-white py-6 text-lg font-bold mt-2">
+          <Button className="w-full bg-brand-blue text-white py-6 text-lg font-bold mt-6 rounded-xl">
             Contact Us
           </Button>
         </div>

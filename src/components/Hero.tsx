@@ -1,20 +1,23 @@
 import heroDog from "@/assets/hero-dog.png";
+import PawwlWatermark from "./PawwlWatermark";
 
 const Hero = () => (
-  <section className="bg-white pt-6 pb-2 md:pb-6">
-    <div className="container mx-auto px-4 md:px-6 max-w-7xl">
-      <div className="relative bg-[#BDE9F2] rounded-[48px] overflow-hidden min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center">
-        {/* Background Text */}
-        <h1 className="text-[6.5rem] sm:text-[10rem] md:text-[16rem] lg:text-[24rem] font-heading font-black text-[#1A4B6B] leading-none tracking-tight text-center select-none opacity-100 pointer-events-none">
-          Pawwl
-        </h1>
+  <section className="bg-white pt-4 md:pt-8 pb-4">
+    <div className="section-container">
+      <div className="relative bg-brand-light rounded-2xl overflow-hidden h-[320px] sm:h-[420px] md:h-[497px] flex items-center justify-center border border-border-accent/30 shadow-sm transition-all duration-300">
         
-        {/* Floating Dog Image */}
+        {/* Professional SVG Watermark Background */}
+        <PawwlWatermark 
+          className="absolute w-[90%] sm:w-[95%] md:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 md:-mt-[19px] z-10 text-[#1b4965]" 
+          opacity={0.6}
+        />
+        
+        {/* Dalmatian Image Section - Improved Scaling */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none">
           <img
             src={heroDog}
             alt="Dalmatian with ball"
-            className="w-full max-w-[240px] md:max-w-[450px] lg:max-w-[550px] object-contain relative z-20 mb-[-2%]"
+            className="w-full max-w-[190px] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[380px] object-contain relative z-20 mb-[-1.5%] drop-shadow-2xl brightness-[1.02] contrast-[1.02]"
           />
         </div>
       </div>

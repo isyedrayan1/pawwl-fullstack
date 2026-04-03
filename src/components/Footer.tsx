@@ -1,128 +1,133 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
+import PawwlWatermark from "./PawwlWatermark";
 
 const quickLinks = ["Home", "About", "Services", "Products", "Blogs", "Careers"];
 const services = ["Vet Care", "Grooming", "Pet Day Care", "Boarding", "Vaccination", "Pet Training"];
 
 const Footer = () => (
-  <footer className="bg-[#1A4B6B] overflow-hidden relative pb-16">
-    <div className="container mx-auto px-4 md:px-6 max-w-7xl relative z-10">
-      
-      {/* 1. CTA Part (H: 770px) */}
-      <div className="min-h-[500px] md:h-[700px] relative flex flex-col items-center justify-center text-center">
-        
-        {/* Large "PAWWL" watermark background - refined for mobile fit */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-          <span className="text-[6.5rem] sm:text-[10rem] md:text-[16rem] lg:text-[20rem] font-heading font-black text-white/[0.06] leading-none tracking-tighter uppercase">
-            PAWWL
-          </span>
+  <footer className="w-full flex flex-col bg-[#1b4965]">
+    
+    {/* 1. Large CTA Section (h-[770px]) */}
+    <div className="relative w-full lg:h-[770px] min-h-[600px] flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+      {/* Background Decorative Circles (Extreme Corners) */}
+      <div className="absolute -top-[150px] -right-[150px] w-[300px] h-[300px] bg-white/5 rounded-full pointer-events-none z-0"></div>
+      <div className="absolute -bottom-[200px] -left-[200px] w-[400px] h-[400px] bg-white/5 rounded-full pointer-events-none z-0"></div>
+
+      {/* Professional SVG Watermark Background - Optimized for mobile visibility */}
+      <PawwlWatermark 
+        className="absolute w-[90%] sm:w-[80%] lg:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 -mt-[19px] z-10 text-white" 
+        opacity={0.03}
+      />
+
+      {/* CTA Content Container */}
+      <div className="relative z-20 flex flex-col items-center gap-12 section-container w-full">
+        <div className="flex flex-col items-center gap-6">
+          <h2 className="font-black text-[40px] md:text-[60px] lg:text-[80px] leading-[1.1] text-white text-center max-w-[1100px]">
+            Ready to Give Your Pet <br className="hidden md:block" /> the Best Life?
+          </h2>
+          <p className="font-normal text-[18px] md:text-[20px] leading-relaxed text-white opacity-90 max-w-lg">
+            Wellness checkups, grooming, training — we're here for every wag and purr.
+          </p>
         </div>
 
-        {/* Decorative Circles - enhanced visibility */}
-        <div className="absolute top-[20%] -left-[10%] w-[600px] h-[600px] bg-white/[0.07] rounded-full blur-[80px] pointer-events-none"></div>
-        <div className="absolute -bottom-[20%] -right-[5%] w-[500px] h-[500px] bg-white/[0.05] rounded-full blur-[60px] pointer-events-none"></div>
-
-        <div className="max-w-[1000px] relative z-10 flex flex-col items-center justify-center">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-white leading-[1.15] mb-8">
-            Ready to Give Your Pet<br />the Best Life?
-          </h2>
-          <p className="text-white/60 font-medium text-lg md:text-xl mb-10 max-w-xl leading-relaxed">
-            Wellness checkups, grooming, training — we're here<br className="hidden md:block" /> for every wag and purr.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <button className="rounded-full bg-white hover:bg-gray-100 text-[#1A4B6B] px-10 py-4 text-base font-bold shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
-              Book Appointment
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7-7 7" />
-              </svg>
-            </button>
-            <button className="rounded-full border-2 border-white/30 bg-transparent hover:bg-white hover:text-[#1A4B6B] text-white px-10 py-4 text-base font-bold transition-all">
-              Explore Services
-            </button>
-          </div>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] px-10 py-7 rounded-full font-semibold text-[16px] shadow-xl hover:shadow-white/10 transition-all flex items-center gap-3 active:scale-95 h-auto">
+            Book Appointment
+            <ArrowRight size={18} />
+          </Button>
+          <Button variant="outline" className="border-2 border-white hover:bg-white/10 text-white px-10 py-7 rounded-full font-semibold text-[16px] transition-all h-auto bg-transparent hover:text-white">
+            Explore Services
+          </Button>
         </div>
       </div>
+    </div>
 
-      {/* 2. Newsletter Signup Row */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-16 border-b border-white/5">
-        <div>
-          <h3 className="text-2xl font-heading font-black mb-2 text-white">Newsletter Signup</h3>
-          <p className="text-white/40 text-sm font-medium">Get the latest pet care tips and exclusive offers delivered to your inbox.</p>
+    {/* 2. Newsletter Row (h-[114px] base) */}
+    <div className="w-full bg-[#1b4965] flex justify-center">
+      <div className="section-container flex flex-col lg:flex-row items-center justify-between gap-8 py-10 lg:h-[114px] border-y border-white/20">
+        <div className="flex flex-col gap-2 text-center lg:text-left">
+          <h3 className="font-bold text-[24px] leading-tight text-white tracking-tight">Newsletter Signup</h3>
+          <p className="font-normal text-[14px] text-white opacity-70">Get the latest pet care tips and exclusive offers delivered to your inbox.</p>
         </div>
-        <div className="flex gap-2 w-full md:w-auto">
+        
+        <div className="flex w-full lg:w-[404px] gap-2">
           <Input 
             placeholder="Your Email Address" 
-            className="rounded-full bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 md:w-80 px-6 focus-visible:ring-[#67B5D5]" 
+            className="flex-1 bg-white border-white rounded-xl h-11 px-4 text-brand-dark focus:ring-brand-light placeholder:text-gray-400" 
           />
-          <Button className="rounded-full bg-white hover:bg-gray-100 text-[#1A4B6B] px-8 h-12 text-sm font-bold shadow-xl">
+          <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] h-11 px-8 rounded-xl font-medium transition-colors">
             Subscribe
           </Button>
         </div>
       </div>
+    </div>
 
-      {/* 3. Main Footer Links Area (Tighter Vertical Spacing) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pt-16 pb-10">
-        {/* Logo & Description */}
-        <div className="flex flex-col">
-          <span className="text-2xl font-heading font-black block mb-6 text-white tracking-widest uppercase">Pawwl</span>
-          <p className="text-white/40 text-sm font-medium leading-relaxed max-w-[280px]">
+    {/* 3. Main Footer Layout (h-[261px] links base) */}
+    <div className="w-full bg-[#1b4965] flex justify-center">
+      <div className="section-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pt-16 pb-12 lg:h-[350px]">
+        {/* Brand Column */}
+        <div className="flex flex-col gap-6">
+          <span className="font-bold text-[24px] text-white tracking-tight">Pawwl</span>
+          <p className="font-normal text-[15px] leading-relaxed text-white opacity-70 max-w-[280px]">
             Your trusted partner in pet care. We provide premium services and products for your beloved companions.
           </p>
         </div>
 
         {/* Quick Links */}
-        <div className="flex flex-col">
-          <h4 className="text-sm font-black mb-6 text-white uppercase tracking-wider">Quick Links</h4>
-          <ul className="space-y-3">
+        <div className="flex flex-col gap-6">
+          <h4 className="font-semibold text-[16px] text-white">Quick Links</h4>
+          <ul className="flex flex-col gap-3">
             {quickLinks.map((link) => (
               <li key={link}>
-                <a href="#" className="text-white/40 hover:text-white transition-colors text-sm font-medium">{link}</a>
+                <a href="#" className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 transition-opacity">{link}</a>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Services */}
-        <div className="flex flex-col">
-          <h4 className="text-sm font-black mb-6 text-white uppercase tracking-wider">Services</h4>
-          <ul className="space-y-3">
+        <div className="flex flex-col gap-6">
+          <h4 className="font-semibold text-[16px] text-white">Services</h4>
+          <ul className="flex flex-col gap-3">
             {services.map((link) => (
               <li key={link}>
-                <a href="#" className="text-white/40 hover:text-white transition-colors text-sm font-medium">{link}</a>
+                <a href="#" className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 transition-opacity">{link}</a>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Contact info */}
-        <div className="flex flex-col">
-          <h4 className="text-sm font-black mb-6 text-white uppercase tracking-wider">Contact</h4>
-          <ul className="space-y-5">
+        <div className="flex flex-col gap-6 text-white">
+          <h4 className="font-semibold text-[16px]">Contact</h4>
+          <ul className="flex flex-col gap-4">
             <li className="flex items-start gap-3">
-              <MapPin size={18} className="text-white/30 shrink-0" />
-              <span className="text-white/40 text-sm font-medium leading-relaxed">
-                123 Pet Avenue, New York,<br />NY 10001
-              </span>
+              <MapPin size={18} className="opacity-60 shrink-0" />
+              <span className="font-normal text-[14px] opacity-80 leading-relaxed">123 Pet Avenue, New York, NY 10001</span>
             </li>
             <li className="flex items-center gap-3">
-              <Phone size={18} className="text-white/30 shrink-0" />
-              <span className="text-white/40 text-sm font-medium">+1 (555) 234-5678</span>
+              <Phone size={18} className="opacity-60 shrink-0" />
+              <span className="font-normal text-[14px] opacity-80">+1 (555) 234-5678</span>
             </li>
             <li className="flex items-center gap-3">
-              <Mail size={18} className="text-white/30 shrink-0" />
-              <span className="text-white/40 text-sm font-medium">hello@pawwl.com</span>
+              <Mail size={18} className="opacity-60 shrink-0" />
+              <span className="font-normal text-[14px] opacity-80">hello@pawwl.com</span>
             </li>
           </ul>
         </div>
       </div>
+    </div>
 
-      {/* 4. Bottom Bar (Moved Upward) */}
-      <div className="pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] font-bold uppercase tracking-widest text-white/20">
-        <p>&copy; 2026 Pawwl Pet Services. All Rights Reserved.</p>
-        <div className="flex gap-8">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms of Use</a>
+    {/* 4. Copyright Bar (h-[67px]) */}
+    <div className="w-full bg-[#1b4965] flex justify-center">
+      <div className="section-container flex flex-col md:flex-row justify-between items-center gap-4 py-8 lg:h-[67px] border-t border-white/20 text-[12px] text-white">
+        <p className="opacity-60 font-normal">© 2026 Pawwl Pet Services. All Rights Reserved.</p>
+        <div className="flex gap-10">
+          <a href="#" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Privacy Policy</a>
+          <a href="#" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Terms of Use</a>
         </div>
       </div>
     </div>

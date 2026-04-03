@@ -18,17 +18,28 @@ export default {
         body: ['Poppins', 'sans-serif'],
       },
       colors: {
-        border: "hsl(var(--border))",
+        brand: {
+          dark: "#012169",
+          blue: "#134e86",
+          accent: "#1b4965",
+          light: "#bbedf4",
+          "light-blue": "#58a4cf",
+        },
+        border: {
+          DEFAULT: "hsl(var(--border))",
+          design: "#dce6ee",
+          accent: "#c1e8fb",
+        },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        foreground: "#212529",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#134e86",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#bbedf4",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
