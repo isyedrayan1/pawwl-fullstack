@@ -1,4 +1,4 @@
-import heroDog from "@/assets/hero-dog.png";
+import heroDog from "@/assets/hero-dog.webp";
 import PawwlWatermark from "./PawwlWatermark";
 
 const Hero = () => (

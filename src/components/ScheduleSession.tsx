@@ -16,7 +16,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import petShopImg from "@/assets/pet_shop.png";
+import petShopImg from "@/assets/pet_shop.webp";
 
 const ScheduleSession = () => {
   const [date, setDate] = React.useState<Date>();

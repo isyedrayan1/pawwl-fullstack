@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import grooming1 from "@/assets/grooming_1.png";
-import grooming2 from "@/assets/grooming_2.png";
+import grooming1 from "@/assets/grooming_1.webp";
+import grooming2 from "@/assets/grooming_2.webp";
 
 const blogs = [
   {

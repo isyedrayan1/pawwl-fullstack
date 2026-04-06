@@ -1,10 +1,10 @@
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import puppyInBox from "@/assets/puppy_box_treats.png";
-import catWithToy from "@/assets/cat_blue_toy.png";
-import kittenPlaying from "@/assets/kitten_toy_string.png";
-import puppyGroup from "@/assets/puppy_group_care.png";
-import petAccessories from "@/assets/pet_accessories.png";
+import puppyInBox from "@/assets/puppy_box_treats.webp";
+import catWithToy from "@/assets/cat_blue_toy.webp";
+import kittenPlaying from "@/assets/kitten_toy_string.webp";
+import puppyGroup from "@/assets/puppy_group_care.webp";
+import petAccessories from "@/assets/pet_accessories.webp";
 
 const Services = () => {
   return (

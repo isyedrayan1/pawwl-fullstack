@@ -73,3 +73,18 @@
     @apply mx-auto max-w-[1128px] w-full px-6 lg:px-0;
   }
 }
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-mobile {
+  animation: marquee 20s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .animate-marquee-mobile {
+    animation: none;
+  }
+}

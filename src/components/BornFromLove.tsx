@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import bornFromLoveImg from "@/assets/born_from_love.png";
+import bornFromLoveImg from "@/assets/born_from_love.webp";
 
 const stats = [
   { value: "8+", label: "Years of Experience" },
