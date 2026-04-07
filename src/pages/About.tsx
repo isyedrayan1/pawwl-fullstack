@@ -160,35 +160,36 @@ const About = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              <div className="lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[728px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-8 items-stretch">
+              <div className="md:col-span-1 lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[728px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
                 <img 
                   src="https://images.unsplash.com/photo-1534361960057-19889db9621e?q=80&w=2670&auto=format&fit=crop" 
                   alt="Dog gallery" 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 />
               </div>
-              <div className="lg:col-span-7 flex flex-col gap-8">
-                <div className="h-[250px] sm:h-[350px] lg:h-[475px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
-                  <img 
-                    src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2669&auto=format&fit=crop" 
-                    alt="Puppies playing" 
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
-                <div className="h-auto sm:h-[221px] bg-brand-accent rounded-[28px] p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-white shadow-xl relative overflow-hidden group">
-                   <div className="flex flex-col gap-3 relative z-10">
-                     <div className="w-10 h-10 opacity-40 text-white flex items-center justify-center bg-white/10 rounded-full">
-                       <Quote size={20} fill="currentColor" />
+              <div className="md:col-span-1 lg:col-span-7 flex flex-col gap-4 sm:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-1 gap-4 sm:gap-8 h-full">
+                  <div className="h-[180px] sm:h-[300px] lg:h-[475px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
+                    <img 
+                      src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2669&auto=format&fit=crop" 
+                      alt="Puppies playing" 
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="h-[180px] sm:h-[300px] lg:h-[221px] bg-brand-accent rounded-[28px] p-4 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-white shadow-xl relative overflow-hidden group">
+                     <div className="flex flex-col gap-1 sm:gap-3 relative z-10 items-center sm:items-start">
+                       <div className="w-8 h-8 sm:w-10 sm:h-10 opacity-40 text-white flex items-center justify-center bg-white/10 rounded-full">
+                         <Quote size={16} fill="currentColor" />
+                       </div>
+                       <h4 className="font-heading font-black text-[16px] sm:text-[24px] md:text-[32px] tracking-tight text-center sm:text-left">Join our pack</h4>
+                       <p className="text-white/50 text-[10px] sm:text-sm md:text-base -mt-1 sm:-mt-2 font-medium uppercase tracking-widest">We're always hiring</p>
                      </div>
-                     <h4 className="font-heading font-black text-[24px] md:text-[32px] tracking-tight">Join our pack</h4>
-                     <p className="text-white/50 text-sm md:text-base -mt-2 font-medium uppercase tracking-widest">We're always hiring</p>
-                   </div>
-                   <Button className="relative z-10 bg-[#e8f0f6] hover:bg-white text-brand-accent rounded-xl px-10 py-6 h-auto text-[14px] font-black flex items-center gap-2.5 transition-all shadow-lg active:scale-95">
-                     View Careers <ArrowRight size={16} strokeWidth={3} />
-                   </Button>
-                   {/* Background Glow */}
-                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                     <Button className="relative z-10 bg-[#e8f0f6] hover:bg-white text-brand-accent rounded-xl px-4 sm:px-10 py-3 sm:py-6 h-auto text-[11px] sm:text-[14px] font-black flex items-center gap-2.5 transition-all shadow-lg active:scale-95">
+                       View Careers <ArrowRight size={14} strokeWidth={3} />
+                     </Button>
+                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                  </div>
                 </div>
               </div>
             </div>
