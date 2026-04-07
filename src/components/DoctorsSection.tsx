@@ -34,10 +34,10 @@ const DoctorsSection = () => {
         </div>
 
         {/* Doctors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 justify-center w-full">
           {doctors.map((vet, i) => (
-            <div key={i} className="w-full md:w-[352px] flex flex-col justify-center gap-2.5 group">
-              <div className="w-full h-[450px] rounded-[16px] overflow-hidden relative shadow-lg">
+            <div key={i} className="w-full flex flex-col justify-center gap-2.5 group">
+              <div className="w-full h-[300px] sm:h-[400px] lg:h-[450px] rounded-[16px] overflow-hidden relative shadow-lg">
                 <img 
                   src={vet.img} 
                   alt={vet.name} 
@@ -45,8 +45,8 @@ const DoctorsSection = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#003459]/20 to-transparent"></div>
               </div>
-              <div className="flex flex-col gap-1.5 self-stretch p-3 rounded-xl min-h-[140px] items-start">
-                <h3 className="font-bold text-[28px] md:text-[37.7px] leading-tight md:leading-[44.1px] text-[#003459] mb-1">
+              <div className="flex flex-col gap-1.5 self-stretch p-2 sm:p-3 rounded-xl min-h-[80px] sm:min-h-[140px] items-start">
+                <h3 className="font-bold text-[20px] sm:text-[28px] md:text-[37.7px] leading-tight md:leading-[44.1px] text-[#003459] mb-1">
                   {vet.name}
                 </h3>
                 <p className="font-semibold text-[16px] md:text-[17.9px] text-[#003459]/70">

@@ -28,7 +28,7 @@ const Products = () => {
             {/* Bottom Split Row (Bento Grid) */}
             <div className="w-full max-w-[1114px] mx-auto flex flex-col lg:flex-row gap-9">
                {/* Left Large Card */}
-               <div className="w-full lg:w-[604px] h-[500px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg">
+               <div className="w-full lg:w-[604px] h-[300px] sm:h-[400px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg">
                   <img src="/assets/productspage/prdheroimg1.webp" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Pet Model" />
                </div>
 
@@ -138,7 +138,7 @@ const Products = () => {
             </div>
 
             {/* Bottom Row Grids */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
                 { category: "In-house Food", title: "Pawwl Premium Kibble", price: "$34.99", old: "$42.99", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=400&fit=crop" },
                 { category: "Accessories", title: "Comfort Leather Collar", price: "$19.99", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&fit=crop" },
