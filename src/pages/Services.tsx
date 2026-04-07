@@ -220,26 +220,27 @@ const Services = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-10 w-full">
             {/* Left Image */}
-            <div className="lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[727px] rounded-[28px] overflow-hidden shadow-sm">
+            <div className="md:col-span-1 lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[727px] rounded-[28px] overflow-hidden shadow-sm">
                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800&h=1200&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 1" />
             </div>
-            
             {/* Right Column */}
-            <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-[15.65px]">
-               <div className="h-[250px] sm:h-[350px] lg:h-[475px] rounded-3xl overflow-hidden shadow-sm">
-                  <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
-               </div>
-               <div className="h-[237px] bg-[#1b4965] rounded-3xl flex flex-col items-center justify-center p-8 text-white relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <Mail className="w-10 h-10 mb-3 opacity-40" />
-                  <span className="font-heading font-black text-[24px] leading-[36px] mb-1">Join our pack</span>
-                  <span className="text-[14px] leading-[21px] opacity-50 mb-5 font-normal text-[#f4f4f4]">We're always hiring</span>
-                  <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] font-bold text-[12px] px-3 py-2.5 rounded-[10px] flex items-center gap-2.5 h-auto transition-colors">
-                    View Careers
-                    <ArrowUpRight size={14} className="stroke-[2.5px]" />
-                  </Button>
+            <div className="md:col-span-1 lg:col-span-7 flex flex-col gap-4 lg:gap-[15.65px]">
+               <div className="grid grid-cols-2 md:grid-cols-1 gap-4 h-full">
+                 <div className="h-[180px] sm:h-[300px] lg:h-[475px] rounded-3xl overflow-hidden shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
+                 </div>
+                 <div className="h-[180px] sm:h-[300px] lg:h-[237px] bg-[#1b4965] rounded-3xl flex flex-col items-center justify-center p-4 sm:p-8 text-white relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Mail className="w-6 h-6 sm:w-10 sm:h-10 mb-2 sm:mb-3 opacity-40" />
+                    <span className="font-heading font-black text-[14px] sm:text-[24px] leading-[1.4] mb-1">Join our pack</span>
+                    <span className="text-[10px] sm:text-[14px] leading-[21px] opacity-50 mb-3 sm:mb-5 font-normal text-[#f4f4f4]">We're always hiring</span>
+                    <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] font-bold text-[10px] sm:text-[12px] px-3 py-2 sm:py-2.5 rounded-[10px] flex items-center gap-2.5 h-auto transition-colors">
+                      View Careers
+                      <ArrowUpRight size={14} className="stroke-[2.5px]" />
+                    </Button>
+                 </div>
                </div>
             </div>
           </div>
