@@ -34,7 +34,7 @@ const DoctorsSection = () => {
         </div>
 
         {/* Doctors Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 justify-center w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 justify-center w-full">
           {doctors.map((vet, i) => (
             <div key={i} className="w-full flex flex-col justify-center gap-2.5 group">
               <div className="w-full h-[300px] sm:h-[400px] lg:h-[450px] rounded-[16px] overflow-hidden relative shadow-lg">
