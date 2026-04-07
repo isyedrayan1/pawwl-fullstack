@@ -273,23 +273,25 @@ const Careers = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 w-full items-stretch">
-            <div className="md:col-span-5 h-[500px] md:h-full rounded-[32px] overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 w-full items-stretch">
+            <div className="md:col-span-1 lg:col-span-5 h-[300px] sm:h-[400px] lg:h-full rounded-[32px] overflow-hidden">
                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800&h=1200&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 1" />
             </div>
-            <div className="md:col-span-7 flex flex-col gap-6">
-               <div className="h-[300px] md:h-[475px] rounded-[32px] overflow-hidden w-full">
-                  <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
-               </div>
-               <div className="h-[237px] bg-[#1b4965] rounded-[32px] flex flex-col items-center justify-center p-8 text-white relative overflow-hidden group w-full">
-                  <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <Mail className="w-10 h-10 mb-3 opacity-40" />
-                  <span className="font-extrabold text-[24px] mb-1">Join our pack</span>
-                  <span className="text-[14px] font-medium opacity-60 mb-5">We're always hiring</span>
-                  <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] font-black text-xs px-6 py-2.5 rounded-xl flex items-center gap-2 h-auto shadow-md">
-                    View Careers
-                    <ArrowUpRight size={14} strokeWidth={3} />
-                  </Button>
+            <div className="md:col-span-1 lg:col-span-7 flex flex-col gap-4 sm:gap-6">
+               <div className="grid grid-cols-2 md:grid-cols-1 gap-4 sm:gap-6 h-full">
+                 <div className="h-[180px] sm:h-[300px] md:h-[475px] rounded-[32px] overflow-hidden w-full">
+                    <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
+                 </div>
+                 <div className="h-[180px] sm:h-[300px] md:h-[237px] bg-[#1b4965] rounded-[32px] flex flex-col items-center justify-center p-4 sm:p-8 text-white relative overflow-hidden group w-full">
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Mail className="w-6 h-6 sm:w-10 sm:h-10 mb-2 sm:mb-3 opacity-40" />
+                    <span className="font-extrabold text-[14px] sm:text-[24px] mb-1">Join our pack</span>
+                    <span className="text-[10px] sm:text-[14px] font-medium opacity-60 mb-3 sm:mb-5">We're always hiring</span>
+                    <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] font-black text-[10px] sm:text-xs px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl flex items-center gap-2 h-auto shadow-md">
+                      View Careers
+                      <ArrowUpRight size={14} strokeWidth={3} />
+                    </Button>
+                 </div>
                </div>
             </div>
           </div>
