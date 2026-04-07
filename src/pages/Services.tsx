@@ -37,7 +37,7 @@ const Services = () => {
             </div>
 
             {/* Service Grid - Precise Alignment from Figma */}
-            <div className="w-full flex flex-wrap lg:grid lg:grid-cols-3 gap-9">
+            <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-9">
               {[
                 { 
                   icon: <Bath className="w-8 h-8" />, 
@@ -70,7 +70,7 @@ const Services = () => {
                   desc: "Reduce shedding and maintain a smooth, healthy coat." 
                 }
               ].map((service, i) => (
-                <div key={i} className="flex gap-2 bg-[#D8FAFF] p-2 rounded-3xl w-full lg:w-[347px] min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group">
+                <div key={i} className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group">
                   <div className="w-full flex flex-col gap-2 p-3">
                     <div className="text-brand-accent">
                       {service.icon}
@@ -172,7 +172,7 @@ const Services = () => {
           </div>
 
           {/* Bottom Grid Row (8 Columns) */}
-          <div className="w-full flex flex-wrap gap-4 justify-between">
+          <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { category: "In-house Food", title: "Pawwl Premium Kibble", price: "$34.99", old: "$42.99", tag: "Featured", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=300&h=300&fit=crop" },
               { category: "Accessories", title: "Comfort Leather Collar", price: "$19.99", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&h=300&fit=crop" },
@@ -183,7 +183,7 @@ const Services = () => {
               { category: "Grooming", title: "Gentle Shampoo 500ml", price: "$14.99", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&h=300&fit=crop" },
               { category: "Health & Supplements", title: "Joint Care Chews", price: "$22.99", old: "$27.99", tag: "Featured", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&h=300&fit=crop" }
             ].map((item, i) => (
-              <div key={i} className="flex-1 min-w-[240px] bg-white p-px rounded-3xl border border-solid border-[#dce6ee] group hover:shadow-xl transition-all duration-300">
+              <div key={i} className="bg-white p-px rounded-3xl border border-solid border-[#dce6ee] group hover:shadow-xl transition-all duration-300">
                 <div className="w-full p-6 flex flex-col gap-1">
                   <span className="font-medium text-[12px] text-[#788796] uppercase tracking-widest">{item.category}</span>
                   <h4 className="font-semibold text-base text-[#212529] line-clamp-1">{item.title}</h4>
@@ -220,15 +220,15 @@ const Services = () => {
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-10 w-full justify-center self-stretch h-auto lg:h-[727.65px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 w-full">
             {/* Left Image */}
-            <div className="w-full lg:w-[504px] h-[727.65px] rounded-[28px] overflow-hidden shadow-sm">
+            <div className="lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[727px] rounded-[28px] overflow-hidden shadow-sm">
                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800&h=1200&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 1" />
             </div>
             
             {/* Right Column */}
-            <div className="w-full lg:w-[600px] flex flex-col gap-[15.65px]">
-               <div className="h-[475px] rounded-3xl overflow-hidden shadow-sm">
+            <div className="lg:col-span-7 flex flex-col gap-4 lg:gap-[15.65px]">
+               <div className="h-[250px] sm:h-[350px] lg:h-[475px] rounded-3xl overflow-hidden shadow-sm">
                   <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
                </div>
                <div className="h-[237px] bg-[#1b4965] rounded-3xl flex flex-col items-center justify-center p-8 text-white relative overflow-hidden group">

@@ -72,24 +72,24 @@ const Careers = () => {
                 </div>
               </div>
 
-              <div className="w-full lg:w-[394px] h-[368px] bg-[#dce6ee] rounded-[28px] border border-[#f0f0f0] overflow-hidden relative">
+              <div className="w-full lg:w-[394px] h-[250px] sm:h-[300px] lg:h-[368px] bg-[#dce6ee] rounded-[28px] border border-[#f0f0f0] overflow-hidden relative">
                 <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=600&fit=crop" className="w-full h-full object-cover absolute inset-0" alt="Dog Working" />
               </div>
             </div>
 
             {/* Bottom Grid */}
-            <div className="w-full flex flex-col lg:flex-row items-center gap-5">
-              <div className="w-full lg:w-[359px] h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-20 rounded-[28px]">
-                <span className="font-extrabold text-[58px] text-[#00b1e0] leading-none">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+              <div className="col-span-2 sm:col-span-1 h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-10 lg:py-20 rounded-[28px]">
+                <span className="font-extrabold text-[36px] sm:text-[58px] text-[#00b1e0] leading-none">
                   We’re<br/>Hiring a<br/>Pawwrent
                 </span>
               </div>
-              <div className="w-full lg:w-[359px] h-[368px] flex flex-col justify-center items-center gap-2 px-7 py-20 rounded-[28px] relative overflow-hidden">
+              <div className="h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 px-7 py-10 lg:py-20 rounded-[28px] relative overflow-hidden">
                 <div className="w-full h-full absolute flex items-center justify-center">
                   <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog" />
                 </div>
               </div>
-              <div className="w-full lg:flex-1 h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-[27px] rounded-[28px] overflow-hidden">
+              <div className="col-span-2 lg:col-span-1 h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-[27px] rounded-[28px] overflow-hidden">
                 <div className="flex flex-col gap-4 self-stretch">
                   <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                   <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
@@ -115,7 +115,7 @@ const Careers = () => {
             </p>
           </div>
 
-          <div className="w-full max-w-[1114px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="w-full max-w-[1114px] grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {[
               { theme: "dark", title: "Growth Opportunities", desc: "Clear career paths with mentorship, internal mobility, and leadership development programs." },
               { theme: "light", title: "Flexible Work Culture", desc: "Hybrid and remote options with flexible hours so you can do your best work on your terms." },

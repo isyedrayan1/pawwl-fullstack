@@ -31,12 +31,12 @@ const About = () => {
               {/* Stats & Story Row */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
                 {/* 50K+ Block */}
-                <div className="lg:col-span-5 h-[494px] bg-brand-accent p-12 md:p-14 rounded-[28px] flex flex-col justify-between text-white relative overflow-hidden shadow-2xl">
+                <div className="lg:col-span-5 h-auto min-h-[300px] lg:h-[494px] bg-brand-accent p-8 sm:p-12 md:p-14 rounded-[28px] flex flex-col justify-between text-white relative overflow-hidden shadow-2xl">
                    <div className="opacity-20">
                      <Heart size={48} strokeWidth={1} />
                    </div>
                    <div className="flex flex-col gap-4">
-                     <span className="font-heading font-black text-[100px] md:text-[140px] leading-[0.8] tracking-tighter">50K+</span>
+                     <span className="font-heading font-black text-[72px] sm:text-[100px] md:text-[140px] leading-[0.8] tracking-tighter">50K+</span>
                      <span className="font-normal text-base md:text-lg opacity-50 uppercase tracking-widest">Pets cared for</span>
                    </div>
                    {/* Decorative circle */}
@@ -116,7 +116,7 @@ const About = () => {
                   }
                 ]
               ].map((row, rowIndex) => (
-                <div key={rowIndex} className="flex flex-col lg:flex-row justify-center gap-8 self-stretch">
+                <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 self-stretch">
                   {row.map((step) => (
                     <div 
                       key={step.id}
@@ -127,7 +127,7 @@ const About = () => {
                       <img 
                         src={step.img} 
                         alt={step.title} 
-                        className="w-[125px] h-[125px] shrink-0 object-cover rounded-2xl transition-transform group-hover:scale-105" 
+                        className="w-[80px] h-[80px] sm:w-[125px] sm:h-[125px] shrink-0 object-cover rounded-2xl transition-transform group-hover:scale-105" 
                       />
                       <div className="flex flex-col gap-1.5 self-stretch grow">
                         <span className={`font-heading font-black text-[27.6px] leading-[1.2] ${step.dark ? "text-white" : "text-brand-blue"}`}>
@@ -161,7 +161,7 @@ const About = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              <div className="lg:col-span-5 h-[500px] lg:h-[728px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
+              <div className="lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[728px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
                 <img 
                   src="https://images.unsplash.com/photo-1534361960057-19889db9621e?q=80&w=2670&auto=format&fit=crop" 
                   alt="Dog gallery" 
@@ -169,14 +169,14 @@ const About = () => {
                 />
               </div>
               <div className="lg:col-span-7 flex flex-col gap-8">
-                <div className="h-[475px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
+                <div className="h-[250px] sm:h-[350px] lg:h-[475px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
                   <img 
                     src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2669&auto=format&fit=crop" 
                     alt="Puppies playing" 
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                   />
                 </div>
-                <div className="h-[221px] bg-brand-accent rounded-[28px] p-10 flex items-center justify-between text-white shadow-xl relative overflow-hidden group">
+                <div className="h-auto sm:h-[221px] bg-brand-accent rounded-[28px] p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-white shadow-xl relative overflow-hidden group">
                    <div className="flex flex-col gap-3 relative z-10">
                      <div className="w-10 h-10 opacity-40 text-white flex items-center justify-center bg-white/10 rounded-full">
                        <Quote size={20} fill="currentColor" />
