@@ -117,25 +117,21 @@ const Careers = () => {
 
           <div className="w-full max-w-[1114px] grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { theme: "dark", title: "Growth Opportunities", desc: "Clear career paths with mentorship, internal mobility, and leadership development programs." },
-              { theme: "light", title: "Flexible Work Culture", desc: "Hybrid and remote options with flexible hours so you can do your best work on your terms." },
-              { theme: "dark", title: "Pet-Friendly Workspace", desc: "Bring your furry friend to work! Our offices are designed to welcome pets of all sizes." },
-              { theme: "light", title: "Learning & Development", desc: "Annual learning stipend, conference passes, and access to industry-leading courses." },
-              { theme: "dark", title: "Community Impact", desc: "Paid volunteer days and company-matched donations to local animal shelters." },
-              { theme: "light", title: "Wellness Benefits", desc: "Comprehensive health coverage, mental wellness support, and pet insurance for your companions." }
+              { title: "Growth Opportunities", desc: "Clear career paths with mentorship, internal mobility, and leadership development programs." },
+              { title: "Flexible Work Culture", desc: "Hybrid and remote options with flexible hours so you can do your best work on your terms." },
+              { title: "Pet-Friendly Workspace", desc: "Bring your furry friend to work! Our offices are designed to welcome pets of all sizes." },
+              { title: "Learning & Development", desc: "Annual learning stipend, conference passes, and access to industry-leading courses." },
+              { title: "Community Impact", desc: "Paid volunteer days and company-matched donations to local animal shelters." },
+              { title: "Wellness Benefits", desc: "Comprehensive health coverage, mental wellness support, and pet insurance for your companions." }
             ].map((card, i) => (
-              <div key={i} className={`flex flex-col gap-4 p-8 rounded-3xl border-2 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer ${
-                card.theme === 'dark' 
-                  ? 'bg-brand-dark border-brand-dark shadow-xl text-white' 
-                  : 'bg-brand-light-blue border-border-accent hover:border-brand-blue/30'
-              }`}>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${card.theme === 'dark' ? 'bg-white text-brand-dark' : 'bg-brand-blue text-white'}`}>
+              <div key={i} className="flex flex-col gap-4 p-6 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-2 bg-brand-dark text-white">
                   <CheckCircle2 size={24} />
                 </div>
-                <h4 className={`font-black text-[18px] leading-snug ${card.theme === 'dark' ? 'text-brand-accent' : 'text-brand-dark'}`}>
+                <h4 className="font-black text-[18px] leading-snug text-brand-dark">
                   {card.title}
                 </h4>
-                <p className={`font-medium text-sm leading-relaxed ${card.theme === 'dark' ? 'text-brand-accent/80' : 'text-foreground/80'}`}>
+                <p className="font-medium text-sm leading-relaxed text-foreground/80">
                   {card.desc}
                 </p>
               </div>
