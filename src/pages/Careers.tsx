@@ -78,7 +78,7 @@ const Careers = () => {
             </div>
 
             {/* Bottom Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+            <div className="flex flex-col gap-5 w-full sm:grid sm:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-2 sm:col-span-1 h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-10 lg:py-20 rounded-[28px]">
                 <span className="font-extrabold text-[36px] sm:text-[58px] text-[#00b1e0] leading-none">
                   We’re<br/>Hiring a<br/>Pawwrent
