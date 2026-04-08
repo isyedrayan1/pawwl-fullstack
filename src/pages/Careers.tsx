@@ -77,24 +77,22 @@ const Careers = () => {
               </div>
             </div>
 
-            {/* Bottom Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-              <div className="col-span-2 sm:col-span-1 h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-10 lg:py-20 rounded-[28px]">
-                <span className="font-extrabold text-[36px] sm:text-[58px] text-[#00b1e0] leading-none">
-                  We’re<br/>Hiring a<br/>Pawwrent
+            {/* Bottom Grid - stacks on mobile, 2-col on sm, 3-col on lg */}
+            <div className="flex flex-col gap-5 w-full sm:grid sm:grid-cols-2 lg:grid-cols-3">
+              <div className="w-full h-[200px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-8 rounded-[28px]">
+                <span className="font-extrabold text-[28px] sm:text-[36px] lg:text-[58px] text-[#00b1e0] leading-none">
+                  We're<br/>Hiring a<br/>Pawwrent
                 </span>
               </div>
-              <div className="h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 px-7 py-10 lg:py-20 rounded-[28px] relative overflow-hidden">
-                <div className="w-full h-full absolute flex items-center justify-center">
-                  <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog" />
-                </div>
+              <div className="w-full h-[200px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog" />
               </div>
-              <div className="col-span-2 lg:col-span-1 h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-[27px] rounded-[28px] overflow-hidden">
-                <div className="flex flex-col gap-4 self-stretch">
-                  <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[42px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+              <div className="w-full sm:col-span-2 lg:col-span-1 h-[200px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-5 sm:px-[27px] rounded-[28px] overflow-hidden">
+                <div className="flex flex-col gap-3 sm:gap-4 self-stretch">
+                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                 </div>
               </div>
             </div>
@@ -117,25 +115,22 @@ const Careers = () => {
 
           <div className="w-full max-w-[1114px] grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {[
-              { theme: "dark", title: "Growth Opportunities", desc: "Clear career paths with mentorship, internal mobility, and leadership development programs." },
-              { theme: "light", title: "Flexible Work Culture", desc: "Hybrid and remote options with flexible hours so you can do your best work on your terms." },
-              { theme: "dark", title: "Pet-Friendly Workspace", desc: "Bring your furry friend to work! Our offices are designed to welcome pets of all sizes." },
-              { theme: "light", title: "Learning & Development", desc: "Annual learning stipend, conference passes, and access to industry-leading courses." },
-              { theme: "dark", title: "Community Impact", desc: "Paid volunteer days and company-matched donations to local animal shelters." },
-              { theme: "light", title: "Wellness Benefits", desc: "Comprehensive health coverage, mental wellness support, and pet insurance for your companions." }
+              { title: "Growth Opportunities", desc: "Clear career paths with mentorship, internal mobility, and leadership development programs." },
+              { title: "Flexible Work Culture", desc: "Hybrid and remote options with flexible hours so you can do your best work on your terms." },
+              { title: "Pet-Friendly Workspace", desc: "Bring your furry friend to work! Our offices are designed to welcome pets of all sizes." },
+              { title: "Learning & Development", desc: "Annual learning stipend, conference passes, and access to industry-leading courses." },
+              { title: "Community Impact", desc: "Paid volunteer days and company-matched donations to local animal shelters." },
+              { title: "Wellness Benefits", desc: "Comprehensive health coverage, mental wellness support, and pet insurance for your companions." }
             ].map((card, i) => (
-              <div key={i} className={`flex flex-col gap-4 p-8 rounded-3xl border-2 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer ${
-                card.theme === 'dark' 
-                  ? 'bg-brand-dark border-brand-dark shadow-xl text-white' 
-                  : 'bg-brand-light-blue border-border-accent hover:border-brand-blue/30'
-              }`}>
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 ${card.theme === 'dark' ? 'bg-white text-brand-dark' : 'bg-brand-blue text-white'}`}>
-                  <CheckCircle2 size={24} />
+              <div key={i} className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-1 sm:mb-2 bg-brand-dark text-white">
+                  <CheckCircle2 size={20} className="sm:hidden" />
+                  <CheckCircle2 size={24} className="hidden sm:block" />
                 </div>
-                <h4 className={`font-black text-[18px] leading-snug ${card.theme === 'dark' ? 'text-brand-accent' : 'text-brand-dark'}`}>
+                <h4 className="font-black text-[15px] sm:text-[18px] leading-snug text-brand-dark">
                   {card.title}
                 </h4>
-                <p className={`font-medium text-sm leading-relaxed ${card.theme === 'dark' ? 'text-brand-accent/80' : 'text-foreground/80'}`}>
+                <p className="font-medium text-xs sm:text-sm leading-relaxed text-foreground/80">
                   {card.desc}
                 </p>
               </div>
@@ -149,7 +144,7 @@ const Careers = () => {
 
       {/* Find Your Role */}
       <section className="w-full flex justify-center bg-white py-16 lg:py-24">
-        <div className="w-[1440px] flex flex-col items-center gap-8 bg-white px-6 lg:px-40 py-12">
+        <div className="w-full max-w-[1440px] flex flex-col items-center gap-8 bg-white px-6 lg:px-40 py-12">
           
           <div className="flex flex-col items-center gap-3 self-stretch">
             <div className="w-full lg:w-[900px] flex flex-col items-center gap-3">
@@ -157,7 +152,7 @@ const Careers = () => {
                 Find Your Purr-fect Role
               </span>
               <span className="font-normal text-[18px] md:text-[20px] leading-[24px] text-center text-[#134e86]">
-                Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special.”
+                Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special."
               </span>
             </div>
           </div>
@@ -311,7 +306,7 @@ const Careers = () => {
             <div className="lg:col-span-6 bg-[#1b4965] rounded-[28px] p-8 md:p-14 text-white flex flex-col gap-10 shadow-xl relative overflow-hidden">
               <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)]" style={{backgroundSize: '20px 20px'}}></div>
               <p className="text-[28px] md:text-[32px] font-normal leading-tight relative z-10">
-                “Game-changer for our golden retriever. The staff truly cares.”
+                "Game-changer for our golden retriever. The staff truly cares."
               </p>
               <div className="flex gap-1 relative z-10">
                  {[1,2,3,4,5].map(i => (
@@ -333,13 +328,13 @@ const Careers = () => {
             <div className="lg:col-span-6 flex flex-col gap-5">
               {[
                 { 
-                  text: '“Outstanding vet care. Every single visit is amazing.”',
+                  text: '"Outstanding vet care. Every single visit is amazing."',
                   name: "Ankita Vashisht",
                   role: "Cat Parent",
                   img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
                 },
                 {
-                  text: '“My pup comes home tired and happy every single day!”',
+                  text: '"My pup comes home tired and happy every single day!"',
                   name: "Aarti Sharma",
                   role: "Pet Parent",
                   img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop"
