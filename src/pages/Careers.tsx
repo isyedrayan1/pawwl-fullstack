@@ -77,22 +77,25 @@ const Careers = () => {
               </div>
             </div>
 
-            {/* Bottom Grid - stacks on mobile, 2-col on sm, 3-col on lg */}
-            <div className="flex flex-col gap-5 w-full sm:grid sm:grid-cols-2 lg:grid-cols-3">
-              <div className="w-full h-[200px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-7 py-8 rounded-[28px]">
-                <span className="font-extrabold text-[28px] sm:text-[36px] lg:text-[58px] text-[#00b1e0] leading-none">
+            {/* Bottom Grid - bento 2-col on mobile, 3-col on lg */}
+            <div className="grid grid-cols-2 gap-4 sm:gap-5 w-full lg:grid-cols-3">
+              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-5 py-6 rounded-[28px]">
+                <span className="font-extrabold text-[22px] sm:text-[36px] lg:text-[58px] text-[#00b1e0] leading-none text-center">
                   We're<br/>Hiring a<br/>Pawwrent
                 </span>
               </div>
-              <div className="w-full h-[200px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
+              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog" />
               </div>
-              <div className="w-full sm:col-span-2 lg:col-span-1 h-[200px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-5 sm:px-[27px] rounded-[28px] overflow-hidden">
-                <div className="flex flex-col gap-3 sm:gap-4 self-stretch">
-                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
-                  <span className="font-extrabold text-[28px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog 2" />
+              </div>
+              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-4 sm:px-[27px] rounded-[28px] overflow-hidden">
+                <div className="flex flex-col gap-2 sm:gap-4 self-stretch">
+                  <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
+                  <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                 </div>
               </div>
             </div>
