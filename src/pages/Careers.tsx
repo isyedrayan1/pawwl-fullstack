@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import DoctorsSection from "@/components/DoctorsSection";
+import PetGallery from "@/components/PetGallery";
+import Testimonials from "@/components/Testimonials";
+import thirdCardImg from "@/assets/home/careers/3rdcard.svg";
+import fifthCardImg from "@/assets/home/careers/5thcard.svg";
 
 const Careers = () => {
   const jobs = [
@@ -58,10 +62,12 @@ const Careers = () => {
               </div>
             </div>
 
-            {/* Middle Grid */}
-            <div className="flex flex-col lg:flex-row gap-5 w-full">
-              <div className="w-full lg:flex-1 h-auto lg:h-[368px] flex flex-col justify-center gap-4 bg-white px-8 md:px-12 py-10 lg:py-0 lg:px-[50px] rounded-[28px] border border-[#c1e8fb]">
-                <div className="flex flex-col">
+            {/* Bento Grid Layout */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 w-full">
+              
+              {/* Card 2: Careers Text */}
+              <div className="col-span-2 lg:col-span-2 h-auto lg:h-[368px] flex flex-col justify-center gap-4 bg-white px-8 md:px-12 py-10 lg:py-0 lg:px-[50px] rounded-[28px] border border-[#c1e8fb] items-start text-left">
+                <div className="flex flex-col items-start text-left">
                   <span className="font-bold text-[48px] md:text-[68px] text-[#00356b] leading-tight mb-2">Careers</span>
                   <span className="font-bold text-[20px] md:text-[24px] text-[#00356b] leading-snug mb-4">
                     Your PET probably wants you to come work here.
@@ -72,25 +78,26 @@ const Careers = () => {
                 </div>
               </div>
 
-              <div className="w-full lg:w-[394px] h-[250px] sm:h-[300px] lg:h-[368px] bg-[#dce6ee] rounded-[28px] border border-[#f0f0f0] overflow-hidden relative">
-                <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=600&fit=crop" className="w-full h-full object-cover absolute inset-0" alt="Dog Working" />
+              {/* Card 3: Image Card (was in row 2) */}
+              <div className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] bg-white rounded-[28px] border border-[#c1e8fb] overflow-hidden relative">
+                <img src={thirdCardImg} className="w-full h-full object-cover" alt="Dog Working" />
               </div>
-            </div>
 
-            {/* Bottom Grid - bento 2-col on mobile, 3-col on lg */}
-            <div className="grid grid-cols-2 gap-4 sm:gap-5 w-full lg:grid-cols-3">
-              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-center gap-2 bg-brand-dark px-5 py-6 rounded-[28px]">
-                <span className="font-extrabold text-[22px] sm:text-[36px] lg:text-[58px] text-[#00b1e0] leading-none text-center">
+              {/* Row 3 equivalent cards (4, 5, 6) */}
+              {/* Card 4: Hiring */}
+              <div className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-start gap-2 bg-[#142535] px-6 md:px-10 lg:px-12 py-6 rounded-[28px]">
+                <span className="font-extrabold text-[20px] sm:text-[36px] lg:text-[52px] text-[#00b1e0] leading-none text-left">
                   We're<br/>Hiring a<br/>Pawwrent
                 </span>
               </div>
-              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog" />
+
+              {/* Card 5: Image Card */}
+              <div className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
+                <img src={fifthCardImg} className="w-full h-full object-cover" alt="Dog" />
               </div>
-              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=500&fit=crop" className="w-full h-full object-cover" alt="Dog 2" />
-              </div>
-              <div className="w-full h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-4 sm:px-[27px] rounded-[28px] overflow-hidden">
+
+              {/* Card 6: Pet Groomers */}
+              <div className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-4 sm:px-[27px] rounded-[28px] overflow-hidden">
                 <div className="flex flex-col gap-2 sm:gap-4 self-stretch">
                   <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                   <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
@@ -98,6 +105,7 @@ const Careers = () => {
                   <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                 </div>
               </div>
+
             </div>
 
           </div>
@@ -260,120 +268,11 @@ const Careers = () => {
       </section>
 
       {/* Gallery Section */}
-      <section className="bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center">
-        <div className="w-full max-w-[1216px] flex flex-col items-center gap-12">
-          <div className="flex flex-col items-center gap-3 text-center max-w-[800px]">
-            <h2 className="font-extrabold text-[32px] md:text-[48px] leading-tight text-[#012169]">
-              Whiskers, Tails, and Joyful Eyes<br />A Gallery Full of Love
-            </h2>
-            <p className="font-medium text-[16px] md:text-[20px] leading-relaxed text-[#134e86] opacity-80">
-              Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 w-full items-stretch">
-            <div className="md:col-span-1 lg:col-span-5 h-[300px] sm:h-[400px] lg:h-full rounded-[32px] overflow-hidden">
-               <img src="https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800&h=1200&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 1" />
-            </div>
-            <div className="md:col-span-1 lg:col-span-7 flex flex-col gap-4 sm:gap-6">
-               <div className="grid grid-cols-2 md:grid-cols-1 gap-4 sm:gap-6 h-full">
-                 <div className="h-[180px] sm:h-[300px] md:h-[475px] rounded-[32px] overflow-hidden w-full">
-                    <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=1000&h=800&fit=crop" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" alt="Pets 2" />
-                 </div>
-                 <div className="h-[180px] sm:h-[300px] md:h-[237px] bg-[#1b4965] rounded-[32px] flex flex-col items-center justify-center p-4 sm:p-8 text-white relative overflow-hidden group w-full">
-                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Mail className="w-6 h-6 sm:w-10 sm:h-10 mb-2 sm:mb-3 opacity-40" />
-                    <span className="font-extrabold text-[14px] sm:text-[24px] mb-1">Join our pack</span>
-                    <span className="text-[10px] sm:text-[14px] font-medium opacity-60 mb-3 sm:mb-5">We're always hiring</span>
-                    <Button className="bg-[#e8f0f6] hover:bg-white text-[#1b4965] font-black text-[10px] sm:text-xs px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl flex items-center gap-2 h-auto shadow-md">
-                      View Careers
-                      <ArrowUpRight size={14} strokeWidth={3} />
-                    </Button>
-                 </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PetGallery />
 
       {/* Testimonials Section */}
-      <section className="bg-[#f8fbff] px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center border-t border-[#dce6ee]">
-        <div className="w-full max-w-[1440px] flex flex-col items-center gap-12 lg:p-[50px] bg-white rounded-[32px] shadow-sm border border-[#dce6ee]">
-          <div className="max-w-[900px] flex flex-col items-center gap-4 text-center">
-            <h2 className="font-extrabold text-[36px] md:text-[48px] text-[#012169]">What other Pawrents say</h2>
-            <p className="font-medium text-[18px] md:text-[20px] text-[#134e86] opacity-80">Stories from pet parents who choose Pawwl with confidence.</p>
-          </div>
+      <Testimonials />
 
-          <div className="w-full max-w-[1120px] grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Main Testimonial */}
-            <div className="lg:col-span-6 bg-[#1b4965] rounded-[28px] p-8 md:p-14 text-white flex flex-col gap-10 shadow-xl relative overflow-hidden">
-              <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)]" style={{backgroundSize: '20px 20px'}}></div>
-              <p className="text-[28px] md:text-[32px] font-normal leading-tight relative z-10">
-                "Game-changer for our golden retriever. The staff truly cares."
-              </p>
-              <div className="flex gap-1 relative z-10">
-                 {[1,2,3,4,5].map(i => (
-                   <Star key={i} size={16} fill="#5fa8d3" className="text-[#5fa8d3]" />
-                 ))}
-              </div>
-              <div className="flex items-center gap-4 mt-auto relative z-10">
-                 <div className="w-14 h-14 rounded-full border-2 border-[#dce6ee] p-0.5 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop" className="w-full h-full object-cover rounded-full" alt="Ayushi" />
-                 </div>
-                 <div className="flex flex-col">
-                    <span className="font-bold text-base">Ayushi Mishra</span>
-                    <span className="text-sm opacity-50 font-medium">Dog Parent</span>
-                 </div>
-              </div>
-            </div>
-
-            {/* Smaller Testimonials */}
-            <div className="lg:col-span-6 flex flex-col gap-5">
-              {[
-                { 
-                  text: '"Outstanding vet care. Every single visit is amazing."',
-                  name: "Ankita Vashisht",
-                  role: "Cat Parent",
-                  img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop"
-                },
-                {
-                  text: '"My pup comes home tired and happy every single day!"',
-                  name: "Aarti Sharma",
-                  role: "Pet Parent",
-                  img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop"
-                }
-              ].map((test, i) => (
-                <div key={i} className="flex-1 bg-white p-8 rounded-3xl border-2 border-[#dce6ee] flex flex-col justify-between hover:border-[#1b4965]/30 transition-colors shadow-sm">
-                  <div className="flex gap-1 mb-4">
-                     {[1,2,3,4,5].map(j => (
-                       <Star key={j} size={14} fill="#1b4965" className="text-[#1b4965]" />
-                     ))}
-                  </div>
-                  <p className="font-medium text-[16px] leading-[1.6] text-[#212529] mb-6">
-                    {test.text}
-                  </p>
-                  <div className="flex items-center gap-3 mt-auto">
-                    <div className="w-10 h-10 rounded-full border-2 border-[#dce6ee] p-px overflow-hidden">
-                      <img src={test.img} className="w-full h-full object-cover rounded-full" alt={test.name} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[14px] text-[#212529] leading-tight">{test.name}</span>
-                      <span className="font-medium text-[12px] text-[#788796]">{test.role}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Developer Test Link */}
-      <div className="w-full bg-[#f8fbff] flex justify-center items-center py-6 border-b border-[#dce6ee]">
-         <Link to="/careers/1" className="text-sm font-bold text-[#0071f3] hover:underline flex items-center gap-2">
-            Test clicking here to open Career CMS Dummy Page
-         </Link>
-      </div>
 
       <Footer />
     </div>

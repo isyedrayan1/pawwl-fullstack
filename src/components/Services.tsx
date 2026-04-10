@@ -138,34 +138,36 @@ const Services = () => {
               ))}
             </div>
 
-            {/* Row 3: Accessories & Day Care */}
-            <div className="flex flex-row gap-[32.3px] items-start w-full">
+            {/* Row 3: Accessories & Day Care - Perfectly Aligned Containers */}
+            <div className="flex flex-row gap-[32.3px] items-end w-full">
               {/* Accessories Card */}
-              <div className="w-[480px] h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group flex-shrink-0">
-                <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-[410px]">
-                  <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Wide Range of Accessories for Pets</h4>
-                  <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetud.</p>
-                </div>
-                <div className="absolute bottom-4 left-6 w-[151px] h-[30px] flex justify-center items-center gap-3 bg-[#134e86] rounded-[20px] z-10">
-                  <span className="font-bold text-[10px] text-[#fffbf2]">Pawwl Select Product</span>
-                  <ArrowUpRight size={9} className="text-[#fffbf2]" />
-                </div>
-                <div className="absolute right-0 bottom-0 h-full w-[200px] z-0">
-                   <div className="absolute right-0 bottom-0 w-[130px] h-[95px]">
-                     <img src={lrow11} alt="" className="w-full h-full object-contain object-right-bottom" />
-                   </div>
-                   <div className="absolute right-14 bottom-0 w-[140px] h-20">
+              <div className="w-[480px] h-[150px] flex items-end relative overflow-visible flex-shrink-0">
+                <div className="w-[480px] h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group">
+                  <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-[410px]">
+                    <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Wide Range of Accessories for Pets</h4>
+                    <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetud.</p>
+                  </div>
+                  <div className="absolute bottom-4 left-6 px-6 py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-3 cursor-pointer z-10 transition-transform hover:scale-105">
+                    <span className="font-bold text-[10px] text-[#fffbf2]">Pawwl Select Product</span>
+                    <ArrowUpRight size={10} className="text-[#fffbf2]" />
+                  </div>
+                  <div className="absolute right-0 bottom-0 h-full w-[200px] z-0">
+                    <div className="absolute right-0 bottom-0 w-[130px] h-[95px]">
+                      <img src={lrow11} alt="" className="w-full h-full object-contain object-right-bottom" />
+                    </div>
+                    <div className="absolute right-14 bottom-0 w-[140px] h-20">
                       <img src={lrow1} alt="" className="w-full h-full object-contain object-bottom" />
-                   </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Day Care Card */}
-              <div className="flex-1 w-[662px] min-h-[150px] relative overflow-visible flex items-end">
-                <div className="absolute top-0 left-0 w-full h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl z-0 overflow-visible">
-                   <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-[641px]">
+              <div className="flex-1 min-h-[150px] relative overflow-visible flex items-end">
+                <div className="w-full h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative z-0">
+                   <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-full sm:max-w-[340px]">
                     <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Best Day Care in Town!</h4>
-                    <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetur. Aliquam enim nullam et arcu dui.</p>
+                    <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetur.</p>
                   </div>
                   {/* Pill Button */}
                   <div className="absolute bottom-4 left-6 px-6 py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-3 cursor-pointer z-10 transition-transform hover:scale-105">

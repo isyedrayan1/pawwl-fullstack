@@ -1,20 +1,23 @@
 import React from 'react';
+import doc1 from "@/assets/doccards/doc1.png";
+import doc2 from "@/assets/doccards/doc2.png";
+import doc3 from "@/assets/doccards/doc3.png";
 
 const doctors = [
   { 
     name: "Fur haven", 
     role: "Pet Care Manager", 
-    img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=600&fit=crop" 
+    img: doc1 
   },
   { 
     name: "Corrie Orvis", 
     role: "Veterinarian", 
-    img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=500&h=600&fit=crop" 
+    img: doc2 
   },
   { 
     name: "Canine Comforts", 
     role: "Dog Trainer", 
-    img: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=500&h=600&fit=crop" 
+    img: doc3 
   }
 ];
 
@@ -34,24 +37,23 @@ const DoctorsSection = () => {
         </div>
 
         {/* Doctors Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 justify-center w-full">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-8 w-full">
           {doctors.map((vet, i) => (
-            <div key={i} className="w-full flex flex-col justify-center gap-2.5 group">
-              <div className="w-full h-[300px] sm:h-[400px] lg:h-[450px] rounded-[16px] overflow-hidden relative shadow-lg">
+            <div key={i} className="w-full max-w-[352px] lg:w-[352px] flex flex-col items-start gap-2.5 group">
+              <div className="w-full h-[450px] rounded-[32px] overflow-hidden relative">
                 <img 
                   src={vet.img} 
                   alt={vet.name} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#003459]/20 to-transparent"></div>
               </div>
-              <div className="flex flex-col gap-1.5 self-stretch p-2 sm:p-3 rounded-xl min-h-[80px] sm:min-h-[140px] items-start">
-                <h3 className="font-bold text-[20px] sm:text-[28px] md:text-[37.7px] leading-tight md:leading-[44.1px] text-[#003459] mb-1">
+              <div className="flex flex-col gap-1.5 self-stretch p-3">
+                <span className="font-bold text-[26px] md:text-[34px] lg:text-[37.7px] tracking-tight leading-tight md:leading-[44.1px] text-[#003459] w-full text-left whitespace-nowrap overflow-hidden text-ellipsis">
                   {vet.name}
-                </h3>
-                <p className="font-semibold text-[16px] md:text-[17.9px] text-[#003459]/70">
+                </span>
+                <span className="font-semibold text-[16px] md:text-[17.9px] text-[#003459] w-full text-left">
                   {vet.role}
-                </p>
+                </span>
               </div>
             </div>
           ))}

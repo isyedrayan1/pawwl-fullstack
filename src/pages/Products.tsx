@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowRight, Star, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import DoctorsSection from "@/components/DoctorsSection";
+import Testimonials from "@/components/Testimonials";
 
 const Products = () => {
   return (
@@ -233,61 +234,7 @@ const Products = () => {
       <DoctorsSection />
 
       {/* 6. Testimonials Section */}
-      <section className="bg-white flex justify-center w-full px-6 md:px-12 lg:px-40 py-16 lg:py-24">
-        <div className="w-full max-w-[1440px] flex flex-col items-center gap-20 bg-white">
-          <div className="max-w-[900px] flex flex-col items-center gap-3 text-center">
-            <h2 className="font-heading font-black text-[36px] md:text-[48px] text-[#012169]">What other Pawrents say</h2>
-            <p className="font-normal text-[18px] md:text-[20px] text-[#134e86] opacity-80">Stories from pet parents who choose Pawwl with confidence.</p>
-          </div>
-
-          <div className="w-full max-w-[1120px] flex flex-col lg:flex-row gap-8 items-stretch">
-            {/* Main Testimonial */}
-            <div className="lg:w-[598px] h-[477px] bg-[#1b4965] rounded-[28px] p-8 md:p-14 text-white flex flex-col gap-10 shadow-xl relative overflow-hidden group">
-              <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)]" style={{backgroundSize: '20px 20px'}}></div>
-              <Quote className="w-14 h-14 opacity-10" />
-              <p className="text-[28px] md:text-[32px] font-normal leading-tight relative z-10 max-w-[486px]">
-                “Game-changer for our golden retriever. The staff truly cares.”
-              </p>
-              <div className="flex gap-1 relative z-10">
-                 {[1,2,3,4,5].map(i => <Star key={i} fill="#5fa8d3" className="w-5 h-5 text-[#5fa8d3]" />)}
-              </div>
-              <div className="flex items-center gap-4 mt-auto relative z-10">
-                 <div className="w-14 h-14 rounded-full border-2 border-[#dce6ee] p-0.5 overflow-hidden">
-                    <img src="https://i.pravatar.cc/150?u=ayushi" className="w-full h-full object-cover rounded-full" alt="Ayushi" />
-                 </div>
-                 <div className="flex flex-col">
-                    <span className="font-bold text-base">Ayushi Mishra</span>
-                    <span className="text-sm opacity-50">Dog Parent</span>
-                 </div>
-              </div>
-            </div>
-
-            {/* Side Column items */}
-            <div className="lg:w-[500px] h-auto lg:h-[477px] flex flex-col gap-5">
-              {[
-                { name: "Ankita Vashisht", role: "Cat Parent", text: "“Outstanding vet care. Every single visit is amazing.”", img: "https://i.pravatar.cc/150?u=ankita", h: "228px" },
-                { name: "Aarti Sharma", role: "Pet Parent", text: "“My pup comes home tired and happy every single day!”", img: "https://i.pravatar.cc/150?u=aarti", h: "229px" }
-              ].map((t, i) => (
-                <div key={i} className={`flex-1 bg-white border border-solid border-[#dce6ee] rounded-3xl p-8 flex flex-col justify-center gap-4 shadow-sm hover:shadow-md transition-shadow`}>
-                  <div className="flex gap-1">
-                    {[1,2,3,4,5].map(j => <Star key={j} fill="#1b4965" className="w-4 h-4 text-[#1b4965]" />)}
-                  </div>
-                  <p className="text-base text-[#212529] font-normal leading-relaxed">{t.text}</p>
-                  <div className="flex items-center gap-3 mt-auto">
-                    <div className="w-10 h-10 rounded-full border border-[#dce6ee] overflow-hidden">
-                       <img src={t.img} className="w-full h-full object-cover" alt={t.name} />
-                    </div>
-                    <div className="flex flex-col">
-                       <span className="font-semibold text-sm text-[#212529]">{t.name}</span>
-                       <span className="text-xs text-[#788796]">{t.role}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <Testimonials />
 
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import { ShoppingBasket, Heart, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const navLinks = [
@@ -15,11 +15,38 @@ const navLinks = [
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      
+      // 1. Only hide if we've scrolled more than 10px (debouncing small movements)
+      if (Math.abs(prevScrollPos - currentScrollPos) < 10) return;
+
+      // 2. Determine visibility
+      const isVisible = prevScrollPos > currentScrollPos || currentScrollPos < 80;
+      
+      setVisible(isVisible);
+      setPrevScrollPos(currentScrollPos);
+      setHasScrolled(currentScrollPos > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
+
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-[#dce6ee] h-[75px] flex items-center w-full">
-      <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-[141px] flex items-center justify-between h-full">
+    <>
+      <nav 
+        className={`fixed top-0 left-0 right-0 z-[100] bg-white transition-all duration-300 ease-in-out h-[75px] flex items-center w-full ${
+          visible ? "translate-y-0 shadow-sm" : "-translate-y-full"
+        } ${hasScrolled ? "border-b border-[#dce6ee]" : "border-none"}`}
+      >
+        <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-[141px] flex items-center justify-between h-full">
         {/* Logo Section */}
         <Link to="/" className="flex items-center">
           <span className="text-[28px] font-bold text-brand-dark leading-[42px] tracking-tight">Pawwl</span>
@@ -95,7 +122,9 @@ const Navbar = () => {
           </Button>
         </div>
       )}
-    </nav>
+      </nav>
+      <div className="h-[75px]" />
+    </>
   );
 };
 

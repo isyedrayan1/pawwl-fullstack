@@ -4,6 +4,8 @@ import PawwlWatermark from "@/components/PawwlWatermark";
 import { ArrowRight, Star, Quote, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DoctorsSection from "@/components/DoctorsSection";
+import PetGallery from "@/components/PetGallery";
+import Testimonials from "@/components/Testimonials";
 
 const About = () => {
   return (
@@ -149,127 +151,10 @@ const About = () => {
         <DoctorsSection />
 
         {/* Section 4: Gallery */}
-        <section className="py-24 bg-white">
-          <div className="section-container">
-            <div className="max-w-[900px] mx-auto text-center mb-16 flex flex-col gap-4">
-              <h2 className="font-heading font-extrabold text-[40px] md:text-[48px] text-brand-dark leading-tight">
-                Whiskers, Tails, and Joyful Eyes<br />A Gallery Full of Love
-              </h2>
-              <p className="text-[20px] text-brand-blue/80 max-w-3xl mx-auto">
-                Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and care that makes every companion feel special.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-8 items-stretch">
-              <div className="md:col-span-1 lg:col-span-5 h-[300px] sm:h-[400px] lg:h-[728px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
-                <img 
-                  src="https://images.unsplash.com/photo-1534361960057-19889db9621e?q=80&w=2670&auto=format&fit=crop" 
-                  alt="Dog gallery" 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <div className="md:col-span-1 lg:col-span-7 flex flex-col gap-4 sm:gap-8">
-                <div className="grid grid-cols-2 md:grid-cols-1 gap-4 sm:gap-8 h-full">
-                  <div className="h-[180px] sm:h-[300px] lg:h-[475px] rounded-[28px] overflow-hidden shadow-xl border border-border-design/30">
-                    <img 
-                      src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=2669&auto=format&fit=crop" 
-                      alt="Puppies playing" 
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <div className="h-[180px] sm:h-[300px] lg:h-[221px] bg-brand-accent rounded-[28px] p-4 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-white shadow-xl relative overflow-hidden group">
-                     <div className="flex flex-col gap-1 sm:gap-3 relative z-10 items-center sm:items-start">
-                       <div className="w-8 h-8 sm:w-10 sm:h-10 opacity-40 text-white flex items-center justify-center bg-white/10 rounded-full">
-                         <Quote size={16} fill="currentColor" />
-                       </div>
-                       <h4 className="font-heading font-black text-[16px] sm:text-[24px] md:text-[32px] tracking-tight text-center sm:text-left">Join our pack</h4>
-                       <p className="text-white/50 text-[10px] sm:text-sm md:text-base -mt-1 sm:-mt-2 font-medium uppercase tracking-widest">We're always hiring</p>
-                     </div>
-                     <Button className="relative z-10 bg-[#e8f0f6] hover:bg-white text-brand-accent rounded-xl px-4 sm:px-10 py-3 sm:py-6 h-auto text-[11px] sm:text-[14px] font-black flex items-center gap-2.5 transition-all shadow-lg active:scale-95">
-                       View Careers <ArrowRight size={14} strokeWidth={3} />
-                     </Button>
-                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PetGallery />
 
         {/* Section 5: Testimonials */}
-        <section className="py-24 bg-white pb-32">
-          <div className="section-container">
-            <div className="max-w-[900px] mx-auto text-center mb-20 flex flex-col gap-4">
-              <h2 className="font-heading font-extrabold text-[40px] md:text-[48px] text-brand-dark">
-                What other Pawrents say
-              </h2>
-              <p className="text-[20px] text-brand-blue/80">
-                Stories from pet parents who choose Pawwl with confidence.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              {/* Featured Testimonial Card */}
-              <div className="lg:col-span-6 bg-brand-accent p-12 md:p-14 rounded-[28px] text-white flex flex-col justify-between gap-12 relative overflow-hidden group shadow-2xl">
-                <Quote className="w-16 h-16 text-white/5 absolute -top-4 -left-4" fill="currentColor" />
-                <div className="relative z-10 flex flex-col gap-10">
-                  <div className="flex gap-1.5">
-                    {[1,2,3,4,5].map(i => <Star key={i} size={24} className="fill-brand-light-blue text-brand-light-blue" />)}
-                  </div>
-                  <p className="text-[28px] md:text-[36px] leading-[1.25] font-normal italic tracking-tight">
-                    “Game-changer for our golden retriever. The staff truly cares.”
-                  </p>
-                </div>
-                <div className="relative z-10 flex items-center gap-5 pt-8 border-t border-white/10">
-                  <div className="w-16 h-16 rounded-full border-2 border-border-design/30 overflow-hidden p-1 bg-white/5">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop" alt="Ayushi" className="w-full h-full object-cover rounded-full" />
-                  </div>
-                  <div>
-                    <p className="font-heading font-bold text-xl tracking-tight">Ayushi Mishra</p>
-                    <p className="text-sm text-white/50 uppercase tracking-widest font-medium">Dog Parent</p>
-                  </div>
-                </div>
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/5 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
-              </div>
-
-              {/* Smaller Side Cards */}
-              <div className="lg:col-span-6 flex flex-col gap-6">
-                {[
-                  {
-                    text: "“Outstanding vet care. Every single visit is amazing.”",
-                    name: "Ankita Vashisht",
-                    role: "Cat Parent",
-                    img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop"
-                  },
-                  {
-                    text: "“My pup comes home tired and happy every single day!”",
-                    name: "Aarti Sharma",
-                    role: "Pet Parent",
-                    img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1976&auto=format&fit=crop"
-                  }
-                ].map((testimonial, i) => (
-                  <div key={i} className="bg-white border border-border-design p-10 rounded-3xl flex flex-col gap-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 group">
-                    <div className="flex gap-1">
-                      {[1,2,3,4,5].map(i => <Star key={i} size={18} className="fill-brand-accent text-brand-accent group-hover:scale-110 transition-transform" />)}
-                    </div>
-                    <p className="text-[20px] text-foreground font-normal leading-[1.6] italic">
-                      {testimonial.text}
-                    </p>
-                    <div className="flex items-center gap-4 pt-4 border-t border-border-design/50">
-                      <div className="w-12 h-12 rounded-full border border-border-design overflow-hidden p-1 shadow-sm">
-                        <img src={testimonial.img} alt={testimonial.name} className="w-full h-full object-cover rounded-full" />
-                      </div>
-                      <div>
-                        <p className="font-heading font-bold text-[18px] text-foreground tracking-tight">{testimonial.name}</p>
-                        <p className="text-sm text-[#788796] font-medium">{testimonial.role}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        <Testimonials />
       </main>
 
       <Footer />
