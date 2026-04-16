@@ -18,9 +18,9 @@ const ProductDetails = () => {
         <div className="w-full max-w-[1114px] px-6 lg:px-0 flex items-center gap-3">
           <span className="font-medium text-xs text-[#b1b1b1] cursor-pointer hover:underline uppercase tracking-wider">Home</span>
           <ChevronRight size={12} className="text-[#b1b1b1]" />
-          <span className="font-medium text-xs text-[#b1b1b1] cursor-pointer hover:underline uppercase tracking-wider">Dog Food</span>
+          <span className="font-medium text-xs text-[#b1b1b1] cursor-pointer hover:underline uppercase tracking-wider">Dry Food</span>
           <ChevronRight size={12} className="text-[#b1b1b1]" />
-          <span className="font-medium text-xs text-[#191919] uppercase tracking-wider">Premium Nutrition Formula</span>
+          <span className="font-medium text-xs text-[#191919] uppercase tracking-wider">Premium Dog Kibble</span>
         </div>
       </div>
 
@@ -50,9 +50,9 @@ const ProductDetails = () => {
 
           {/* Right: Product Details */}
           <div className="flex-1 flex flex-col pt-2">
-            <span className="text-[#0071f3] font-bold text-[11px] tracking-widest uppercase underline mb-3">Pawwl Nutrition</span>
+            <span className="text-[#0071f3] font-bold text-[11px] tracking-widest uppercase underline mb-3">Pawwl In-house Nutrition</span>
             <h1 className="text-[38px] md:text-[44px] font-extrabold leading-tight text-[#191919] mb-4">
-              Premium Nutrition Formula
+              Premium Dog Kibble
             </h1>
             
             {/* Rating */}
@@ -163,7 +163,7 @@ const ProductDetails = () => {
               <div className="flex flex-col gap-2">
                 <span className="font-bold text-[15px] text-[#191919]">Key Benefits</span>
                 <p className="font-normal text-[14px] leading-relaxed text-[#555555]">
-                  Pawwl Premium Nutrition Formula is crafted with real chicken as the first ingredient, combined with a proprietary blend of superfoods, probiotics, and essential vitamins. Designed to support healthy digestion, strong joints, and a shiny coat. Our recipe is developed with leading veterinary nutritionists to provide complete and balanced nutrition for dogs of all breeds and life stages.
+                  Pawwl Premium Dog Kibble is made with real chicken as the first ingredient, blended with wholesome grains, vegetables and essential vitamins. Designed to support healthy digestion, strong joints and a shiny coat — complete and balanced nutrition for adult dogs of all breeds.
                 </p>
               </div>
               <div className="flex flex-col gap-2">
@@ -315,10 +315,10 @@ const ProductDetails = () => {
           
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: "Organic Training Treats", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&fit=crop", price: "$18.99", rating: "4.7" },
-              { title: "Comfort Cloud Pet Bed", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&fit=crop", price: "$64.99", rating: "4.9" },
-              { title: "Adventure Leash & Collar Set", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&fit=crop", price: "$34.99", rating: "4.6" },
-              { title: "Daily Dental Chews", img: "https://images.unsplash.com/photo-1626391911357-19aa48d68994?w=400&fit=crop", price: "$22.99", rating: "4.8" }
+              { title: "Chicken Jerky Sticks", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&fit=crop", price: "$18.99", rating: "4.7" },
+              { title: "Cozy Pet Bed", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&fit=crop", price: "$64.99", rating: "4.9" },
+              { title: "Comfort Collar & Leash", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&fit=crop", price: "$34.99", rating: "4.6" },
+              { title: "Dental Chew Sticks", img: "https://images.unsplash.com/photo-1626391911357-19aa48d68994?w=400&fit=crop", price: "$22.99", rating: "4.8" }
             ].map((item, i) => (
                <Link to="/products/1" key={i} className="flex flex-col bg-white rounded-3xl border border-[#f0f0f0] overflow-hidden hover:shadow-xl transition-all hover:scale-[1.02] group">
                  <div className="w-full aspect-[4/3] bg-[#f4f7f9] relative overflow-hidden p-2">
