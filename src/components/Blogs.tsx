@@ -11,8 +11,8 @@ const blogs = [
   },
   {
     date: "Dec 30",
-    title: "Premium Grooming Care",
-    desc: "Discover the best grooming tools and techniques that professional groomers use daily. Keep your pet looking and feeling their best.",
+    title: "Choosing the Right Pet Food",
+    desc: "Dry kibble, wet pouches or a mix? A simple guide to picking the right everyday food for your dog or cat.",
     img: grooming2,
   },
 ];
