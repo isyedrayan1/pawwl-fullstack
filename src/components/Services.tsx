@@ -59,15 +59,15 @@ const Services = () => {
                 
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
-                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Premium Dog Kibble</span>
-                  <p className="font-normal text-[10px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
+                  <span className="font-bold text-[19px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Premium Dog Kibble</span>
+                  <p className="font-normal text-[12px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
                     Wholesome dry food for adult dogs <br className="hidden lg:block" /> with real chicken and rice.
                   </p>
                 </div>
 
                 {/* Pill Button - BOTTOM LEFT */}
                 <div className="absolute bottom-4 lg:bottom-8 left-4 lg:left-10 px-4 lg:px-5 py-1.5 lg:py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-2 transition-transform hover:scale-105 cursor-pointer z-10">
-                  <span className="font-bold text-[8px] lg:text-[10px] text-white">Pawwl Select Product</span>
+                  <span className="font-bold text-[10px] lg:text-[10px] text-white">Pawwl Select Product</span>
                   <ArrowUpRight size={10} className="text-white" />
                 </div>
 
@@ -87,15 +87,15 @@ const Services = () => {
                 
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
-                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Tasty Cat Gravy Pouch</span>
-                  <p className="font-normal text-[10px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
+                  <span className="font-bold text-[19px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Tasty Cat Gravy Pouch</span>
+                  <p className="font-normal text-[12px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
                     Soft chunks in rich gravy <br className="hidden lg:block" /> cats simply can't resist.
                   </p>
                 </div>
 
                 {/* Pill Button - BOTTOM LEFT */}
                 <div className="absolute bottom-4 lg:bottom-8 left-4 lg:left-10 px-4 lg:px-5 py-1.5 lg:py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-2 transition-transform hover:scale-105 cursor-pointer z-10">
-                  <span className="font-bold text-[8px] lg:text-[10px] text-white">Pawwl Select Product</span>
+                  <span className="font-bold text-[10px] lg:text-[10px] text-white">Pawwl Select Product</span>
                   <ArrowUpRight size={10} className="text-white" />
                 </div>
 
@@ -202,15 +202,15 @@ const Services = () => {
                  <div key={i} className="w-full h-[230px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-3">
                    {/* Top Text Related */}
                    <div className="flex flex-col gap-1 z-10 h-[80px]">
-                      <span className="font-bold text-[13px] text-[#134e86] leading-tight">
+                      <span className="font-bold text-[15px] text-[#134e86] leading-tight">
                         {item.title}
                       </span>
-                      <p className="text-[#012169] text-[9px] opacity-70 leading-tight">
+                      <p className="text-[#012169] text-[11px] opacity-70 leading-tight">
                         {item.desc}
                       </p>
-                      <div className="mt-1 w-[90px] h-5 flex justify-center items-center bg-[#134e86] rounded-[12px] gap-1">
-                        <span className="text-[7px] font-bold text-white">Pawwl Select</span>
-                        <ArrowUpRight size={6} className="text-white" />
+                      <div className="mt-1 w-[100px] h-6 flex justify-center items-center bg-[#134e86] rounded-[12px] gap-1">
+                        <span className="text-[9px] font-bold text-white">Pawwl Select</span>
+                        <ArrowUpRight size={8} className="text-white" />
                       </div>
                    </div>
 
@@ -236,10 +236,10 @@ const Services = () => {
             {/* Day Care - Full Row Mobile */}
             <div className="w-full h-[180px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-4">
                <div className="flex flex-col gap-1 z-10 h-[80px]">
-                  <h4 className="text-[17px] font-bold text-[#134e86]">Best Day Care in Town!</h4>
-                  <p className="text-[#012169] text-[11px] opacity-70">Safe daycare and grooming for your furry family.</p>
+                  <h4 className="text-[18px] font-bold text-[#134e86]">Best Day Care in Town!</h4>
+                  <p className="text-[#012169] text-[12px] opacity-70">Safe daycare and grooming for your furry family.</p>
                   <div className="mt-2 text-center max-w-fit px-5 py-2 bg-[#134e86] rounded-full flex items-center justify-center gap-2">
-                    <span className="text-[9px] font-bold text-white">Pawwl Select Product</span>
+                    <span className="text-[10px] font-bold text-white">Pawwl Select Product</span>
                     <ArrowUpRight size={10} className="text-white" />
                   </div>
                </div>
