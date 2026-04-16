@@ -58,11 +58,11 @@ const Products = () => {
         <div className="w-full max-w-[1440px] px-6 md:px-12 lg:px-40 flex justify-center">
           <div className="w-full max-w-[1140px] flex gap-4 md:gap-6 justify-between overflow-x-auto pb-4 no-scrollbar items-center">
             {[
-              { title: "Food bowls", count: "12 Products", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=150&h=150&fit=crop" },
+              { title: "Food Bowls", count: "12 Products", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=150&h=150&fit=crop" },
               { title: "Pet Toys", count: "34 Products", img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=150&h=150&fit=crop" },
-              { title: "Pet supplies", count: "28 Products", img: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=150&h=150&fit=crop" },
-              { title: "Clothing", count: "16 Products", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=150&h=150&fit=crop" },
-              { title: "Foods", count: "43 Products", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=150&h=150&fit=crop" },
+              { title: "Treats", count: "28 Products", img: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=150&h=150&fit=crop" },
+              { title: "Dry Food", count: "26 Products", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=150&h=150&fit=crop" },
+              { title: "Wet Food", count: "18 Products", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=150&h=150&fit=crop" },
               { title: "Pet Beds", count: "22 Products", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=150&h=150&fit=crop" }
             ].map((cat, i) => (
               <div key={i} className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer">
@@ -141,10 +141,10 @@ const Products = () => {
             {/* Bottom Row Grids */}
             <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { category: "In-house Food", title: "Pawwl Premium Kibble", price: "$34.99", old: "$42.99", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=400&fit=crop" },
-                { category: "Accessories", title: "Comfort Leather Collar", price: "$19.99", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&fit=crop" },
-                { category: "Grooming", title: "Pro Grooming Kit", price: "$49.99", old: "$59.99", tag: "Featured", img: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&fit=crop" },
-                { category: "Health & Supplements", title: "Vitality Supplement Pack", price: "$29.99", tag: "Popular", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&fit=crop" }
+                { category: "In-house Food", title: "Premium Dog Kibble", price: "$34.99", old: "$42.99", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=400&fit=crop" },
+                { category: "Accessories", title: "Comfort Collar & Leash", price: "$19.99", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&fit=crop" },
+                { category: "Grooming", title: "Pet Grooming Kit", price: "$49.99", old: "$59.99", tag: "Featured", img: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&fit=crop" },
+                { category: "Health & Supplements", title: "Pet Health Supplements", price: "$29.99", tag: "Popular", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=400&fit=crop" }
               ].map((item, i) => (
                 <Link to="/products/1" key={i} className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 overflow-hidden h-[400px]">
                   <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">

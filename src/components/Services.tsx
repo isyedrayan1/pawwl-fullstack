@@ -28,9 +28,9 @@ const Services = () => {
               
               {/* Text - TOP LEFT (Smaller and Moved Up) */}
               <div className="absolute top-4 left-4 lg:top-6 lg:left-6 z-20 flex flex-col max-w-[280px] lg:max-w-[330px]">
-                <span className="font-bold text-[22px] lg:text-[30px] leading-tight text-[#012169]">Super Chewer</span>
+                <span className="font-bold text-[22px] lg:text-[30px] leading-tight text-[#012169]">Long-Lasting Chew Bones</span>
                 <p className="text-[12px] lg:text-[14px] text-[#012169] mt-1 lg:mt-2 leading-tight opacity-90 font-medium">
-                  Get Durable Pet Toys @ 50%off
+                  Tough chews for power chewers — 50% off this week.
                 </p>
               </div>
 
@@ -59,9 +59,9 @@ const Services = () => {
                 
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
-                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Super Chewer</span>
+                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Premium Dog Kibble</span>
                   <p className="font-normal text-[10px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
-                    Lorem ipsum dolor sit amet consectetur. <br className="hidden lg:block" /> Semper tristique ornare cursus.
+                    Wholesome dry food for adult dogs <br className="hidden lg:block" /> with real chicken and rice.
                   </p>
                 </div>
 
@@ -87,9 +87,9 @@ const Services = () => {
                 
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
-                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Super Chewer</span>
+                  <span className="font-bold text-[17px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Tasty Cat Gravy Pouch</span>
                   <p className="font-normal text-[10px] lg:text-[15px] text-[#012169] mt-1 lg:mt-2 leading-relaxed opacity-90">
-                    Lorem ipsum dolor sit amet consectetur. <br className="hidden lg:block" /> Semper tristique ornare cursus.
+                    Soft chunks in rich gravy <br className="hidden lg:block" /> cats simply can't resist.
                   </p>
                 </div>
 
@@ -116,11 +116,15 @@ const Services = () => {
           <div className="hidden lg:flex flex-col gap-8">
             {/* Row 2: Three Food Cards */}
             <div className="grid grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
+              {[
+                { title: "Adult Cat Dry Food", desc: "Crunchy bites packed with protein for adult cats." },
+                { title: "Puppy Starter Food", desc: "Balanced nutrition to fuel growing puppies daily." },
+                { title: "Chicken Jerky Sticks", desc: "Slow-cooked meaty jerky — perfect training reward." }
+              ].map((item, i) => (
                 <div key={i} className="h-[165px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group">
                   <div className="absolute top-4 left-6 flex flex-col max-w-[200px] z-10">
-                    <span className="font-bold text-[18px] text-[#134e86] leading-tight mb-1">Tasty Cat & Dog Food</span>
-                    <p className="font-normal text-[14px] text-[#012169] leading-tight opacity-70">Lorem ipsum dolor sit amet consectetud.</p>
+                    <span className="font-bold text-[18px] text-[#134e86] leading-tight mb-1">{item.title}</span>
+                    <p className="font-normal text-[14px] text-[#012169] leading-tight opacity-70">{item.desc}</p>
                   </div>
                   <div className="absolute bottom-4 left-6 w-[130px] h-[28px] flex justify-center items-center gap-2 bg-[#134e86] rounded-[20px] cursor-pointer z-10">
                     <span className="font-bold text-[9px] text-[#fffbf2]">Pawwl Select Product</span>
@@ -145,7 +149,7 @@ const Services = () => {
                 <div className="w-[480px] h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group">
                   <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-[410px]">
                     <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Wide Range of Accessories for Pets</h4>
-                    <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetud.</p>
+                    <p className="text-[#012169] text-xs font-normal opacity-70">Collars, bowls, beds and grooming kits — all in one place.</p>
                   </div>
                   <div className="absolute bottom-4 left-6 px-6 py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-3 cursor-pointer z-10 transition-transform hover:scale-105">
                     <span className="font-bold text-[10px] text-[#fffbf2]">Pawwl Select Product</span>
@@ -167,7 +171,7 @@ const Services = () => {
                 <div className="w-full h-[125px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative z-0">
                    <div className="absolute top-4 left-6 flex flex-col gap-[3px] z-10 w-full sm:max-w-[340px]">
                     <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Best Day Care in Town!</h4>
-                    <p className="text-[#012169] text-xs font-normal opacity-70">Lorem ipsum dolor sit amet consectetur.</p>
+                    <p className="text-[#012169] text-xs font-normal opacity-70">Safe daycare, grooming and pampering for your furry family.</p>
                   </div>
                   {/* Pill Button */}
                   <div className="absolute bottom-4 left-6 px-6 py-2 bg-[#134e86] rounded-full flex justify-center items-center gap-3 cursor-pointer z-10 transition-transform hover:scale-105">
@@ -187,15 +191,22 @@ const Services = () => {
           <div className="lg:hidden flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-4">
                {/* 4 Cards: 3 Food + 1 Accessories */}
-               {[1, 2, 3, 4].map((i) => (
+               {[
+                 { title: "Adult Cat Dry Food", desc: "Crunchy protein bites for cats." },
+                 { title: "Puppy Starter Food", desc: "Balanced nutrition for puppies." },
+                 { title: "Chicken Jerky Sticks", desc: "Meaty jerky training treats." },
+                 { title: "Pet Accessories", desc: "Bowls, collars and more." }
+               ].map((item, idx) => {
+                 const i = idx + 1;
+                 return (
                  <div key={i} className="w-full h-[230px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-3">
                    {/* Top Text Related */}
                    <div className="flex flex-col gap-1 z-10 h-[80px]">
                       <span className="font-bold text-[13px] text-[#134e86] leading-tight">
-                        {i === 4 ? "Accessories for Pets" : "Tasty Food for Pets"}
+                        {item.title}
                       </span>
                       <p className="text-[#012169] text-[9px] opacity-70 leading-tight">
-                        Lorem ipsum dolor sit amet.
+                        {item.desc}
                       </p>
                       <div className="mt-1 w-[90px] h-5 flex justify-center items-center bg-[#134e86] rounded-[12px] gap-1">
                         <span className="text-[7px] font-bold text-white">Pawwl Select</span>
@@ -218,14 +229,15 @@ const Services = () => {
                      )}
                    </div>
                  </div>
-               ))}
+                 );
+               })}
             </div>
 
             {/* Day Care - Full Row Mobile */}
             <div className="w-full h-[180px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-4">
                <div className="flex flex-col gap-1 z-10 h-[80px]">
                   <h4 className="text-[17px] font-bold text-[#134e86]">Best Day Care in Town!</h4>
-                  <p className="text-[#012169] text-[11px] opacity-70">Lorem ipsum dolor sit amet consectetur.</p>
+                  <p className="text-[#012169] text-[11px] opacity-70">Safe daycare and grooming for your furry family.</p>
                   <div className="mt-2 text-center max-w-fit px-5 py-2 bg-[#134e86] rounded-full flex items-center justify-center gap-2">
                     <span className="text-[9px] font-bold text-white">Pawwl Select Product</span>
                     <ArrowUpRight size={10} className="text-white" />
