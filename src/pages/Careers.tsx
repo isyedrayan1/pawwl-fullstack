@@ -8,8 +8,12 @@ import { Link } from "react-router-dom";
 import DoctorsSection from "@/components/DoctorsSection";
 import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
+import SEO from "@/components/SEO";
 import thirdCardImg from "@/assets/home/careers/3rdcard.svg";
 import fifthCardImg from "@/assets/home/careers/5thcard.svg";
+
+import car1 from "@/assets/gallery/1.webp";
+import car20 from "@/assets/gallery/20.webp";
 
 const Careers = () => {
   const jobs = [
@@ -44,6 +48,11 @@ const Careers = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title="Careers | Join the Pawwl Pet Care Team Mumbai"
+        description="Build your career in pet care with Pawwl Mumbai. We're looking for passionate veterinarians, professional groomers, and pet enthusiasts to join our Bhandup West team."
+        url="https://pawwl.com/careers"
+      />
       <Navbar />
 
       {/* Hero Section */}
@@ -268,7 +277,7 @@ const Careers = () => {
       </section>
 
       {/* Gallery Section */}
-      <PetGallery />
+      <PetGallery img1={car1} img2={car20} />
 
       {/* Testimonials Section */}
       <Testimonials />

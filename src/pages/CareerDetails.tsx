@@ -4,9 +4,16 @@ import { ChevronRight, ArrowLeft, Briefcase, MapPin, CheckCircle2, Clock, Mail }
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+import SEO from "@/components/SEO";
+
 const CareerDetails = () => {
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title="Job Opening | Careers at Pawwl Mumbai"
+        description="Explore this career opportunity at Pawwl, Mumbai's premium pet care studio. We are looking for dedicated professionals to join our pet care family."
+        type="article"
+      />
       <Navbar />
 
       {/* 1. Breadcrumbs */}

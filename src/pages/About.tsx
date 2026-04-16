@@ -7,9 +7,18 @@ import DoctorsSection from "@/components/DoctorsSection";
 import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
 
+import ab1 from "@/assets/gallery/1.webp";
+import ab2 from "@/assets/gallery/10.webp";
+import SEO from "@/components/SEO";
+
 const About = () => {
   return (
     <div className="min-h-screen bg-white font-body selection:bg-brand-blue selection:text-white">
+      <SEO 
+        title="About Us | Pawwl Pet Care Studio Mumbai"
+        description="Learn about Pawwl's mission to provide premium, professional pet care in Mumbai. Founded on love, driven by expertise in vet care, grooming, and boarding."
+        url="https://pawwl.com/about"
+      />
       <Navbar />
       
       <main>
@@ -18,7 +27,7 @@ const About = () => {
           <div className="section-container">
             <div className="flex flex-col gap-6 w-full">
               {/* Top Banner Row */}
-              <div className="relative bg-brand-light rounded-2xl overflow-hidden h-[320px] sm:h-[420px] md:h-[496px] flex items-center justify-center border border-border-design shadow-sm transition-all duration-300">
+              <div className="relative bg-brand-light rounded-[28px] overflow-hidden h-[320px] sm:h-[420px] md:h-[496px] flex items-center justify-center border border-border-design shadow-sm transition-all duration-300">
                 <img 
                   src="/assets/images/aboutheaderimg.webp" 
                   alt="Dog Paw Handshake" 
@@ -90,14 +99,14 @@ const About = () => {
                     id: 1,
                     title: "Consultation",
                     desc: "Begin with a personalized consultation to understand your pet’s unique needs, lifestyle, and preferences. This step ensures we provide the best care tailored specifically for them.",
-                    img: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=2670&auto=format&fit=crop",
+                    img: ab1,
                     dark: true
                   },
                   {
                     id: 2,
                     title: "Care Plan Development",
                     desc: "We create a customized care plan designed to meet your pet’s specific needs, focusing on their health, nutrition, and overall well-being. Every detail is tailored for their happiness and comfort.",
-                    img: "https://images.unsplash.com/photo-1541599540903-21b373879563?q=80&w=2671&auto=format&fit=crop",
+                    img: ab2,
                     dark: false
                   }
                 ],
@@ -151,7 +160,7 @@ const About = () => {
         <DoctorsSection />
 
         {/* Section 4: Gallery */}
-        <PetGallery />
+        <PetGallery img1={ab1} img2={ab2} />
 
         {/* Section 5: Testimonials */}
         <Testimonials />

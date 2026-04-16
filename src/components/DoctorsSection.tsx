@@ -1,7 +1,7 @@
 import React from 'react';
-import doc1 from "@/assets/doccards/doc1.png";
-import doc2 from "@/assets/doccards/doc2.png";
-import doc3 from "@/assets/doccards/doc3.png";
+import doc1 from "@/assets/doccards/doc1.webp";
+import doc2 from "@/assets/doccards/doc2.webp";
+import doc3 from "@/assets/doccards/doc3.webp";
 
 const doctors = [
   { 

@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, GraduationCap } from "lucide-react";
+import { ArrowUpRight, GraduationCap, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import defaultGal1 from "@/assets/gallery/6.webp";
+import defaultGal2 from "@/assets/gallery/11.webp";
 
-const PetGallery = () => (
+interface PetGalleryProps {
+  img1?: string;
+  img2?: string;
+}
+
+const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps) => (
   <section className="w-full flex flex-col items-center gap-8 self-stretch bg-white px-6 md:px-12 lg:px-40 py-12 md:py-16">
     
     {/* Header Content */}
@@ -21,7 +28,7 @@ const PetGallery = () => (
       {/* 1. Column Left: Large Vertical Image (504px) */}
       <div className="w-full lg:w-[504px] h-[400px] sm:h-[500px] lg:h-[727.6px] rounded-[28px] overflow-hidden group shadow-lg border border-[#dce6ee]">
         <img 
-          src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=1000&h=1500&fit=crop" 
+          src={img1} 
           alt="Pets 1" 
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
         />
@@ -33,29 +40,29 @@ const PetGallery = () => (
         {/* Top (Left on Mobile): Horizontal Image */}
         <div className="w-full h-[180px] sm:h-[300px] lg:h-[475px] rounded-[24px] md:rounded-[28px] overflow-hidden group shadow-md border border-[#dce6ee]">
           <img 
-             src="https://images.unsplash.com/photo-1544568100-847a948585b9?w=1200&h=800&fit=crop" 
+             src={img2} 
              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
              alt="Pets 2" 
           />
         </div>
 
-        {/* Bottom (Right on Mobile): Navy Careers Card */}
+        {/* Bottom (Right on Mobile): Navy Gallery CTA Card */}
         <div className="w-full h-[180px] sm:h-[300px] lg:h-[237px] flex justify-center items-center bg-[#1b4965] rounded-[24px] md:rounded-[32px] p-4 sm:p-8 relative overflow-hidden group shadow-lg">
            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
            
            <div className="flex flex-col items-center text-center gap-2 sm:gap-4 relative z-10">
               <div className="opacity-40 text-white group-hover:opacity-80 transition-opacity">
-                <GraduationCap className="w-6 h-6 sm:w-10 sm:h-10" strokeWidth={1.5} />
+                <ImageIcon className="w-6 h-6 sm:w-10 sm:h-10" strokeWidth={1.5} />
               </div>
               
               <div className="flex flex-col gap-0.5 sm:gap-1">
-                <h4 className="font-extrabold text-[14px] sm:text-[24px] leading-tight text-white line-clamp-1">Join us</h4>
-                <span className="font-normal text-[8px] sm:text-[14px] leading-tight text-[#f4f4f4]/60 uppercase tracking-widest hidden sm:block">We're hiring</span>
+                <h4 className="font-extrabold text-[14px] sm:text-[24px] leading-tight text-white line-clamp-1">Explore More</h4>
+                <span className="font-normal text-[8px] sm:text-[14px] leading-tight text-[#f4f4f4]/60 uppercase tracking-widest hidden sm:block">View Full Gallery</span>
               </div>
 
-              <Link to="/careers">
+              <Link to="/gallery">
                 <Button className="flex items-center gap-1.5 md:gap-[9px] bg-[#e8f0f6] hover:bg-white px-3 md:px-7 h-7 md:h-12 rounded-[8px] md:rounded-[10px] shadow-md transition-all active:scale-95 group/btn border-none">
-                  <span className="font-bold text-[10px] md:text-[12px] text-[#1b4965]">Careers</span>
+                  <span className="font-bold text-[10px] md:text-[12px] text-[#1b4965]">View Gallery</span>
                   <ArrowUpRight size={12} className="text-[#1b4965] transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </Button>
               </Link>

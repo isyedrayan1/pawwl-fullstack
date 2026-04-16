@@ -1,11 +1,15 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
-import { ArrowUpRight, Star, Quote, Mail, GraduationCap, Heart, Scissors, Bath, Ruler, Stethoscope } from "lucide-react";
+import { ArrowUpRight, Star, Quote, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DoctorsSection from "@/components/DoctorsSection";
 import PetGallery from "@/components/PetGallery";
 import TestimonialsSection from "@/components/TestimonialsSection";
+
+import srv5 from "@/assets/gallery/5.webp";
+import srv9 from "@/assets/gallery/9.webp";
+import srv17 from "@/assets/gallery/17.webp";
 
 // Testimonial Data for Services Page
 const servicesTestimonials = [
@@ -32,42 +36,52 @@ const servicesTestimonials = [
   },
 ];
 
+import SEO from "@/components/SEO";
+
 const Services = () => {
   return (
-    <div className="min-h-screen bg-[#fffaef]">
+    <div className="min-h-screen bg-white text-brand-dark selection:bg-brand-blue selection:text-white">
+      <SEO 
+        title="Professional Pet Services | Vet Care, Grooming & Boarding Mumbai"
+        description="Comprehensive pet care services in Mumbai. Specialized in veterinary medical checkups, professional pet grooming, safe pet daycare, and luxury boarding."
+        url="https://pawwl.com/services"
+      />
       <Navbar />
 
       {/* 1. Precise Hero Section from Figma */}
       <section className="bg-white pt-4 md:pt-8 pb-12">
         <div className="section-container">
           <div className="w-full flex flex-wrap gap-x-6 gap-y-9">
-            {/* Banner Container */}
-            <div className="w-full h-[320px] sm:h-[420px] md:h-[496px] rounded-2xl relative overflow-hidden flex items-center justify-center group shadow-2xl">
+            {/* Top Pawwl Banner */}
+            <div className="w-full h-[320px] sm:h-[420px] md:h-[496px] flex justify-center items-center bg-black/20 rounded-[28px] overflow-hidden relative group">
               <img 
                 src="/assets/images/serviceheroimg.webp" 
                 alt="Services Banner" 
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10"
               />
-              <div className="absolute inset-0 flex justify-between items-center bg-black/10 px-[100px] py-[19px] rounded-2xl group-hover:bg-black/20 transition-colors"></div>
-              <PawwlWatermark 
-                className="absolute w-[90%] sm:w-[95%] md:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 text-white" 
-                opacity={1.0}
-              />
+              <div className="w-full h-full absolute inset-0 flex justify-center items-center z-20">
+                <PawwlWatermark 
+                  className="absolute w-[90%] sm:w-[95%] md:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-white drop-shadow-2xl" 
+                  opacity={0.9}
+                />
+              </div>
             </div>
 
             {/* Service Grid */}
             <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-9">
               {[
-                { icon: <Bath className="w-8 h-8" />, title: "Bath & Wash", desc: "Gentle shampoo and conditioning to keep coats clean, soft, and fresh." },
-                { icon: <Scissors className="w-8 h-8" />, title: "Haircut & Styling", desc: "Breed-specific or custom grooming styles tailored to your pet’s needs." },
-                { icon: <Heart className="w-8 h-8" />, title: "Nail Trimming", desc: "Safe nail care to protect paws and ensure comfortable movement." },
-                { icon: <PlusIcon className="w-8 h-8" />, title: "Ear Cleaning", desc: "Careful ear cleaning to reduce buildup and help prevent infections." },
-                { icon: <GraduationCap className="w-8 h-8" />, title: "Teeth Cleaning", desc: "Basic dental care for fresher breath and better oral hygiene." },
-                { icon: <Stethoscope className="w-8 h-8" />, title: "Treatment", desc: "Reduce shedding and maintain a smooth, healthy coat." }
+                { imgSrc: "/assets/icons/pet.webp", title: "Bath & Wash", desc: "Gentle shampoo and conditioning to keep coats clean, soft, and fresh." },
+                { imgSrc: "/assets/icons/dog.webp", title: "Haircut & Styling", desc: "Breed-specific or custom grooming styles tailored to your pet’s needs." },
+                { imgSrc: "/assets/icons/nail-clippers.webp", title: "Nail Trimming", desc: "Safe nail care to protect paws and ensure comfortable movement." },
+                { imgSrc: "/assets/icons/ear-cleaning.webp", title: "Ear Cleaning", desc: "Careful ear cleaning to reduce buildup and help prevent infections." },
+                { imgSrc: "/assets/icons/dental-insurance.webp", title: "Teeth Cleaning", desc: "Basic dental care for fresher breath and better oral hygiene." },
+                { imgSrc: "/assets/icons/vet.webp", title: "Treatment", desc: "Reduce shedding and maintain a smooth, healthy coat." }
               ].map((service, i) => (
                 <div key={i} className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group">
                   <div className="w-full flex flex-col gap-2 p-3">
-                    <div className="text-brand-accent">{service.icon}</div>
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 mb-1">
+                       <img src={service.imgSrc} alt={service.title} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
+                    </div>
                     <span className="font-bold text-[20px] leading-[24px] text-[#241f1b]">{service.title}</span>
                     <span className="font-normal text-[16px] leading-[24px] text-[#534d49]">{service.desc}</span>
                   </div>
@@ -88,7 +102,7 @@ const Services = () => {
             
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
                <div className="rounded-[28px] overflow-hidden shadow-sm h-[500px]">
-                 <img src="https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800&h=1200&fit=crop" className="w-full h-full object-cover" alt="" />
+                 <img src={srv17} className="w-full h-full object-cover" alt="Premium Products" />
                </div>
                <div className="flex flex-col gap-8">
                   <div className="bg-[#D8FAFF] p-8 rounded-[28px] h-[234px]">
@@ -108,7 +122,7 @@ const Services = () => {
       <DoctorsSection />
 
       {/* 4. Gallery Section */}
-      <PetGallery />
+      <PetGallery img1={srv5} img2={srv9} />
 
       {/* 5. Testimonials Section - Standarized Bento Unified */}
       <TestimonialsSection testimonials={servicesTestimonials} />

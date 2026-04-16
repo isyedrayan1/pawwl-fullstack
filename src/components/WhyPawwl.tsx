@@ -7,7 +7,7 @@ const WhyPawwl = () => (
       <div className="flex flex-col justify-center items-center gap-4 mb-[72px]">
         <h2 className="font-extrabold text-[32px] md:text-[48px] text-center text-brand-dark leading-tight">Why Pawwl?</h2>
         <p className="font-normal text-[16px] md:text-[20px] leading-[1.4] text-center text-brand-dark max-w-2xl opacity-80 px-4">
-          BarkBox isn't just a box of dog stuff. It's a monthly surprise that brings joy and enrichment to your pup's life.
+          At Pawwl, we go beyond basic care. We provide a nurturing environment that brings joy, health, and enrichment to every pet's life.
         </p>
       </div>
 

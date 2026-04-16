@@ -16,7 +16,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import petShopImg from "@/assets/pet_shop.webp";
+import formImg from "@/assets/formimg.webp";
 
 const ScheduleSession = () => {
   const [date, setDate] = React.useState<Date>();
@@ -31,7 +31,7 @@ const ScheduleSession = () => {
               Schedule a session with Pawwl
             </h2>
             <p className="font-normal text-[20px] leading-[24px] text-center text-[#012169] max-w-[800px] opacity-80">
-              BarkBox isn’t just a box of dog stuff. It’s a monthly surprise that brings joy and enrichment to your pup’s life.
+              Booking a session with Pawwl means choosing peace of mind. Our experts are ready to provide professional grooming and care tailored to your pet.
             </p>
           </div>
 
@@ -40,7 +40,7 @@ const ScheduleSession = () => {
             {/* Left Image Section */}
             <div className="lg:w-[556px] w-full self-stretch rounded-2xl overflow-hidden shadow-inner min-h-[400px]">
               <img 
-                src={petShopImg} 
+                src={formImg} 
                 alt="Schedule Session" 
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
               />
@@ -75,13 +75,7 @@ const ScheduleSession = () => {
                     </div>
                   </div>
 
-                  {/* Row 2: Email */}
-                  <div className="flex flex-col gap-1.5 focus-within:text-brand-blue transition-colors">
-                    <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Email Address</label>
-                    <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm">
-                      <input type="email" placeholder="johndoe001@example.com" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
-                    </div>
-                  </div>
+                  {/* Row Removed - Email field deleted */}
 
                   {/* Row 3: Pet Name & Type */}
                   <div className="flex flex-col sm:flex-row items-center gap-4 self-stretch">

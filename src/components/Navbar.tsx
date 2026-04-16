@@ -2,12 +2,13 @@ import { ShoppingBasket, Heart, Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
 
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services", hasDropdown: true },
-  { name: "Categories", href: "#", hasDropdown: true },
+  { name: "Gallery", href: "/gallery" },
   { name: "Products", href: "/products", hasDropdown: true },
   { name: "Blogs", href: "/#" },
   { name: "Careers", href: "/careers" },
@@ -19,6 +20,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
   const location = useLocation();
+  const { cart, favorites, setCartOpen, setFavoritesOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,8 +50,12 @@ const Navbar = () => {
       >
         <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-[141px] flex items-center justify-between h-full">
         {/* Logo Section */}
-        <Link to="/" className="flex items-center">
-          <span className="text-[28px] font-bold text-brand-dark leading-[42px] tracking-tight">Pawwl</span>
+        <Link to="/" className="flex items-center gap-2 group">
+          <img src="/pawwl-logo-main-croped.webp" alt="Pawwl Logo" className="w-[48px] h-[48px] object-contain group-hover:scale-105 transition-transform" />
+          <div className="flex flex-col -gap-1">
+            <span className="text-[22px] font-bold text-brand-dark leading-none tracking-tight">Pawwl</span>
+            <span className="text-[12px] font-medium text-[#134e86]/60 mt-0.5">One stop pet care</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -77,11 +83,27 @@ const Navbar = () => {
         {/* Icons and Action Button */}
         <div className="hidden lg:flex items-center gap-4 xl:gap-6">
           <div className="flex items-center gap-1">
-            <button className="p-2 text-brand-dark hover:text-brand-blue hover:bg-brand-light rounded-full transition-all">
+            <button 
+              onClick={() => setCartOpen(true)}
+              className="p-2 text-brand-dark hover:text-brand-blue hover:bg-brand-light rounded-full transition-all relative"
+            >
               <ShoppingBasket size={22} strokeWidth={2.5} />
+              {cart.length > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-[#134e86] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {cart.length}
+                </span>
+              )}
             </button>
-            <button className="p-2 text-brand-dark hover:text-brand-blue hover:bg-brand-light rounded-full transition-all">
+            <button 
+              onClick={() => setFavoritesOpen(true)}
+              className="p-2 text-brand-dark hover:text-brand-blue hover:bg-brand-light rounded-full transition-all relative"
+            >
               <Heart size={22} strokeWidth={2.5} />
+              {favorites.length > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-[#134e86] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {favorites.length}
+                </span>
+              )}
             </button>
           </div>
           <Button asChild className="bg-brand-blue hover:bg-brand-dark text-white px-6 py-2.5 rounded-xl text-[14px] font-bold shadow-sm h-auto transition-all active:scale-95 border-none">
@@ -90,12 +112,25 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button
-          className="xl:hidden p-2 text-brand-dark"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+        <div className="xl:hidden flex items-center gap-2">
+           <button 
+            onClick={() => setCartOpen(true)}
+            className="p-2 text-brand-dark relative"
+           >
+            <ShoppingBasket size={24} />
+            {cart.length > 0 && (
+              <span className="absolute top-1 right-1 w-4 h-4 bg-[#134e86] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                {cart.length}
+              </span>
+            )}
+           </button>
+          <button
+            className="p-2 text-brand-dark"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Design Overlay */}
@@ -116,6 +151,19 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
+            <li className="pt-4 border-t border-[#f0f0f0]">
+               <button 
+                onClick={() => {
+                  setFavoritesOpen(true);
+                  setMobileOpen(false);
+                }}
+                className="flex items-center gap-3 text-lg font-bold text-brand-dark"
+               >
+                 <Heart size={22} className="text-[#ff4d4d]" />
+                 Favorites
+                 {favorites.length > 0 && <span className="text-[#b1b1b1] text-sm font-medium">({favorites.length})</span>}
+               </button>
+            </li>
           </ul>
           <Button asChild className="w-full bg-brand-blue text-white py-6 text-lg font-bold mt-8 rounded-xl shadow-lg border-none hover:bg-brand-dark">
             <Link to="/contact" onClick={() => setMobileOpen(false)}>Contact Us</Link>

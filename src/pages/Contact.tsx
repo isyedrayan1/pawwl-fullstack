@@ -5,9 +5,16 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock, Calendar, ArrowRight } from "lucide-react";
 import ScheduleSession from "@/components/ScheduleSession";
 
+import SEO from "@/components/SEO";
+
 const Contact = () => {
   return (
     <div className="min-h-screen bg-white">
+      <SEO 
+        title="Contact Us | Visit Pawwl Mumbai Office"
+        description="Get in touch with Mumbai's best pet care studio. Located in Bhandup West. Contact us for vet appointments, grooming sessions, or pet supplies."
+        url="https://pawwl.com/contact"
+      />
       <Navbar />
 
       {/* Hero & Contact Info */}
@@ -34,39 +41,39 @@ const Contact = () => {
                 { 
                   icon: <MapPin size={20} />, 
                   title: "Visit Us", 
-                  desc: "42, MG Road, Indiranagar, Bengaluru, Karnataka 560038", 
-                  sub: "Near Metro Station" 
+                  desc: "Shop No, 4–5–6, Joy Homes CHS Rd, Kashi Nagar, Valmik Nagar, Bhandup West, Mumbai, 400078", 
+                  sub: "Bhandup West, Mumbai" 
                 },
                 { 
                   icon: <Phone size={20} />, 
                   title: "Call Us", 
-                  desc: "+91 80 4567 8900", 
-                  sub: "Toll-free: 1800-123-PAWWL" 
+                  desc: "+91 72088 13649", 
+                  sub: "WhatsApp Available" 
                 },
                 { 
                   icon: <Mail size={20} />, 
                   title: "Email Us", 
-                  desc: "hello@pawwl.in", 
-                  sub: "We reply within 24 hours" 
+                  desc: "hello@pawwl.com", 
+                  sub: "Support within 24h" 
                 },
                 { 
                   icon: <Clock size={20} />, 
                   title: "Working Hours", 
-                  desc: "Mon – Sat: 9:00 AM – 8:00 PM", 
-                  sub: "Sunday: 10:00 AM – 6:00 PM" 
+                  desc: "Mon – Sun: 10:00 AM – 9:00 PM", 
+                  sub: "Open All Days" 
                 }
               ].map((info, i) => (
-                <div key={i} className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group">
+                <div key={i} className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px]">
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}
                   </div>
                   <span className="font-black text-[16px] leading-tight text-center text-brand-dark">
                     {info.title}
                   </span>
-                  <p className="font-medium text-[14px] leading-relaxed text-center text-foreground/80">
+                  <p className="font-medium text-[13px] leading-relaxed text-center text-foreground/80 line-clamp-3">
                     {info.desc}
                   </p>
-                  <span className="font-black text-[12px] leading-tight text-center text-brand-blue mt-auto uppercase tracking-wider">
+                  <span className="font-black text-[11px] leading-tight text-center text-brand-blue mt-auto uppercase tracking-wider">
                     {info.sub}
                   </span>
                 </div>
@@ -123,6 +130,22 @@ const Contact = () => {
              ))}
           </div>
 
+        </div>
+      </section>
+
+      {/* Map Section */}
+      <section className="w-full px-6 md:px-12 lg:px-40 pb-24">
+        <div className="w-full max-w-[1114px] mx-auto overflow-hidden rounded-[32px] border-2 border-border-accent bg-white p-4 shadow-xl">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d120617.49138228265!2d72.8124078!3d19.1384897!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b9d45d3f805d%3A0x6577fdc07c82a5d9!2sPawwl%20One%20stop%20pet%20care%20%7C%20Best%20Pet%20clinic%20and%20shop%20in%20Bhandup!5e0!3m2!1sen!2sin!4v1776378473997!5m2!1sen!2sin" 
+            width="100%" 
+            height="450" 
+            style={{ border: 0 }} 
+            allowFullScreen={true} 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            className="rounded-[24px]"
+          />
         </div>
       </section>
 
