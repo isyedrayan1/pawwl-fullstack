@@ -8,6 +8,7 @@ import About from "./pages/About.tsx";
 import Services from "./pages/Services.tsx";
 import Products from "./pages/Products.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
+import { Navigate } from "react-router-dom";
 import Careers from "./pages/Careers.tsx";
 import CareerDetails from "./pages/CareerDetails.tsx";
 import Contact from "./pages/Contact.tsx";
@@ -35,8 +36,11 @@ const AppContent = () => {
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetails />} />
+            {/* Products routes temporarily disabled — redirect to home. Restore the original elements to re-enable. */}
+            <Route path="/products" element={<Navigate to="/" replace />} />
+            <Route path="/products/:id" element={<Navigate to="/" replace />} />
+            {/* <Route path="/products" element={<Products />} /> */}
+            {/* <Route path="/products/:id" element={<ProductDetails />} /> */}
             <Route path="/careers" element={<Careers />} />
             <Route path="/careers/:id" element={<CareerDetails />} />
             <Route path="/contact" element={<Contact />} />
