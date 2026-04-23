@@ -55,35 +55,52 @@ const galleryAssetsPaths = Object.values(localAssets)
 export function ImageGallery() {
     const [loadedCount, setLoadedCount] = React.useState(0);
     const totalAssets = galleryAssetsPaths.length;
-    // Show gallery after first 6 items load to ensure a smooth start
     const isReady = loadedCount >= Math.min(6, totalAssets);
+
+    // Distribute assets into columns manually to ensure stability (1, 2, 3, 4 stay at the top)
+    const columns: string[][] = [[], [], [], []];
+    galleryAssetsPaths.forEach((src, index) => {
+        columns[index % 4].push(src);
+    });
 
 	return (
 		<div className="relative flex min-h-screen w-full flex-col items-center justify-center py-10 px-4 md:px-8">
             {!isReady && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white gap-4">
+                <div className="w-full py-24 flex flex-col items-center justify-center bg-white gap-4 min-h-[60vh]">
                     <div className="w-12 h-12 border-4 border-[#134e86] border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-[#134e86] font-medium animate-pulse">Loading Pawwl Gallery...</p>
+                    <p className="text-[#134e86] font-medium animate-pulse">Gathering the Pack...</p>
                 </div>
             )}
 
-            {/* True Masonry using CSS Columns - adapting to exact image sizes */}
+            {/* Stable Manual Masonry Layout */}
 			<div className={cn(
-                "mx-auto w-full max-w-6xl columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6 pb-20 transition-opacity duration-700",
-                isReady ? "opacity-100" : "opacity-0"
+                "mx-auto w-full max-w-6xl flex gap-4 sm:gap-6 pb-20 transition-opacity duration-1000",
+                isReady ? "opacity-100 h-auto" : "opacity-0 h-0 overflow-hidden"
             )}>
-				
-                {galleryAssetsPaths.map((src, index) => {
-                    return (
-                        <AnimatedAsset
-                            key={`gallery-asset-${index}`}
-                            alt={`Pawwl Pack Moment ${index}`}
-                            src={src}
-                            onLoaded={() => setLoadedCount(prev => prev + 1)}
-                        />
-                    );
-                })}
-
+				{columns.map((column, colIndex) => (
+                    <div 
+                        key={`column-${colIndex}`} 
+                        className={cn(
+                            "flex flex-col gap-4 sm:gap-6 flex-1",
+                            // Hide 3rd and 4th columns on mobile, 4th on tablet
+                            colIndex >= 2 && "hidden md:flex",
+                            colIndex >= 3 && "hidden xl:flex"
+                        )}
+                    >
+                        {column.map((src, index) => {
+                            // Find original index for the alt text
+                            const originalIndex = galleryAssetsPaths.indexOf(src);
+                            return (
+                                <AnimatedAsset
+                                    key={`gallery-asset-${originalIndex}`}
+                                    alt={`Pawwl Pack Moment ${originalIndex}`}
+                                    src={src}
+                                    onLoaded={() => setLoadedCount(prev => prev + 1)}
+                                />
+                            );
+                        })}
+                    </div>
+                ))}
 			</div>
 		</div>
 	);
@@ -125,14 +142,12 @@ function AnimatedAsset({ alt, src, onLoaded }: AnimatedAssetProps) {
 	return (
 		<motion.div
             ref={containerRef}
-            // Simplified animation to reduce GPU strain on large images
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "50px" }}
             transition={{ duration: 0.5, ease: "easeOut" }} 
 			className={cn(
-                "bg-[#f8fdff] relative rounded-[20px] border-2 border-[#c1e8fb] overflow-hidden group shadow-sm hover:shadow-xl transition-shadow break-inside-avoid",
-                isLoading && "min-h-[200px] aspect-[4/5]"
+                "bg-[#f8fdff] relative rounded-[20px] border-2 border-[#c1e8fb] overflow-hidden group shadow-sm hover:shadow-xl transition-shadow",
             )}
 		>
             {isLoading && (
