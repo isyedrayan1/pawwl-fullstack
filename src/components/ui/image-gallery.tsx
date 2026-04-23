@@ -9,7 +9,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 // Load local files automatically and dynamically via Vite
 const localAssets = import.meta.glob([
   '@/assets/gallery/**/*.{jpeg,jpg,png,webp,mp4,webm,gif}',
-  '@/assets/Newgallery/**/*.{jpeg,jpg,png,webp,mp4,webm,gif}'
+  '@/assets/Newgallery/**/*.{jpeg,jpg,png,webp,mp4,webm,gif}',
+  '!@/assets/**/*-old.webp' // Explicitly exclude heavy backup files from the build
 ], { eager: true });
 
 const galleryAssetsPaths = Object.values(localAssets)
