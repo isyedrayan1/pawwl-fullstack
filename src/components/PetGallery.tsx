@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, GraduationCap, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -10,26 +11,39 @@ interface PetGalleryProps {
 }
 
 const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps) => (
-  <section className="w-full flex flex-col items-center gap-8 self-stretch bg-white px-6 md:px-12 lg:px-40 py-12 md:py-16">
+  <section className="w-full flex flex-col items-center gap-8 self-stretch bg-white px-6 md:px-12 lg:px-40 py-12 md:py-16 overflow-hidden">
     
     {/* Header Content */}
-    <div className="w-full max-w-[900px] flex flex-col items-center gap-3 text-center mb-[72px]">
+    <motion.div 
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="w-full max-w-[900px] flex flex-col items-center gap-3 text-center mb-[72px]"
+    >
       <h2 className="font-extrabold text-[32px] md:text-[48px] text-[#012169] leading-tight">
         Whiskers, Tails, and Joyful Eyes<br className="hidden md:block" /> A Gallery Full of Love
       </h2>
       <p className="font-normal text-[16px] md:text-[20px] leading-[1.4] text-[#134e86]">
         Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special.”
       </p>
-    </div>
+    </motion.div>
 
     {/* Bento Content Section */}
-    <div className="w-full max-w-[1144px] flex flex-col lg:flex-row gap-6 md:gap-9 items-stretch">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1, ease: "easeOut" }}
+      className="w-full max-w-[1144px] flex flex-col lg:flex-row gap-6 md:gap-9 items-stretch"
+    >
       
       {/* 1. Column Left: Large Vertical Image (504px) */}
       <div className="w-full lg:w-[504px] h-[400px] sm:h-[500px] lg:h-[727.6px] rounded-[28px] overflow-hidden group shadow-lg border border-[#dce6ee]">
         <img 
           src={img1} 
           alt="Pets 1" 
+          loading="lazy" decoding="async"
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
         />
       </div>
@@ -41,6 +55,7 @@ const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps)
         <div className="w-full h-[180px] sm:h-[300px] lg:h-[475px] rounded-[24px] md:rounded-[28px] overflow-hidden group shadow-md border border-[#dce6ee]">
           <img 
              src={img2} 
+             loading="lazy" decoding="async"
              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
              alt="Pets 2" 
           />
@@ -69,7 +84,7 @@ const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps)
            </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   </section>
 );
 

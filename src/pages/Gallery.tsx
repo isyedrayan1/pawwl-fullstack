@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -6,7 +7,7 @@ import SEO from "@/components/SEO";
 
 const Gallery = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-hidden">
       <SEO 
         title="Pet Photo Gallery | Moments at Pawwl Studio"
         description="Explore our gallery of happy pets! See our professional grooming results, veterinary care moments, and daycare activities at Mumbai's top pet studio."
@@ -15,9 +16,15 @@ const Gallery = () => {
       <Navbar />
       
       {/* 1. Precise Hero Section from Figma */}
-      <section className="bg-white pt-4 md:pt-8 pb-12">
+      <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container">
-          <div className="w-full flex flex-wrap gap-x-6 gap-y-9">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="w-full flex flex-wrap gap-x-6 gap-y-9"
+          >
             {/* Banner Container */}
             <div className="w-full h-[320px] sm:h-[420px] md:h-[496px] rounded-2xl relative overflow-hidden flex items-center justify-center group shadow-2xl">
               <img 
@@ -31,19 +38,25 @@ const Gallery = () => {
                 opacity={1.0}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <main className="bg-white">
-        <div className="section-container flex flex-col items-center gap-4 mb-12 mt-4 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="section-container flex flex-col items-center gap-4 mb-12 mt-4 text-center"
+        >
           <div className="w-fit bg-[#e8f7ff] px-4 py-1.5 rounded-full border border-[#c1e8fb] shadow-sm">
             <span className="font-bold text-[12px] md:text-xs text-[#134e86]">Moments of Joy</span>
           </div>
           <h1 className="font-extrabold text-[36px] md:text-[52px] text-[#012169] leading-tight tracking-tight">
             Pawwl Gallery.
           </h1>
-        </div>
+        </motion.div>
         <ImageGallery />
       </main>
 

@@ -10,7 +10,7 @@ const navLinks = [
   { name: "Services", href: "/services", hasDropdown: true },
   { name: "Gallery", href: "/gallery" },
   // { name: "Products", href: "/products", hasDropdown: true }, // temporarily hidden
-  { name: "Blogs", href: "/#" },
+  { name: "Blogs", href: "/blog" },
   { name: "Careers", href: "/careers" },
 ];
 

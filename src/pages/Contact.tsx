@@ -1,15 +1,18 @@
+import { useIsMobile } from "@/hooks/useMediaQuery";
+import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock, Calendar, ArrowRight } from "lucide-react";
 import ScheduleSession from "@/components/ScheduleSession";
-
 import SEO from "@/components/SEO";
 
 const Contact = () => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-hidden">
       <SEO 
         title="Contact Us | Visit Pawwl Mumbai Office"
         description="Get in touch with Mumbai's best pet care studio. Located in Bhandup West. Contact us for vet appointments, grooming sessions, or pet supplies."
@@ -18,11 +21,17 @@ const Contact = () => {
       <Navbar />
 
       {/* Hero & Contact Info */}
-      <section className="bg-white pt-4 md:pt-8 pb-12">
+      <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container flex flex-col gap-8">
           
            {/* Top Banner */}
-           <div className="w-full flex flex-col gap-6">
+           <motion.div 
+             initial={{ opacity: 0, scale: 0.95 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             viewport={{ once: true }}
+             transition={{ duration: 1 }}
+             className="w-full flex flex-col gap-6"
+           >
              <div className="w-full max-w-[1114px] h-[320px] sm:h-[420px] md:h-[496px] bg-[#4a72ae] rounded-[28px] overflow-hidden relative flex justify-center items-center mx-auto shadow-2xl group">
                 <PawwlWatermark 
                   className="absolute z-10 w-[90%] md:w-[1000px] h-auto text-white drop-shadow-2xl" 
@@ -31,12 +40,18 @@ const Contact = () => {
                 <img 
                   src="/assets/images/contacthero.webp" 
                   className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[60%] md:h-[65%] w-auto object-contain z-20 pointer-events-none" 
+                  loading="lazy" decoding="async"
                   alt="Contact Hero Illustration" 
                 />
               </div>
 
             {/* Quick Contact Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full"
+            >
               {[
                 { 
                   icon: <MapPin size={20} />, 
@@ -63,7 +78,18 @@ const Contact = () => {
                   sub: "Open All Days" 
                 }
               ].map((info, i) => (
-                <div key={i} className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px]">
+                <motion.div 
+                  key={i} 
+                  variants={{
+                    hidden: { 
+                      opacity: 0, 
+                      x: isMobile ? (i % 2 === 0 ? -50 : 50) : 0,
+                      y: isMobile ? 0 : 30 
+                    },
+                    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, delay: i * 0.1 } }
+                  }}
+                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px]"
+                >
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}
                   </div>
@@ -76,25 +102,31 @@ const Contact = () => {
                   <span className="font-black text-[11px] leading-tight text-center text-brand-blue mt-auto uppercase tracking-wider">
                     {info.sub}
                   </span>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       <ScheduleSession />
 
       {/* Specific Help FAQ Section */}
-      <section className="bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center">
+      <section className="bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center overflow-hidden">
         <div className="w-full max-w-[1114px] flex flex-col items-center gap-12 bg-white rounded-3xl">
           
-          <div className="max-w-[700px] flex flex-col items-center gap-4 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-[700px] flex flex-col items-center gap-4 text-center"
+          >
             <h2 className="font-black text-[36px] md:text-[48px] text-brand-dark leading-tight">Need Specific help?</h2>
             <p className="font-medium text-[18px] md:text-[20px] text-brand-dark/80 opacity-80 leading-relaxed">
               Jump straight to the support you need. Our Specialised teams are ready to assist.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full">
              {[
@@ -114,7 +146,14 @@ const Contact = () => {
                  action: "Contact Vet Support"
                }
              ].map((card, i) => (
-               <div key={i} className="flex-1 bg-white p-8 rounded-3xl border-2 border-border-accent flex flex-col gap-4 hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer">
+               <motion.div 
+                 key={i} 
+                 initial={{ opacity: 0, y: 30 }}
+                 whileInView={{ opacity: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.6, delay: i * 0.1 }}
+                 className="flex-1 bg-white p-8 rounded-3xl border-2 border-border-accent flex flex-col gap-4 hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer"
+               >
                   <div className="w-14 h-14 flex justify-center items-center bg-brand-light text-brand-blue rounded-xl mb-2 group-hover:bg-brand-blue group-hover:text-white transition-colors">
                      {i === 0 ? <Clock size={24} /> : i === 1 ? <MapPin size={24} /> : <Phone size={24} />}
                   </div>
@@ -126,7 +165,7 @@ const Contact = () => {
                     {card.action}
                     <ArrowRight size={16} />
                   </div>
-               </div>
+               </motion.div>
              ))}
           </div>
 
@@ -134,8 +173,14 @@ const Contact = () => {
       </section>
 
       {/* Map Section */}
-      <section className="w-full px-6 md:px-12 lg:px-40 pb-24">
-        <div className="w-full max-w-[1114px] mx-auto overflow-hidden rounded-[32px] border-2 border-border-accent bg-white p-4 shadow-xl">
+      <section className="w-full px-6 md:px-12 lg:px-40 pb-24 overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="w-full max-w-[1114px] mx-auto overflow-hidden rounded-[32px] border-2 border-border-accent bg-white p-4 shadow-xl"
+        >
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d120617.49138228265!2d72.8124078!3d19.1384897!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b9d45d3f805d%3A0x6577fdc07c82a5d9!2sPawwl%20One%20stop%20pet%20care%20%7C%20Best%20Pet%20clinic%20and%20shop%20in%20Bhandup!5e0!3m2!1sen!2sin!4v1776378473997!5m2!1sen!2sin" 
             width="100%" 
@@ -146,7 +191,7 @@ const Contact = () => {
             referrerPolicy="no-referrer-when-downgrade"
             className="rounded-[24px]"
           />
-        </div>
+        </motion.div>
       </section>
 
       <Footer />

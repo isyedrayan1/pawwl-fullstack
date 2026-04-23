@@ -21,7 +21,7 @@ const Index = () => (
     <Navbar />
     <Hero />
     <HomeServices />
-    {/* <FeaturedProducts /> -- temporarily hidden, restore by uncommenting */}
+    {/* <FeaturedProducts /> */}
     <IntroVideo />
     <WhyPawwl />
     <Blogs />

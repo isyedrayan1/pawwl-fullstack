@@ -1,4 +1,7 @@
+import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 // Detailed Bento Assets
 import img286 from "@/assets/home/servbento/image 286.webp";
@@ -15,28 +18,41 @@ import lrow11 from "@/assets/home/servbento/lrow-11.webp";
 import bentolast from "@/assets/home/servbento/bentolast.svg";
 
 const FeaturedProducts = () => {
+  const isMobile = useIsMobile();
+
   return (
-    <section className="bg-white py-12 md:py-16">
+    <section className="bg-white py-12 md:py-16 overflow-hidden">
       <div className="section-container">
         
         {/* Simple Store Header */}
-        <div className="flex flex-col items-center gap-4 mb-10 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex flex-col items-center gap-4 mb-10 text-center"
+        >
           <div className="w-fit bg-[#e8f7ff] px-4 py-1.5 rounded-full border border-[#c1e8fb]">
             <span className="font-medium text-[12px] md:text-xs text-[#134e86]">Pawwl Store</span>
           </div>
           <h2 className="font-extrabold text-[32px] md:text-[40px] text-[#012169] leading-tight">
             Premium Pet Essentials.
           </h2>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col gap-8">
           
           {/* Row 2: Main Large Card + Two Wide Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch overflow-hidden">
             
             {/* Left Main Card: Super Chewer */}
-            <div className="lg:col-span-12 xl:col-span-5 h-[500px] lg:h-[592px] w-full max-w-[440px] mx-auto xl:mx-0 bg-[#58a4cf] rounded-2xl relative overflow-hidden transition-all shadow-inner">
-              
+            <motion.div 
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="lg:col-span-12 xl:col-span-5 h-[500px] lg:h-[592px] w-full max-w-[440px] mx-auto xl:mx-0 bg-[#58a4cf] rounded-2xl relative overflow-hidden transition-all shadow-inner"
+            >
               {/* Text - TOP LEFT (Smaller and Moved Up) */}
               <div className="absolute top-4 left-4 lg:top-6 lg:left-6 z-20 flex flex-col max-w-[280px] lg:max-w-[330px]">
                 <span className="font-bold text-[22px] lg:text-[26px] leading-tight text-[#012169]">
@@ -63,13 +79,18 @@ const FeaturedProducts = () => {
                 Learn More
                 <ArrowUpRight size={16} className="text-[#012169] transition-transform group-hover:translate-x-1" />
               </a>
-            </div>
+            </motion.div>
 
             {/* Right Column: Two wide white cards */}
             <div className="lg:col-span-12 xl:col-span-7 flex flex-col gap-8">
               {/* Top Case */}
-              <div className="relative w-full h-[180px] lg:h-[280px] bg-white border-2 border-solid border-[#c1e8fb] rounded-2xl overflow-hidden group">
-                
+              <motion.div 
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative w-full h-[180px] lg:h-[280px] bg-white border-2 border-solid border-[#c1e8fb] rounded-2xl overflow-hidden group"
+              >
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
                   <span className="font-bold text-[19px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Premium Dog Kibble</span>
@@ -93,11 +114,16 @@ const FeaturedProducts = () => {
                     <img src={superchewer2} alt="" className="w-full h-full object-contain object-right-bottom" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Bottom Case */}
-              <div className="relative w-full h-[180px] lg:h-[280px] bg-white border-2 border-solid border-[#c1e8fb] rounded-2xl overflow-hidden group">
-                
+              <motion.div 
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                className="relative w-full h-[180px] lg:h-[280px] bg-white border-2 border-solid border-[#c1e8fb] rounded-2xl overflow-hidden group"
+              >
                 {/* Text Block - TOP LEFT */}
                 <div className="absolute top-4 lg:top-10 left-4 lg:left-10 flex flex-col max-w-[180px] lg:max-w-[330px] z-10">
                   <span className="font-bold text-[19px] lg:text-[32px] leading-tight lg:leading-[36px] text-[#012169]">Tasty Cat Gravy Pouch</span>
@@ -121,20 +147,32 @@ const FeaturedProducts = () => {
                     <img src={fr22} alt="" className="w-full h-full object-contain object-right-top" />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
           {/* Desktop-Only Rows (2, 3, 4) - Hidden on Mobile */}
-          <div className="hidden lg:flex flex-col gap-8">
+          <div className="hidden lg:flex flex-col gap-8 overflow-hidden">
             {/* Row 2: Three Food Cards */}
-            <div className="grid grid-cols-3 gap-8">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-3 gap-8"
+            >
               {[
                 { title: "Adult Cat Dry Food", desc: "Crunchy bites packed with protein for adult cats." },
                 { title: "Puppy Starter Food", desc: "Balanced nutrition to fuel growing puppies daily." },
                 { title: "Chicken Jerky Sticks", desc: "Slow-cooked meaty jerky — perfect training reward." }
               ].map((item, i) => (
-                <div key={i} className="h-[165px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group">
+                <motion.div 
+                  key={i} 
+                  variants={{
+                    hidden: { opacity: 0, y: 40 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
+                  }}
+                  className="h-[165px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group"
+                >
                   <div className="absolute top-4 left-6 flex flex-col max-w-[200px] z-10">
                     <span className="font-bold text-[18px] text-[#134e86] leading-tight mb-1">{item.title}</span>
                     <p className="font-normal text-[14px] text-[#012169] leading-tight opacity-70">{item.desc}</p>
@@ -151,14 +189,20 @@ const FeaturedProducts = () => {
                       <img src={row21} alt="" className="w-full h-full object-contain object-bottom" />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Row 3: Accessories & Day Care - Perfectly Aligned Containers */}
-            <div className="flex flex-row gap-[32.3px] items-end w-full">
+            <div className="flex flex-row gap-[32.3px] items-end w-full overflow-hidden">
               {/* Accessories Card */}
-              <div className="w-[490px] h-[175px] flex items-end relative overflow-visible flex-shrink-0">
+              <motion.div 
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="w-[490px] h-[175px] flex items-end relative overflow-visible flex-shrink-0"
+              >
                 <div className="w-[490px] h-[145px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden group">
                   <div className="absolute top-5 left-6 flex flex-col gap-[4px] z-10 w-[410px]">
                     <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Wide Range of Accessories for Pets</h4>
@@ -177,10 +221,16 @@ const FeaturedProducts = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Day Care Card */}
-              <div className="flex-1 min-h-[175px] relative overflow-visible flex items-end">
+              <motion.div 
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="flex-1 min-h-[175px] relative overflow-visible flex items-end"
+              >
                 <div className="w-full h-[145px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative z-0">
                    <div className="absolute top-5 left-6 flex flex-col gap-[4px] z-10 w-full sm:max-w-[340px]">
                     <h4 className="text-[20px] font-bold text-[#134e86] leading-tight">Best Day Care in Town!</h4>
@@ -196,12 +246,12 @@ const FeaturedProducts = () => {
                 <div className="absolute right-4 bottom-[-12px] w-[380px] h-[150px] z-20 pointer-events-none items-end flex justify-end">
                   <img src={bentolast} alt="Day care pets" className="w-full h-auto object-contain object-right-bottom" />
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
           {/* Mobile-Only Modular Layout - Hidden on Desktop */}
-          <div className="lg:hidden flex flex-col gap-6">
+          <div className="lg:hidden flex flex-col gap-6 overflow-hidden">
             <div className="grid grid-cols-2 gap-4">
                {/* 4 Cards: 3 Food + 1 Accessories */}
                {[
@@ -212,7 +262,14 @@ const FeaturedProducts = () => {
                ].map((item, idx) => {
                  const i = idx + 1;
                  return (
-                 <div key={i} className="w-full h-[230px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-3">
+                 <motion.div 
+                   key={i} 
+                   initial={{ opacity: 0, x: idx % 2 === 0 ? -40 : 40 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true, margin: "-100px" }}
+                   transition={{ duration: 0.8, delay: idx * 0.1, ease: "easeOut" }}
+                   className="w-full h-[230px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-3"
+                 >
                    {/* Top Text Related */}
                    <div className="flex flex-col gap-1 z-10 h-[80px]">
                       <span className="font-bold text-[15px] text-[#134e86] leading-tight">
@@ -241,13 +298,19 @@ const FeaturedProducts = () => {
                        </div>
                      )}
                    </div>
-                 </div>
+                 </motion.div>
                  );
                })}
             </div>
 
             {/* Day Care - Full Row Mobile */}
-            <div className="w-full h-[180px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full h-[180px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-4"
+            >
                <div className="flex flex-col gap-1 z-10 h-[80px]">
                   <h4 className="text-[18px] font-bold text-[#134e86]">Best Day Care in Town!</h4>
                   <p className="text-[#012169] text-[12px] opacity-70">Safe daycare and grooming for your furry family.</p>
@@ -260,9 +323,8 @@ const FeaturedProducts = () => {
                <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-[320px] h-[100px] z-0 flex justify-center items-end">
                  <img src={bentolast} className="w-full h-auto object-contain object-bottom" alt="" />
                </div>
-            </div>
+            </motion.div>
           </div>
-
         </div>
       </div>
     </section>

@@ -1,29 +1,36 @@
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import bornFromLoveImg from "@/assets/born_from_love.webp";
 
-const stats = [
-  { value: "8+", label: "Years of Experience" },
-  { value: "50+", label: "Premium Products" },
-  { value: "10K+", label: "Happy Customers" },
-];
-
 const BornFromLove = () => (
-  <section className="py-12 bg-white">
+  <section className="py-12 bg-white overflow-hidden">
     <div className="section-container">
       <div className="flex flex-col lg:flex-row items-center gap-10 bg-white">
         
         {/* Left Image Section */}
-        <div className="w-full lg:w-[430px] h-[584px] rounded-[28px] overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full lg:w-[430px] h-[584px] rounded-[28px] overflow-hidden"
+        >
           <img 
             src={bornFromLoveImg} 
             alt="Born from Love" 
             className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
           />
-        </div>
+        </motion.div>
 
         {/* Right Content Section */}
-        <div className="flex flex-col gap-8 flex-1">
-          <div className="w-full flex flex-col justify-center bg-white border border-border-design rounded-3xl p-12">
+        <div className="flex flex-col gap-8 flex-1 w-full">
+          <motion.div 
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full flex flex-col justify-center bg-white border border-border-design rounded-3xl p-12"
+          >
             <div className="flex flex-col gap-6">
               <div className="w-fit bg-brand-light px-4 py-1.5 rounded-full border border-brand-accent">
                 <span className="font-medium text-xs text-brand-accent">About Pawwl</span>
@@ -39,10 +46,16 @@ const BornFromLove = () => (
                 </svg>
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Highlights Row - Optimized for mobile */}
-          <div className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0"
+          >
             {[
               { label: "Established", val: "2026" },
               { label: "Expert Care", val: "100%" },
@@ -53,7 +66,7 @@ const BornFromLove = () => (
                 <span className="font-normal text-[10px] sm:text-[14px] leading-tight text-[#788796]">{stat.label}</span>
               </div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
       </div>

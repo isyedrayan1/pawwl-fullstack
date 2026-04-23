@@ -13,6 +13,8 @@ import Careers from "./pages/Careers.tsx";
 import CareerDetails from "./pages/CareerDetails.tsx";
 import Contact from "./pages/Contact.tsx";
 import Gallery from "./pages/Gallery.tsx";
+import Blogs from "./pages/Blogs.tsx";
+import BlogDetail from "./pages/BlogDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,8 @@ const AppContent = () => {
             <Route path="/careers/:id" element={<CareerDetails />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/blog" element={<Blogs />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
 

@@ -1,3 +1,5 @@
+import { useIsMobile } from "@/hooks/useMediaQuery";
+import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -6,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import DoctorsSection from "@/components/DoctorsSection";
 import PetGallery from "@/components/PetGallery";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import SEO from "@/components/SEO";
 
 import srv5 from "@/assets/gallery/5.webp";
 import srv9 from "@/assets/gallery/9.webp";
@@ -36,11 +39,11 @@ const servicesTestimonials = [
   },
 ];
 
-import SEO from "@/components/SEO";
-
 const Services = () => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="min-h-screen bg-white text-brand-dark selection:bg-brand-blue selection:text-white">
+    <div className="min-h-screen bg-white text-brand-dark selection:bg-brand-blue selection:text-white overflow-hidden">
       <SEO 
         title="Professional Pet Services | Vet Care, Grooming & Boarding Mumbai"
         description="Comprehensive pet care services in Mumbai. Specialized in veterinary medical checkups, professional pet grooming, safe pet daycare, and luxury boarding."
@@ -49,15 +52,22 @@ const Services = () => {
       <Navbar />
 
       {/* 1. Precise Hero Section from Figma */}
-      <section className="bg-white pt-4 md:pt-8 pb-12">
+      <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container">
           <div className="w-full flex flex-wrap gap-x-6 gap-y-9">
             {/* Top Pawwl Banner */}
-            <div className="w-full h-[320px] sm:h-[420px] md:h-[496px] flex justify-center items-center bg-black/20 rounded-[28px] overflow-hidden relative group">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-full h-[320px] sm:h-[420px] md:h-[496px] flex justify-center items-center bg-black/20 rounded-[28px] overflow-hidden relative group"
+            >
               <img 
                 src="/assets/images/serviceheroimg.webp" 
                 alt="Services Banner" 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-10"
+                loading="lazy" decoding="async"
               />
               <div className="w-full h-full absolute inset-0 flex justify-center items-center z-20">
                 <PawwlWatermark 
@@ -65,10 +75,15 @@ const Services = () => {
                   opacity={0.9}
                 />
               </div>
-            </div>
+            </motion.div>
 
             {/* Service Grid */}
-            <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-9">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-9"
+            >
               {[
                 { imgSrc: "/assets/icons/pet.webp", title: "Bath & Wash", desc: "Gentle shampoo and conditioning to keep coats clean, soft, and fresh." },
                 { imgSrc: "/assets/icons/dog.webp", title: "Haircut & Styling", desc: "Breed-specific or custom grooming styles tailored to your pet’s needs." },
@@ -77,34 +92,63 @@ const Services = () => {
                 { imgSrc: "/assets/icons/dental-insurance.webp", title: "Teeth Cleaning", desc: "Basic dental care for fresher breath and better oral hygiene." },
                 { imgSrc: "/assets/icons/vet.webp", title: "Treatment", desc: "Reduce shedding and maintain a smooth, healthy coat." }
               ].map((service, i) => (
-                <div key={i} className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group">
+                <motion.div 
+                  key={i} 
+                  variants={{
+                    hidden: { 
+                      opacity: 0, 
+                      x: isMobile ? (i % 2 === 0 ? -40 : 40) : 0,
+                      y: isMobile ? 0 : 40
+                    },
+                    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
+                  }}
+                  className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group"
+                >
                   <div className="w-full flex flex-col gap-2 p-3">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mb-1">
-                       <img src={service.imgSrc} alt={service.title} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
+                       <img src={service.imgSrc} loading="lazy" decoding="async" alt={service.title} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" />
                     </div>
                     <span className="font-bold text-[20px] leading-[24px] text-[#241f1b]">{service.title}</span>
                     <span className="font-normal text-[16px] leading-[24px] text-[#534d49]">{service.desc}</span>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* 2. Products Showcase */}
-      <section className="bg-white py-24 flex flex-col items-center">
+      <section className="bg-white py-24 flex flex-col items-center overflow-hidden">
          <div className="section-container flex flex-col items-center gap-12">
-            <div className="flex flex-col items-center gap-3 text-center mb-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="flex flex-col items-center gap-3 text-center mb-4"
+            >
               <h2 className="font-heading font-black text-[32px] md:text-[51.4px] leading-tight text-brand-dark">Pamper Your Pet with Our Premium Products</h2>
               <p className="font-normal text-[18px] md:text-[20px] leading-[24px] text-brand-dark/80 max-w-4xl">Pamper your pet with our premium products designed for comfort and style.</p>
-            </div>
+            </motion.div>
             
-            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-               <div className="rounded-[28px] overflow-hidden shadow-sm h-[500px]">
-                 <img src={srv17} className="w-full h-full object-cover" alt="Premium Products" />
-               </div>
-               <div className="flex flex-col gap-8">
+            <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch overflow-hidden">
+               <motion.div 
+                 initial={{ opacity: 0, x: -40 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true, margin: "-100px" }}
+                 transition={{ duration: 0.8, ease: "easeOut" }}
+                 className="rounded-[28px] overflow-hidden shadow-sm h-[500px]"
+               >
+                 <img src={srv17} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Premium Products" />
+               </motion.div>
+               <motion.div 
+                 initial={{ opacity: 0, x: 40 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true, margin: "-100px" }}
+                 transition={{ duration: 0.8, ease: "easeOut" }}
+                 className="flex flex-col gap-8"
+               >
                   <div className="bg-[#D8FAFF] p-8 rounded-[28px] h-[234px]">
                     <h3 className="font-bold text-2xl mb-2">In-house Nutrition</h3>
                     <p className="opacity-70">Best for your pets health.</p>
@@ -113,7 +157,7 @@ const Services = () => {
                     <h3 className="font-bold text-2xl mb-2">Accessories</h3>
                     <p className="opacity-70">Safe and Durable.</p>
                   </div>
-               </div>
+               </motion.div>
             </div>
          </div>
       </section>
