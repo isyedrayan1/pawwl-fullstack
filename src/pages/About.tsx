@@ -47,8 +47,8 @@ const About = () => {
                      <Heart size={48} strokeWidth={1} />
                    </div>
                    <div className="flex flex-col gap-4">
-                     <span className="font-heading font-black text-[72px] sm:text-[100px] md:text-[140px] leading-[0.8] tracking-tighter">50K+</span>
-                     <span className="font-normal text-base md:text-lg opacity-50 uppercase tracking-widest">Pets cared for</span>
+                     <span className="font-heading font-black text-[40px] sm:text-[60px] md:text-[80px] leading-[1.0] tracking-tighter">Born From Love</span>
+                     <span className="font-normal text-base md:text-lg opacity-50 uppercase tracking-widest">Our Founding Story</span>
                    </div>
                    {/* Decorative circle */}
                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>

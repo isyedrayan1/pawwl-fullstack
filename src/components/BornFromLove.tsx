@@ -30,7 +30,7 @@ const BornFromLove = () => (
               </div>
               <h2 className="font-black text-[32px] md:text-[40px] lg:text-[52px] leading-tight text-[#212529]">Born from Love.</h2>
               <p className="font-normal text-[16px] leading-[26.4px] text-[#788796] max-w-md">
-                Since 2018, we've grown from a small grooming studio to a full-spectrum pet care platform serving thousands of families.
+                Established in 2026, we've started our journey to provide Mumbai's pets with the premium, professional care they truly deserve.
               </p>
               <Button className="w-fit bg-brand-accent text-white px-8 py-3 h-auto rounded-full font-semibold text-sm hover:bg-brand-dark transition-colors flex items-center gap-2 shadow-none">
                 Learn About Us
@@ -41,15 +41,15 @@ const BornFromLove = () => (
             </div>
           </div>
 
-          {/* Stats Row - Always horizontal, optimized for mobile */}
+          {/* Highlights Row - Optimized for mobile */}
           <div className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0">
             {[
-              { label: "Years", val: "8+" },
-              { label: "Experts", val: "50+" },
-              { label: "Families", val: "10K+" }
+              { label: "Established", val: "2026" },
+              { label: "Expert Care", val: "100%" },
+              { label: "Premium", val: "Only" }
             ].map((stat) => (
               <div key={stat.label} className="h-[90px] sm:h-[165px] flex-1 flex flex-col justify-center items-center bg-white rounded-2xl sm:rounded-[20px] border border-border-design hover:shadow-md transition-shadow">
-                <span className="font-black text-[22px] sm:text-[44px] leading-none text-brand-accent mb-1">{stat.val}</span>
+                <span className="font-black text-[22px] sm:text-[40px] leading-none text-brand-accent mb-1 uppercase">{stat.val}</span>
                 <span className="font-normal text-[10px] sm:text-[14px] leading-tight text-[#788796]">{stat.label}</span>
               </div>
             ))}

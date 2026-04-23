@@ -85,81 +85,102 @@ const Footer = () => (
       </div>
     </div>
 
-    {/* 3. Main Footer Layout (h-[261px] links base) */}
+    {/* 3. Main Footer Layout */}
     <div className="w-full bg-[#1b4965] flex justify-center text-white">
-      <div className="section-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pt-16 pb-12 lg:min-h-[350px]">
-        {/* Brand Column */}
-        <div className="flex flex-col gap-6">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/pawwl-logo-main-croped.webp" alt="Pawwl Logo" className="w-[38px] h-[38px] object-contain" />
-            <span className="font-bold text-[24px] text-white tracking-tight antialiased">Pawwl</span>
-          </Link>
-          <p className="font-normal text-[15px] leading-relaxed text-white opacity-70 max-w-[280px]">
-            Your trusted partner in pet care. We provide premium services and products for your beloved companions.
-          </p>
+      <div className="section-container flex flex-col gap-8 pt-10 pb-8">
+        
+        {/* Brand Row (Big Logo on Left, Description on Right) */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-10 border-b border-white/10">
+          {/* Big Logo & Name on the Left */}
+          <div className="flex items-center gap-5 group">
+            <img 
+              src="/pawwl-logo-main-croped.webp" 
+              alt="Pawwl Logo" 
+              className="w-[80px] h-[80px] md:w-[100px] md:h-[100px] object-contain transition-transform duration-500" 
+            />
+            <div className="flex flex-col items-start text-left">
+              <span className="font-black text-[36px] md:text-[44px] text-white tracking-tighter antialiased leading-none">Pawwl</span>
+              <span className="text-[14px] font-bold text-white/50 uppercase tracking-[0.2em] mt-1">One stop pet care</span>
+            </div>
+          </div>
+
+          {/* Description on the Right */}
+          <div className="flex-1 max-w-[500px] md:text-right">
+            <p className="font-normal text-[16px] md:text-[18px] leading-relaxed text-white opacity-80 text-center md:text-right italic">
+              "Your trusted partner in pet care. We provide premium services and products for your beloved companions since 2026."
+            </p>
+          </div>
         </div>
 
-        {/* Quick Links */}
-        <div className="flex flex-col gap-6 text-white">
-          <h4 className="font-semibold text-[16px]">Quick Links</h4>
-          <ul className="flex flex-col gap-3">
-            {quickLinks.map((link) => (
-              <li key={link.label}>
-                <Link to={link.path} className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 transition-opacity">{link.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {/* Links & Info Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Quick Links */}
+          <div className="flex flex-col gap-4 text-white">
+            <h4 className="font-bold text-[15px] text-white uppercase tracking-wider">Quick Links</h4>
+            <ul className="flex flex-col gap-2">
+              {quickLinks.map((link) => (
+                <li key={link.label}>
+                  <Link to={link.path} className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 hover:translate-x-1 transition-all inline-block">{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Services */}
-        <div className="flex flex-col gap-6 text-white">
-          <h4 className="font-semibold text-[16px]">Services</h4>
-          <ul className="flex flex-col gap-3">
-            {services.map((link) => (
-              <li key={link.label}>
-                <Link to={link.path} className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 transition-opacity">{link.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+          {/* Services */}
+          <div className="flex flex-col gap-4 text-white">
+            <h4 className="font-bold text-[15px] text-white uppercase tracking-wider">Services</h4>
+            <ul className="flex flex-col gap-2">
+              {services.map((link) => (
+                <li key={link.label}>
+                  <Link to={link.path} className="font-normal text-[14px] text-white opacity-60 hover:opacity-100 hover:translate-x-1 transition-all inline-block">{link.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Contact info */}
-        <div className="flex flex-col gap-6 text-white">
-          <h4 className="font-semibold text-[16px]">Contact</h4>
-          <ul className="flex flex-col gap-4">
-            <li className="flex items-start gap-3">
-              <MapPin size={18} className="opacity-60 shrink-0 mt-1" />
-              <div className="flex flex-col gap-2">
-                <span className="font-normal text-[14px] opacity-80 leading-relaxed max-w-[280px]">
-                  Shop No, 4–5–6, Joy Homes CHS Rd, Kashi Nagar, Valmik Nagar, Bhandup West, Mumbai, Maharashtra 400078
+          {/* Contact info */}
+          <div className="flex flex-col gap-4 text-white lg:col-span-1">
+            <h4 className="font-bold text-[15px] text-white uppercase tracking-wider">Get in Touch</h4>
+            <ul className="flex flex-col gap-3">
+              <li className="flex items-start gap-3">
+                <MapPin size={18} className="text-white/40 shrink-0 mt-1" />
+                <span className="font-normal text-[14px] opacity-80 leading-relaxed">
+                  Shop No, 4–5–6, Joy Homes CHS Rd, Kashi Nagar, Valmik Nagar, Bhandup West, Mumbai 400078
                 </span>
-                <a 
-                  href="https://maps.app.goo.gl/XEuHrRH3Q3fapSZf6" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-[12px] font-bold text-white hover:underline flex items-center gap-1.5"
-                >
-                  Get Directions
-                  <ArrowRight size={12} />
-                </a>
-              </div>
-            </li>
-            <li className="flex items-center gap-3">
-              <Phone size={18} className="opacity-60 shrink-0" />
-              <span className="font-normal text-[14px] opacity-80">+91 72088 13649</span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Mail size={18} className="opacity-60 shrink-0" />
-              <span className="font-normal text-[14px] opacity-80">hello@pawwl.com</span>
-            </li>
-          </ul>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone size={18} className="text-white/40 shrink-0" />
+                <span className="font-normal text-[14px] opacity-80">+91 72088 13649</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail size={18} className="text-white/40 shrink-0" />
+                <span className="font-normal text-[14px] opacity-80">hello@pawwl.com</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Map Section */}
+          <div className="flex flex-col gap-4 text-white">
+            <h4 className="font-bold text-[15px] text-white uppercase tracking-wider">Find Us</h4>
+            <div className="w-full h-[120px] rounded-2xl overflow-hidden border border-white/10 shadow-inner group">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d120617.49138228265!2d72.8124078!3d19.1384897!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b9d45d3f805d%3A0x6577fdc07c82a5d9!2sPawwl%20One%20stop%20pet%20care%20%7C%20Best%20Pet%20clinic%20and%20shop%20in%20Bhandup!5e0!3m2!1sen!2sin!4v1776378473997!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0, filter: 'grayscale(100%) invert(90%) contrast(150%) brightness(90%)' }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                className="opacity-50 group-hover:opacity-80 transition-opacity duration-500"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     {/* 4. Copyright Bar (h-[67px]) */}
     <div className="w-full bg-[#1b4965] flex justify-center text-white">
-      <div className="section-container flex flex-col md:flex-row justify-between items-center gap-4 py-8 lg:h-[67px] border-t border-white/20 text-[12px]">
+      <div className="section-container flex flex-col md:flex-row justify-between items-center gap-4 py-4 lg:h-[60px] border-t border-white/20 text-[12px]">
         <p className="opacity-60 font-normal">© 2026 Pawwl Pet Services. All Rights Reserved.</p>
         <div className="flex gap-10">
           <a href="#" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Privacy Policy</a>

@@ -18,8 +18,8 @@ const WhyPawwl = () => (
              <Radio size={24} />
           </div>
           <div className="space-y-4 mt-12 lg:mt-0">
-            <h3 className="font-black text-[80px] sm:text-[100px] lg:text-[140px] leading-[0.8] text-white">50K+</h3>
-            <p className="font-normal text-base text-white opacity-50">Pets cared for</p>
+            <h3 className="font-black text-[40px] sm:text-[50px] lg:text-[70px] leading-[1.0] text-white">Expert<br />Care</h3>
+            <p className="font-normal text-base text-white opacity-50">Professional Pet Services</p>
           </div>
         </div>
 
@@ -45,8 +45,8 @@ const WhyPawwl = () => (
             <div className="h-8 w-8 sm:h-11 sm:w-11 bg-brand-accent rounded-xl flex items-center justify-center text-white mb-3 sm:mb-6 group-hover:rotate-12 transition-transform">
               <Users size={20} />
             </div>
-            <h4 className="font-bold text-[15px] sm:text-[20px] leading-tight text-[#212529] mb-1">Community 10K+</h4>
-            <p className="font-normal text-[11px] sm:text-[14px] leading-relaxed text-[#788796] line-clamp-2">Join our pet parents.</p>
+            <h4 className="font-bold text-[15px] sm:text-[20px] leading-tight text-[#212529] mb-1">Pet Community</h4>
+            <p className="font-normal text-[11px] sm:text-[14px] leading-relaxed text-[#788796] line-clamp-2">Join our family of pet parents.</p>
           </div>
 
           <div className="min-h-[170px] sm:h-[237px] flex flex-col justify-center bg-white p-4 sm:p-8 rounded-3xl border border-border-design hover:border-brand-blue transition-colors group">

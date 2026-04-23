@@ -50,11 +50,11 @@ const Navbar = () => {
       >
         <div className="w-full max-w-[1440px] mx-auto px-6 lg:px-[141px] flex items-center justify-between h-full">
         {/* Logo Section */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <img src="/pawwl-logo-main-croped.webp" alt="Pawwl Logo" className="w-[48px] h-[48px] object-contain group-hover:scale-105 transition-transform" />
+        <Link to="/" className="flex items-center gap-3 group">
+          <img src="/pawwl-logo-main-croped.webp" alt="Pawwl Logo" className="w-[56px] h-[56px] object-contain group-hover:scale-105 transition-transform" />
           <div className="flex flex-col -gap-1">
-            <span className="text-[22px] font-bold text-brand-dark leading-none tracking-tight">Pawwl</span>
-            <span className="text-[12px] font-medium text-[#134e86]/60 mt-0.5">One stop pet care</span>
+            <span className="text-[26px] font-bold text-brand-dark leading-none tracking-tight">Pawwl</span>
+            <span className="text-[13px] font-medium text-brand-dark/80 mt-0.5">One stop pet care</span>
           </div>
         </Link>
 
