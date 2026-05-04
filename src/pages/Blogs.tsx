@@ -1,5 +1,7 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { blogs } from "@/data/blogData";
@@ -10,45 +12,51 @@ import SEO from "@/components/SEO";
 const Blogs = () => {
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <SEO 
+      <SEO
         title="Pet Care Blogs | Expert Advice from Pawwl Studio Mumbai"
         description="Read our latest blogs on pet grooming, nutrition, and health. Expert tips from the professional team at Pawwl Studio, Bhandup."
       />
       <Navbar />
-      
+
       <main className="py-24">
         <div className="section-container">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-center mb-16"
-          >
+          <div className="gs-reveal text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-heading font-black text-[#1A4B6B] mb-6">Our Stories & Tips</h1>
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Learn everything about pet care from our experts. Simple guides, professional insights!
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 overflow-hidden">
             {blogs.map((blog, i) => (
-              <motion.div 
+              <div
                 key={blog.id}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
+                className="gs-reveal"
               >
                 <Link to={`/blog/${blog.id}`} className="group cursor-pointer">
                   <div className="rounded-[40px] overflow-hidden mb-8 aspect-[16/10] relative shadow-lg">
-                    <img 
-                      src={blog.mainImage} 
-                      alt={blog.title} 
+                    <img
+                      src={blog.mainImage}
+                      alt={blog.title}
                       loading="lazy" decoding="async"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute top-6 left-6">
                       <span className="bg-white/90 backdrop-blur-sm text-[#1A4B6B] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
@@ -69,7 +77,7 @@ const Blogs = () => {
                     </Button>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

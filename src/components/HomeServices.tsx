@@ -1,54 +1,17 @@
-import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
-import { Heart, Scissors, Bath, GraduationCap, Stethoscope } from "lucide-react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import PawwlWatermark from "./PawwlWatermark";
 
 const HomeServices = () => {
-  const isMobile = useIsMobile();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = (index: number) => {
-    let initialX = 0;
-    
-    if (isMobile) {
-      // 2-column grid: left column slides from left, right from right
-      initialX = index % 2 === 0 ? -40 : 40;
-    } else {
-      // 3-column grid: index 0,3 from left; 1,4 fade only; 2,5 from right
-      if (index % 3 === 0) initialX = -40;
-      else if (index % 3 === 2) initialX = 40;
-      else initialX = 0;
-    }
-
-    return {
-      hidden: { opacity: 0, x: initialX },
-      visible: { 
-        opacity: 1, 
-        x: 0, 
-        transition: { duration: 0.8, ease: "easeOut" as const } 
-      }
-    };
-  };
+  const headerRef = useReveal({ y: 40 });
+  const gridRef = useStaggerReveal(".gs-card", { y: 40, stagger: 0.08 });
 
   return (
     <section className="bg-white py-12 md:py-16 overflow-hidden">
       <div className="section-container">
         
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex flex-col items-center gap-4 mb-10 text-center"
+        <div 
+          ref={headerRef}
+          className="flex flex-col items-center gap-4 mb-10 text-center opacity-0"
         >
           <div className="w-fit bg-[#e8f7ff] px-4 py-1.5 rounded-full border border-[#c1e8fb]">
             <span className="font-medium text-[12px] md:text-xs text-[#134e86]">Welcome to Pawwl</span>
@@ -59,7 +22,7 @@ const HomeServices = () => {
           <p className="font-normal text-[16px] md:text-[18px] leading-[1.6] text-[#012169] max-w-[640px] opacity-80 px-4">
             At Pawwl, we blend professional expertise with genuine affection. Our certified grooming clinic provides a safe, calm, and premium experience designed entirely around your pet's health and happiness.
           </p>
-        </motion.div>
+        </div>
 
         <div className="w-full flex flex-wrap gap-x-6 gap-y-9 relative">
             <PawwlWatermark 
@@ -68,11 +31,8 @@ const HomeServices = () => {
             />
 
           {/* Service Grid */}
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+          <div 
+            ref={gridRef}
             className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10"
           >
             {[
@@ -83,10 +43,9 @@ const HomeServices = () => {
               { imgSrc: "/assets/icons/dental-insurance.webp", title: "Teeth Cleaning", desc: "Basic dental care for fresher breath and better oral hygiene." },
               { imgSrc: "/assets/icons/vet.webp", title: "Treatment", desc: "Reduce shedding and maintain a smooth, healthy coat." }
             ].map((service, i) => (
-              <motion.div 
+              <div 
                 key={i} 
-                variants={itemVariants(i)}
-                className="flex gap-2 bg-[#f8fdff] border-2 border-[#c1e8fb] p-2 rounded-[24px] sm:rounded-[28px] w-full min-h-[140px] sm:min-h-[160px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
+                className="gs-card flex gap-2 bg-[#f8fdff] border-2 border-[#c1e8fb] p-2 rounded-[24px] sm:rounded-[28px] w-full min-h-[140px] sm:min-h-[160px] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group opacity-0"
               >
                 <div className="w-full flex flex-col gap-2 p-3 sm:p-4">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 mb-1 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
@@ -95,9 +54,9 @@ const HomeServices = () => {
                   <span className="font-bold text-[18px] sm:text-[20px] leading-tight text-[#012169] mt-1">{service.title}</span>
                   <span className="font-normal text-[13px] sm:text-[15px] leading-snug text-[#012169] opacity-70">{service.desc}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

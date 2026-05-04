@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
 import { ArrowRight, Star, Quote, Heart } from "lucide-react";
@@ -13,6 +13,12 @@ import ab2 from "@/assets/gallery/10.webp";
 import SEO from "@/components/SEO";
 
 const About = () => {
+  const heroBannerRef = useReveal({ y: 0, scale: 0.96, duration: 1.2, ease: "power4.out" });
+  const storyLeftRef = useReveal({ x: -40, y: 0 });
+  const storyRightRef = useReveal({ x: 40, y: 0 });
+  const commitHeaderRef = useReveal({ y: 40 });
+  const commitGridRef = useStaggerReveal(".commit-card", { y: 30, stagger: 0.1 });
+
   return (
     <div className="min-h-screen bg-white font-body selection:bg-brand-blue selection:text-white overflow-hidden">
       <SEO 
@@ -28,11 +34,7 @@ const About = () => {
           <div className="section-container">
             <div className="flex flex-col gap-6 w-full">
               {/* Top Banner Row */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="relative bg-brand-light rounded-[28px] overflow-hidden h-[320px] sm:h-[420px] md:h-[496px] flex items-center justify-center border border-border-design shadow-sm"
               >
                 <img 
@@ -44,16 +46,12 @@ const About = () => {
                   className="absolute w-[90%] sm:w-[95%] md:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 text-white" 
                   opacity={1.0}
                 />
-              </motion.div>
+              </div>
 
               {/* Stats & Story Row */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch overflow-hidden">
                 {/* 50K+ Block */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                <div 
                   className="lg:col-span-5 h-auto min-h-[300px] lg:h-[494px] bg-brand-accent p-8 sm:p-12 md:p-14 rounded-[28px] flex flex-col justify-between text-white relative overflow-hidden shadow-2xl"
                 >
                    <div className="opacity-20">
@@ -64,14 +62,10 @@ const About = () => {
                      <span className="font-normal text-base md:text-lg opacity-50 uppercase tracking-widest">Our Founding Story</span>
                    </div>
                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-                </motion.div>
+                </div>
 
                 {/* Our Story Block */}
-                <motion.div 
-                  initial={{ opacity: 0, x: 40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                <div 
                   className="lg:col-span-7 h-auto lg:h-[494px] bg-white rounded-[28px] border border-border-design p-8 md:p-12 flex flex-col gap-6"
                 >
                   <h2 className="font-heading font-black text-[48px] md:text-[56px] leading-[1.05] text-foreground">Our Story</h2>
@@ -92,7 +86,7 @@ const About = () => {
                       <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </button>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
@@ -101,11 +95,7 @@ const About = () => {
         {/* Section 2: Commitment */}
         <section className="py-24 bg-white overflow-hidden">
           <div className="section-container">
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="max-w-[1000px] mx-auto text-center mb-20 flex flex-col gap-4"
             >
               <h2 className="font-heading font-extrabold text-[40px] md:text-[52px] leading-tight text-brand-blue">
@@ -114,9 +104,9 @@ const About = () => {
               <p className="text-[18px] md:text-[20px] text-brand-blue/80 max-w-3xl mx-auto">
                 Caring for your pet is a journey, and we’re here every step of the way. Our streamlined pet care process ensures your furry friends get the best care, tailored to their unique needs.
               </p>
-            </motion.div>
+            </div>
 
-            <div className="w-full max-w-[1120px] mx-auto flex flex-col items-center gap-8">
+            <div ref={commitGridRef} className="w-full max-w-[1120px] mx-auto flex flex-col items-center gap-8">
               {[
                 [
                   {
@@ -153,12 +143,8 @@ const About = () => {
               ].map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 self-stretch">
                   {row.map((step, colIndex) => (
-                    <motion.div 
+                    <div 
                       key={step.id}
-                      initial={{ opacity: 0, x: colIndex === 0 ? -40 : 40 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.8, delay: colIndex * 0.1, ease: "easeOut" }}
                       className={`flex items-center gap-6 grow p-6 rounded-[32px] border transition-all duration-300 hover:shadow-xl group ${
                         step.dark ? "bg-brand-accent border-transparent text-white" : "bg-white border-border-accent text-brand-blue"
                       }`}
@@ -176,7 +162,7 @@ const About = () => {
                           {step.desc}
                         </span>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               ))}

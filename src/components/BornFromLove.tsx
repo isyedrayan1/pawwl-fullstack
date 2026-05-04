@@ -1,35 +1,34 @@
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { useReveal } from "@/hooks/useGsapReveal";
 import bornFromLoveImg from "@/assets/born_from_love.webp";
 
-const BornFromLove = () => (
-  <section className="py-12 bg-white overflow-hidden">
-    <div className="section-container">
-      <div className="flex flex-col lg:flex-row items-center gap-10 bg-white">
-        
-        {/* Left Image Section */}
-        <motion.div 
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="w-full lg:w-[430px] h-[584px] rounded-[28px] overflow-hidden"
-        >
+const BornFromLove = () => {
+  const imgRef = useReveal({ x: -40, y: 0 });
+  const contentRef = useReveal({ x: 40, y: 0 });
+  const statsRef = useReveal({ y: 30, delay: 0.15 });
+
+  return (
+    <section className="py-12 bg-white overflow-hidden">
+      <div className="section-container">
+        <div className="flex flex-col lg:flex-row items-center gap-10 bg-white">
+          
+          {/* Left Image Section */}
+          <div 
+            ref={imgRef}
+            className="w-full lg:w-[430px] h-[584px] rounded-[28px] overflow-hidden opacity-0"
+          >
           <img 
             src={bornFromLoveImg} 
             alt="Born from Love" 
             className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
           />
-        </motion.div>
+          </div>
 
         {/* Right Content Section */}
         <div className="flex flex-col gap-8 flex-1 w-full">
-          <motion.div 
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full flex flex-col justify-center bg-white border border-border-design rounded-3xl p-12"
+          <div 
+            ref={contentRef}
+            className="w-full flex flex-col justify-center bg-white border border-border-design rounded-3xl p-12 opacity-0"
           >
             <div className="flex flex-col gap-6">
               <div className="w-fit bg-brand-light px-4 py-1.5 rounded-full border border-brand-accent">
@@ -46,15 +45,12 @@ const BornFromLove = () => (
                 </svg>
               </Button>
             </div>
-          </motion.div>
+          </div>
 
           {/* Highlights Row - Optimized for mobile */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0"
+          <div 
+            ref={statsRef}
+            className="flex flex-row gap-3 sm:gap-5 px-1 sm:px-0 opacity-0"
           >
             {[
               { label: "Established", val: "2026" },
@@ -66,12 +62,13 @@ const BornFromLove = () => (
                 <span className="font-normal text-[10px] sm:text-[14px] leading-tight text-[#788796]">{stat.label}</span>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default BornFromLove;

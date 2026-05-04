@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -23,6 +26,24 @@ const Products = () => {
 
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el, 
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+
+
+
   return (
     <div className="min-h-screen bg-white text-brand-dark selection:bg-brand-blue selection:text-white overflow-hidden">
       <SEO 
@@ -38,11 +59,7 @@ const Products = () => {
           <div className="w-full flex flex-col gap-9">
             
             {/* Top Wide Banner */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="w-full max-w-[1114px] h-[320px] sm:h-[420px] md:h-[496px] bg-[#4a72ae] rounded-[28px] relative overflow-hidden flex items-center justify-center mx-auto group shadow-2xl"
             >
                <img src="/assets/images/productsheroimg.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover z-20" alt="Products Banner" />
@@ -50,27 +67,19 @@ const Products = () => {
                  className="relative z-10 w-[90%] md:w-[1000px] h-auto text-white drop-shadow-2xl" 
                  opacity={1}
                />
-            </motion.div>
+            </div>
 
             {/* Bottom Split Row (Bento Grid) */}
             <div className="w-full max-w-[1114px] mx-auto flex flex-col lg:flex-row gap-9 overflow-hidden">
                {/* Left Large Card */}
-               <motion.div 
-                 initial={{ opacity: 0, x: -40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="w-full lg:w-[604px] h-[300px] sm:h-[400px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg"
                >
                   <img src="/assets/productspage/prdheroimg1.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Pet Model" />
-               </motion.div>
+               </div>
 
                {/* Right Stacked Cards */}
-               <motion.div 
-                 initial={{ opacity: 0, x: 40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="w-full lg:w-[474px] flex flex-col gap-[34px]"
                >
                   {/* Top: 20% Off */}
@@ -85,7 +94,7 @@ const Products = () => {
                        Shop<br/>Quality<br/>Supplies
                      </span>
                   </div>
-               </motion.div>
+               </div>
             </div>
           </div>
         </div>
@@ -94,10 +103,7 @@ const Products = () => {
       {/* 2. Categories Row */}
       <section className="w-full flex justify-center bg-white py-[40px] border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] px-6 md:px-12 lg:px-40 flex justify-center">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+          <div 
             className="w-full max-w-[1140px] flex gap-4 md:gap-6 justify-between overflow-x-auto pb-4 no-scrollbar items-center"
           >
             {[
@@ -108,13 +114,9 @@ const Products = () => {
               { title: "Wet Food", count: "18 Products", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=150&h=150&fit=crop" },
               { title: "Pet Beds", count: "22 Products", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=150&h=150&fit=crop" }
             ].map((cat, i) => (
-              <motion.div 
-                key={i} 
-                variants={{
-                  hidden: { opacity: 0, y: 40 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
-                }}
-                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer"
+              <div
+                key={i}
+                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer gs-reveal"
               >
                 <div className="w-[100px] md:w-[140px] h-[100px] md:h-[140px] rounded-full overflow-hidden bg-[#e8f0f6] border-4 border-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] group-hover:border-[#5fa8d3] transition-all duration-300 transform group-hover:-translate-y-1">
                   <img src={cat.img} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={cat.title} />
@@ -125,9 +127,9 @@ const Products = () => {
                   </span>
                   <span className="font-medium text-[12px] md:text-[13px] text-[#788796]">{cat.count}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -135,11 +137,7 @@ const Products = () => {
       <section className="w-full flex justify-center bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] flex flex-col items-center gap-12">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <div 
             className="flex flex-col items-center gap-4 text-center max-w-3xl"
           >
             <h2 className="font-extrabold text-[36px] md:text-[51.4px] leading-tight text-[#134e86]">
@@ -148,16 +146,12 @@ const Products = () => {
             <p className="font-normal text-[18px] md:text-[20px] leading-relaxed text-[#134e86]/80">
               Discover a curated collection of essential pet supplies designed for those who value quality, durability, and the exceptional well-being of their companions.
             </p>
-          </motion.div>
+          </div>
 
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
             <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
               {/* Main Product Card */}
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="w-full lg:w-[606px] flex flex-col bg-white rounded-[28px] border border-[#dce6ee] overflow-hidden group shadow-md relative"
               >
                 <div className="w-full h-[500px] lg:h-full relative overflow-hidden bg-[#e8f0f6]">
@@ -184,14 +178,10 @@ const Products = () => {
                     <ShoppingBag size={20} />
                   </a>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Side Column items */}
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="w-full lg:w-[502px] flex flex-col gap-8"
               >
                 {sideProducts.map((item, i) => (
@@ -220,24 +210,17 @@ const Products = () => {
                     </div>
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             {/* Bottom Row Grids */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+            <div 
               className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
             >
               {gridProducts.map((item, i) => (
-                <motion.div 
-                  key={i} 
-                  variants={{
-                    hidden: { opacity: 0, y: 40 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.05, ease: "easeOut" } }
-                  }}
-                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative"
+                <div
+                  key={i}
+                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative gs-reveal"
                 >
                   <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
                     <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>
@@ -265,9 +248,9 @@ const Products = () => {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

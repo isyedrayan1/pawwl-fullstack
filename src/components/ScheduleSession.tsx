@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import * as React from "react";
+import { useReveal } from "@/hooks/useGsapReveal";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Calendar as CalendarIcon, Clock } from "lucide-react";
 import {
@@ -21,18 +21,18 @@ import formImg from "@/assets/formimg.webp";
 
 const ScheduleSession = () => {
   const [date, setDate] = React.useState<Date>();
+  const headerRef = useReveal({ y: 40 });
+  const imgRef = useReveal({ x: -40, y: 0 });
+  const formRef = useReveal({ x: 40, y: 0 });
 
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="section-container">
         <div className="w-full flex flex-col justify-between items-center gap-12">
           {/* Header Section */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex flex-col justify-center items-center gap-4 self-stretch"
+          <div 
+            ref={headerRef}
+            className="flex flex-col justify-center items-center gap-4 self-stretch opacity-0"
           >
             <h2 className="font-extrabold text-[32px] md:text-[48px] text-center text-[#012169] leading-tight px-4">
               Schedule a session with Pawwl
@@ -40,32 +40,26 @@ const ScheduleSession = () => {
             <p className="font-normal text-[20px] leading-[24px] text-center text-[#012169] max-w-[800px] opacity-80">
               Booking a session with Pawwl means choosing peace of mind. Our experts are ready to provide professional grooming and care tailored to your pet.
             </p>
-          </motion.div>
+          </div>
 
           {/* Form Card */}
           <div className="w-full flex lg:flex-row flex-col gap-8 bg-white p-6 rounded-3xl border-2 border-solid border-[#c1e8fb] shadow-xl">
             {/* Left Image Section */}
-            <motion.div 
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="lg:w-[556px] w-full self-stretch rounded-2xl overflow-hidden shadow-inner min-h-[400px]"
+            <div 
+              ref={imgRef}
+              className="lg:w-[556px] w-full self-stretch rounded-2xl overflow-hidden shadow-inner min-h-[400px] opacity-0"
             >
               <img 
                 src={formImg} 
                 alt="Schedule Session" 
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
               />
-            </motion.div>
+            </div>
 
             {/* Right Form Section */}
-            <motion.div 
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="lg:w-[498px] w-full flex flex-col gap-6"
+            <div 
+              ref={formRef}
+              className="lg:w-[498px] w-full flex flex-col gap-6 opacity-0"
             >
               <div className="flex flex-col gap-2 self-stretch">
                 <h3 className="font-bold text-[28px] text-brand-dark tracking-tight">Pawwl Pet Services</h3>
@@ -204,7 +198,7 @@ const ScheduleSession = () => {
                   </Button>
                 </div>
               </form>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

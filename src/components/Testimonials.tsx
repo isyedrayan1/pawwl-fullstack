@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { motion } from "motion/react";
 import { TestimonialsColumn } from "@/components/ui/testimonials-columns";
+import { useReveal } from "@/hooks/useGsapReveal";
 
 const testimonials = [
   {
@@ -56,15 +56,14 @@ const secondColumn = [testimonials[1], testimonials[4], testimonials[7]];
 const thirdColumn = [testimonials[2], testimonials[5], testimonials[8]];
 
 const Testimonials = () => {
+  const headerRef = useReveal({ y: 20, duration: 0.9 });
+
   return (
     <section className="bg-white py-24 relative overflow-hidden">
       <div className="section-container z-10 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="flex flex-col items-center justify-center max-w-[700px] mx-auto text-center mb-16"
+        <div
+          ref={headerRef}
+          className="flex flex-col items-center justify-center max-w-[700px] mx-auto text-center mb-16 opacity-0"
         >
           <div className="flex justify-center mb-6">
             <div className="bg-brand-light text-brand-accent px-4 py-1.5 rounded-full border border-brand-accent/20 text-xs font-bold uppercase tracking-wider">
@@ -78,7 +77,7 @@ const Testimonials = () => {
           <p className="mt-6 text-[18px] text-brand-dark/60 max-w-xl mx-auto leading-relaxed">
             Real experiences from real customers who trust Pawwl for their furry family members.
           </p>
-        </motion.div>
+        </div>
 
         <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] max-h-[740px] overflow-hidden">
           <TestimonialsColumn testimonials={firstColumn} duration={20} />

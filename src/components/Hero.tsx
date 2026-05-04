@@ -1,16 +1,17 @@
-import { motion } from "motion/react";
 import heroDog from "@/assets/hero-dog.webp";
+import { useReveal } from "@/hooks/useGsapReveal";
 import PawwlWatermark from "./PawwlWatermark";
 
-const Hero = () => (
-  <section className="bg-white pt-4 md:pt-8 pb-4">
-    <div className="section-container">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="relative bg-brand-light rounded-2xl overflow-hidden h-[320px] sm:h-[420px] md:h-[497px] flex items-center justify-center border border-border-accent/30 shadow-sm transition-all duration-300"
-      >
+const Hero = () => {
+  const heroRef = useReveal({ y: 0, scale: 0.96, duration: 1.2, ease: "power4.out" });
+
+  return (
+    <section className="bg-white pt-4 md:pt-8 pb-4">
+      <div className="section-container">
+        <div 
+          ref={heroRef}
+          className="relative bg-brand-light rounded-2xl overflow-hidden h-[320px] sm:h-[420px] md:h-[497px] flex items-center justify-center border border-border-accent/30 shadow-sm transition-all duration-300 opacity-0"
+        >
         
         {/* Professional SVG Watermark Background */}
         <PawwlWatermark 
@@ -26,9 +27,10 @@ const Hero = () => (
             className="w-full max-w-[190px] sm:max-w-[280px] md:max-w-[340px] lg:max-w-[380px] object-contain relative z-20 mb-[-1.5%] drop-shadow-2xl brightness-[1.02] contrast-[1.02]"
           />
         </div>
-      </motion.div>
-    </div>
-  </section>
-);
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default Hero;

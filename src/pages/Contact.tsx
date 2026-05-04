@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -10,6 +13,24 @@ import SEO from "@/components/SEO";
 
 const Contact = () => {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el, 
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+
+
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
@@ -25,11 +46,7 @@ const Contact = () => {
         <div className="section-container flex flex-col gap-8">
           
            {/* Top Banner */}
-           <motion.div 
-             initial={{ opacity: 0, scale: 0.95 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             transition={{ duration: 1 }}
+           <div 
              className="w-full flex flex-col gap-6"
            >
              <div className="w-full max-w-[1114px] h-[320px] sm:h-[420px] md:h-[496px] bg-[#4a72ae] rounded-[28px] overflow-hidden relative flex justify-center items-center mx-auto shadow-2xl group">
@@ -46,10 +63,7 @@ const Contact = () => {
               </div>
 
             {/* Quick Contact Cards */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+            <div 
               className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full"
             >
               {[
@@ -78,17 +92,9 @@ const Contact = () => {
                   sub: "Open All Days" 
                 }
               ].map((info, i) => (
-                <motion.div 
-                  key={i} 
-                  variants={{
-                    hidden: { 
-                      opacity: 0, 
-                      x: isMobile ? (i % 2 === 0 ? -50 : 50) : 0,
-                      y: isMobile ? 0 : 30 
-                    },
-                    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, delay: i * 0.1 } }
-                  }}
-                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px]"
+                <div
+                  key={i}
+                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] gs-reveal"
                 >
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}
@@ -102,10 +108,10 @@ const Contact = () => {
                   <span className="font-black text-[11px] leading-tight text-center text-brand-blue mt-auto uppercase tracking-wider">
                     {info.sub}
                   </span>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -115,18 +121,14 @@ const Contact = () => {
       <section className="bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center overflow-hidden">
         <div className="w-full max-w-[1114px] flex flex-col items-center gap-12 bg-white rounded-3xl">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+          <div 
             className="max-w-[700px] flex flex-col items-center gap-4 text-center"
           >
             <h2 className="font-black text-[36px] md:text-[48px] text-brand-dark leading-tight">Need Specific help?</h2>
             <p className="font-medium text-[18px] md:text-[20px] text-brand-dark/80 opacity-80 leading-relaxed">
               Jump straight to the support you need. Our Specialised teams are ready to assist.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full">
              {[
@@ -146,12 +148,8 @@ const Contact = () => {
                  action: "Contact Vet Support"
                }
              ].map((card, i) => (
-               <motion.div 
+               <div 
                  key={i} 
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 0.6, delay: i * 0.1 }}
                  className="flex-1 bg-white p-8 rounded-3xl border-2 border-border-accent flex flex-col gap-4 hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer"
                >
                   <div className="w-14 h-14 flex justify-center items-center bg-brand-light text-brand-blue rounded-xl mb-2 group-hover:bg-brand-blue group-hover:text-white transition-colors">
@@ -165,7 +163,7 @@ const Contact = () => {
                     {card.action}
                     <ArrowRight size={16} />
                   </div>
-               </motion.div>
+               </div>
              ))}
           </div>
 
@@ -174,11 +172,7 @@ const Contact = () => {
 
       {/* Map Section */}
       <section className="w-full px-6 md:px-12 lg:px-40 pb-24 overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <div 
           className="w-full max-w-[1114px] mx-auto overflow-hidden rounded-[32px] border-2 border-border-accent bg-white p-4 shadow-xl"
         >
           <iframe 
@@ -191,7 +185,7 @@ const Contact = () => {
             referrerPolicy="no-referrer-when-downgrade"
             className="rounded-[24px]"
           />
-        </motion.div>
+        </div>
       </section>
 
       <Footer />
