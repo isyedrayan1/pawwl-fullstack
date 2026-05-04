@@ -38,11 +38,8 @@ const AppContent = () => {
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
-            {/* Products routes temporarily disabled — redirect to home. Restore the original elements to re-enable. */}
-            <Route path="/products" element={<Navigate to="/" replace />} />
-            <Route path="/products/:id" element={<Navigate to="/" replace />} />
-            {/* <Route path="/products" element={<Products />} /> */}
-            {/* <Route path="/products/:id" element={<ProductDetails />} /> */}
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/careers/:id" element={<CareerDetails />} />
             <Route path="/contact" element={<Contact />} />

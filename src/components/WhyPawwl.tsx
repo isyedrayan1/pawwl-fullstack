@@ -26,7 +26,7 @@ const WhyPawwl = () => {
     }
     return {
       hidden: { opacity: 0, x: initialX },
-      visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+      visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
     };
   };
 
