@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { useReveal } from "@/hooks/useGsapReveal";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -10,6 +13,23 @@ import SEO from "@/components/SEO";
 
 const Contact = () => {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el, 
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+
 
 
   return (
@@ -74,7 +94,7 @@ const Contact = () => {
               ].map((info, i) => (
                 <div
                   key={i}
-                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] opacity-0"
+                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] gs-reveal"
                 >
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}

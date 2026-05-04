@@ -1,5 +1,8 @@
+import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { useReveal } from "@/hooks/useGsapReveal";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -41,6 +44,23 @@ const servicesTestimonials = [
 
 const Services = () => {
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el, 
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+
 
 
   return (
@@ -88,7 +108,7 @@ const Services = () => {
               ].map((service, i) => (
                 <div
                   key={i}
-                  className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group opacity-0"
+                  className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group gs-reveal"
                 >
                   <div className="w-full flex flex-col gap-2 p-3">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mb-1">

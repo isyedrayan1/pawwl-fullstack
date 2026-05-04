@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { useReveal } from "@/hooks/useGsapReveal";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -49,6 +51,23 @@ const Careers = () => {
       return matchSearch && matchDept && matchLoc && matchType;
     });
   }, [jobs, search, deptFilter, locFilter, typeFilter]);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
+        gsap.fromTo(el, 
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true }
+          }
+        );
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
@@ -164,7 +183,7 @@ const Careers = () => {
             ].map((card, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer opacity-0"
+                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer gs-reveal"
               >
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-1 sm:mb-2 bg-brand-dark text-white">
                   <CheckCircle2 size={20} className="sm:hidden" />
@@ -288,7 +307,7 @@ const Careers = () => {
                             </div>
                          </div>
                       </div>
-                      <ArrowUpRight size={16} className="text-[#0071f3] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ArrowUpRight size={16} className="text-[#0071f3] gs-reveal group-hover:opacity-100 transition-opacity" />
                     </div>
                     
                     <span className="font-normal text-[14px] leading-[22px] text-[#555555] mt-4 mb-4 line-clamp-2">
