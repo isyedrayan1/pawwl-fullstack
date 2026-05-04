@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -75,7 +75,7 @@ const Services = () => {
                   opacity={0.9}
                 />
               </div>
-            </motion.div>
+            </div>
 
             {/* Service Grid */}
             <motion.div 
@@ -92,17 +92,9 @@ const Services = () => {
                 { imgSrc: "/assets/icons/dental-insurance.webp", title: "Teeth Cleaning", desc: "Basic dental care for fresher breath and better oral hygiene." },
                 { imgSrc: "/assets/icons/vet.webp", title: "Treatment", desc: "Reduce shedding and maintain a smooth, healthy coat." }
               ].map((service, i) => (
-                <motion.div 
-                  key={i} 
-                  variants={{
-                    hidden: { 
-                      opacity: 0, 
-                      x: isMobile ? (i % 2 === 0 ? -40 : 40) : 0,
-                      y: isMobile ? 0 : 40
-                    },
-                    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
-                  }}
-                  className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group"
+                <div
+                  key={i}
+                  className="flex gap-2 bg-[#D8FAFF] p-2 rounded-2xl sm:rounded-3xl w-full min-h-[120px] sm:min-h-[160px] transition-all hover:-translate-y-1 hover:shadow-xl group opacity-0"
                 >
                   <div className="w-full flex flex-col gap-2 p-3">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 mb-1">
@@ -111,9 +103,9 @@ const Services = () => {
                     <span className="font-bold text-[20px] leading-[24px] text-[#241f1b]">{service.title}</span>
                     <span className="font-normal text-[16px] leading-[24px] text-[#534d49]">{service.desc}</span>
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -130,7 +122,7 @@ const Services = () => {
             >
               <h2 className="font-heading font-black text-[32px] md:text-[51.4px] leading-tight text-brand-dark">Pamper Your Pet with Our Premium Products</h2>
               <p className="font-normal text-[18px] md:text-[20px] leading-[24px] text-brand-dark/80 max-w-4xl">Pamper your pet with our premium products designed for comfort and style.</p>
-            </motion.div>
+            </div>
             
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch overflow-hidden">
                <motion.div 
@@ -141,7 +133,7 @@ const Services = () => {
                  className="rounded-[28px] overflow-hidden shadow-sm h-[500px]"
                >
                  <img src={srv17} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Premium Products" />
-               </motion.div>
+               </div>
                <motion.div 
                  initial={{ opacity: 0, x: 40 }}
                  whileInView={{ opacity: 1, x: 0 }}
@@ -157,7 +149,7 @@ const Services = () => {
                     <h3 className="font-bold text-2xl mb-2">Accessories</h3>
                     <p className="opacity-70">Safe and Durable.</p>
                   </div>
-               </motion.div>
+               </div>
             </div>
          </div>
       </section>

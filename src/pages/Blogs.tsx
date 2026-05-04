@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { blogs } from "@/data/blogData";
@@ -31,7 +31,7 @@ const Blogs = () => {
             <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Learn everything about pet care from our experts. Simple guides, professional insights!
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 overflow-hidden">
             {blogs.map((blog, i) => (
@@ -69,7 +69,7 @@ const Blogs = () => {
                     </Button>
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -50,7 +50,7 @@ const Products = () => {
                  className="relative z-10 w-[90%] md:w-[1000px] h-auto text-white drop-shadow-2xl" 
                  opacity={1}
                />
-            </motion.div>
+            </div>
 
             {/* Bottom Split Row (Bento Grid) */}
             <div className="w-full max-w-[1114px] mx-auto flex flex-col lg:flex-row gap-9 overflow-hidden">
@@ -63,7 +63,7 @@ const Products = () => {
                  className="w-full lg:w-[604px] h-[300px] sm:h-[400px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg"
                >
                   <img src="/assets/productspage/prdheroimg1.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Pet Model" />
-               </motion.div>
+               </div>
 
                {/* Right Stacked Cards */}
                <motion.div 
@@ -85,7 +85,7 @@ const Products = () => {
                        Shop<br/>Quality<br/>Supplies
                      </span>
                   </div>
-               </motion.div>
+               </div>
             </div>
           </div>
         </div>
@@ -108,13 +108,9 @@ const Products = () => {
               { title: "Wet Food", count: "18 Products", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=150&h=150&fit=crop" },
               { title: "Pet Beds", count: "22 Products", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=150&h=150&fit=crop" }
             ].map((cat, i) => (
-              <motion.div 
-                key={i} 
-                variants={{
-                  hidden: { opacity: 0, y: 40 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
-                }}
-                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer"
+              <div
+                key={i}
+                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer opacity-0"
               >
                 <div className="w-[100px] md:w-[140px] h-[100px] md:h-[140px] rounded-full overflow-hidden bg-[#e8f0f6] border-4 border-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] group-hover:border-[#5fa8d3] transition-all duration-300 transform group-hover:-translate-y-1">
                   <img src={cat.img} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={cat.title} />
@@ -125,9 +121,9 @@ const Products = () => {
                   </span>
                   <span className="font-medium text-[12px] md:text-[13px] text-[#788796]">{cat.count}</span>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -148,7 +144,7 @@ const Products = () => {
             <p className="font-normal text-[18px] md:text-[20px] leading-relaxed text-[#134e86]/80">
               Discover a curated collection of essential pet supplies designed for those who value quality, durability, and the exceptional well-being of their companions.
             </p>
-          </motion.div>
+          </div>
 
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
             <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
@@ -184,7 +180,7 @@ const Products = () => {
                     <ShoppingBag size={20} />
                   </a>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Side Column items */}
               <motion.div 
@@ -220,7 +216,7 @@ const Products = () => {
                     </div>
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </div>
 
             {/* Bottom Row Grids */}
@@ -231,13 +227,9 @@ const Products = () => {
               className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
             >
               {gridProducts.map((item, i) => (
-                <motion.div 
-                  key={i} 
-                  variants={{
-                    hidden: { opacity: 0, y: 40 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.05, ease: "easeOut" } }
-                  }}
-                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative"
+                <div
+                  key={i}
+                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative opacity-0"
                 >
                   <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
                     <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>
@@ -265,9 +257,9 @@ const Products = () => {
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -79,7 +79,7 @@ const Careers = () => {
                   opacity={1}
                 />
               </div>
-            </motion.div>
+            </div>
 
             {/* Bento Grid Layout */}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 w-full overflow-hidden">
@@ -101,7 +101,7 @@ const Careers = () => {
                     Dog people welcome. If you want to solve big problems in new ways with the smartest, kindest, weirdest people you've ever met, we want to meet you. We're building a team of ambitious, customer obsessed dog people who embrace new technology to bring dogs as much joy as humanly possible. If you've been spending your free time using AI to better understand your dog's barks...we should really talk.
                   </p>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Card 3: Image Card (was in row 2) */}
               <motion.div 
@@ -112,7 +112,7 @@ const Careers = () => {
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] bg-white rounded-[28px] border border-[#c1e8fb] overflow-hidden relative"
               >
                 <img src={thirdCardImg} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Dog Working" />
-              </motion.div>
+              </div>
 
               {/* Row 3 equivalent cards (4, 5, 6) */}
               {/* Card 4: Hiring */}
@@ -126,7 +126,7 @@ const Careers = () => {
                 <span className="font-extrabold text-[20px] sm:text-[36px] lg:text-[52px] text-[#00b1e0] leading-none text-left">
                   We're<br/>Hiring a<br/>Pawwrent
                 </span>
-              </motion.div>
+              </div>
 
               {/* Card 5: Image Card */}
               <motion.div 
@@ -137,7 +137,7 @@ const Careers = () => {
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden"
               >
                 <img src={fifthCardImg} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Dog" />
-              </motion.div>
+              </div>
 
               {/* Card 6: Pet Groomers */}
               <motion.div 
@@ -153,7 +153,7 @@ const Careers = () => {
                   <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                   <span className="font-extrabold text-[20px] sm:text-[36px] xl:text-[46px] leading-none whitespace-nowrap text-[#142535]">Pet Groomers</span>
                 </div>
-              </motion.div>
+              </div>
 
             </div>
 
@@ -177,7 +177,7 @@ const Careers = () => {
             <p className="font-normal text-[18px] md:text-[20px] text-[#134e86] leading-relaxed opacity-80">
               Pamper your pet with our premium products designed for comfort and style. From cozy bedding to durable toys, we offer your furry friend needs to feel loved and cared for.
             </p>
-          </motion.div>
+          </div>
 
           <motion.div 
             initial="hidden"
@@ -193,13 +193,9 @@ const Careers = () => {
               { title: "Community Impact", desc: "Paid volunteer days and company-matched donations to local animal shelters." },
               { title: "Wellness Benefits", desc: "Comprehensive health coverage, mental wellness support, and pet insurance for your companions." }
             ].map((card, i) => (
-              <motion.div 
-                key={i} 
-                variants={{
-                  hidden: { opacity: 0, y: 40 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: i * 0.1, ease: "easeOut" } }
-                }}
-                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer"
+              <div
+                key={i}
+                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer opacity-0"
               >
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-1 sm:mb-2 bg-brand-dark text-white">
                   <CheckCircle2 size={20} className="sm:hidden" />
@@ -211,9 +207,9 @@ const Careers = () => {
                 <p className="font-medium text-xs sm:text-sm leading-relaxed text-foreground/80">
                   {card.desc}
                 </p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -239,7 +235,7 @@ const Careers = () => {
                 Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special."
               </span>
             </div>
-          </motion.div>
+          </div>
 
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
@@ -343,7 +339,7 @@ const Careers = () => {
                       <ChevronRight size={14} className="text-[#0071f3]" />
                     </div>
                   </Link>
-                </motion.div>
+                </div>
               )) : (
                 <div className="w-full flex justify-center items-center py-20 text-[#555555]">
                   <span className="font-medium text-lg">No positions found matching your criteria.</span>
@@ -351,7 +347,7 @@ const Careers = () => {
               )}
             </div>
 
-          </motion.div>
+          </div>
         </div>
       </section>
 

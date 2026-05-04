@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
 import { ImageGallery } from "@/components/ui/image-gallery";
@@ -38,7 +38,7 @@ const Gallery = () => {
                 opacity={1.0}
               />
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -56,7 +56,7 @@ const Gallery = () => {
           <h1 className="font-extrabold text-[36px] md:text-[52px] text-[#012169] leading-tight tracking-tight">
             Pawwl Gallery.
           </h1>
-        </motion.div>
+        </div>
         <ImageGallery />
       </main>
 

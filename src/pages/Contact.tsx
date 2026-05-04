@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { motion } from "motion/react";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
@@ -78,17 +78,9 @@ const Contact = () => {
                   sub: "Open All Days" 
                 }
               ].map((info, i) => (
-                <motion.div 
-                  key={i} 
-                  variants={{
-                    hidden: { 
-                      opacity: 0, 
-                      x: isMobile ? (i % 2 === 0 ? -50 : 50) : 0,
-                      y: isMobile ? 0 : 30 
-                    },
-                    visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6, delay: i * 0.1 } }
-                  }}
-                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px]"
+                <div
+                  key={i}
+                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] opacity-0"
                 >
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}
@@ -102,10 +94,10 @@ const Contact = () => {
                   <span className="font-black text-[11px] leading-tight text-center text-brand-blue mt-auto uppercase tracking-wider">
                     {info.sub}
                   </span>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -126,7 +118,7 @@ const Contact = () => {
             <p className="font-medium text-[18px] md:text-[20px] text-brand-dark/80 opacity-80 leading-relaxed">
               Jump straight to the support you need. Our Specialised teams are ready to assist.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full">
              {[
@@ -165,7 +157,7 @@ const Contact = () => {
                     {card.action}
                     <ArrowRight size={16} />
                   </div>
-               </motion.div>
+               </div>
              ))}
           </div>
 
@@ -191,7 +183,7 @@ const Contact = () => {
             referrerPolicy="no-referrer-when-downgrade"
             className="rounded-[24px]"
           />
-        </motion.div>
+        </div>
       </section>
 
       <Footer />
