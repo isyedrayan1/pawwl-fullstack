@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import Navbar from "@/components/Navbar";
+import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
 import { ArrowRight, Star, Quote, Heart } from "lucide-react";
@@ -13,6 +13,12 @@ import ab2 from "@/assets/gallery/10.webp";
 import SEO from "@/components/SEO";
 
 const About = () => {
+  const heroBannerRef = useReveal({ y: 0, scale: 0.96, duration: 1.2, ease: "power4.out" });
+  const storyLeftRef = useReveal({ x: -40, y: 0 });
+  const storyRightRef = useReveal({ x: 40, y: 0 });
+  const commitHeaderRef = useReveal({ y: 40 });
+  const commitGridRef = useStaggerReveal(".commit-card", { y: 30, stagger: 0.1 });
+
   return (
     <div className="min-h-screen bg-white font-body selection:bg-brand-blue selection:text-white overflow-hidden">
       <SEO 
@@ -44,7 +50,7 @@ const About = () => {
                   className="absolute w-[90%] sm:w-[95%] md:w-[1000px] h-auto left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 text-white" 
                   opacity={1.0}
                 />
-              </motion.div>
+              </div>
 
               {/* Stats & Story Row */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch overflow-hidden">
@@ -64,7 +70,7 @@ const About = () => {
                      <span className="font-normal text-base md:text-lg opacity-50 uppercase tracking-widest">Our Founding Story</span>
                    </div>
                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-                </motion.div>
+                </div>
 
                 {/* Our Story Block */}
                 <motion.div 
@@ -92,7 +98,7 @@ const About = () => {
                       <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </button>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
@@ -114,9 +120,9 @@ const About = () => {
               <p className="text-[18px] md:text-[20px] text-brand-blue/80 max-w-3xl mx-auto">
                 Caring for your pet is a journey, and we’re here every step of the way. Our streamlined pet care process ensures your furry friends get the best care, tailored to their unique needs.
               </p>
-            </motion.div>
+            </div>
 
-            <div className="w-full max-w-[1120px] mx-auto flex flex-col items-center gap-8">
+            <div ref={commitGridRef} className="w-full max-w-[1120px] mx-auto flex flex-col items-center gap-8">
               {[
                 [
                   {
@@ -176,7 +182,7 @@ const About = () => {
                           {step.desc}
                         </span>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               ))}
