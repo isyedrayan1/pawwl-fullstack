@@ -1,5 +1,5 @@
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { useReveal } from "@/hooks/useGsapReveal";
 import { ArrowUpRight, GraduationCap, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import defaultGal1 from "@/assets/gallery/6.webp";
@@ -10,32 +10,30 @@ interface PetGalleryProps {
   img2?: string;
 }
 
-const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps) => (
-  <section className="w-full flex flex-col items-center gap-8 self-stretch bg-white px-6 md:px-12 lg:px-40 py-12 md:py-16 overflow-hidden">
-    
-    {/* Header Content */}
-    <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-      className="w-full max-w-[900px] flex flex-col items-center gap-3 text-center mb-[72px]"
-    >
+const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps) => {
+  const headerRef = useReveal({ y: 30 });
+  const bentoRef = useReveal({ y: 0, scale: 0.98, duration: 1.1 });
+
+  return (
+    <section className="w-full flex flex-col items-center gap-8 self-stretch bg-white px-6 md:px-12 lg:px-40 py-12 md:py-16 overflow-hidden">
+      
+      {/* Header Content */}
+      <div 
+        ref={headerRef}
+        className="w-full max-w-[900px] flex flex-col items-center gap-3 text-center mb-[72px] opacity-0"
+      >
       <h2 className="font-extrabold text-[32px] md:text-[48px] text-[#012169] leading-tight">
         Whiskers, Tails, and Joyful Eyes<br className="hidden md:block" /> A Gallery Full of Love
       </h2>
       <p className="font-normal text-[16px] md:text-[20px] leading-[1.4] text-[#134e86]">
         Step into a world of heartwarming moments captured in every frame. From wagging tails to joyful eyes, our gallery showcases the love and every companion feel special.”
       </p>
-    </motion.div>
+      </div>
 
     {/* Bento Content Section */}
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.98 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      className="w-full max-w-[1144px] flex flex-col lg:flex-row gap-6 md:gap-9 items-stretch"
+    <div 
+      ref={bentoRef}
+      className="w-full max-w-[1144px] flex flex-col lg:flex-row gap-6 md:gap-9 items-stretch opacity-0"
     >
       
       {/* 1. Column Left: Large Vertical Image (504px) */}
@@ -84,8 +82,9 @@ const PetGallery = ({ img1 = defaultGal1, img2 = defaultGal2 }: PetGalleryProps)
            </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   </section>
-);
+  );
+};
 
 export default PetGallery;
