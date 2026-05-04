@@ -150,10 +150,6 @@ const Contact = () => {
              ].map((card, i) => (
                <div 
                  key={i} 
-                 initial={{ opacity: 0, y: 30 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 0.6, delay: i * 0.1 }}
                  className="flex-1 bg-white p-8 rounded-3xl border-2 border-border-accent flex flex-col gap-4 hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer"
                >
                   <div className="w-14 h-14 flex justify-center items-center bg-brand-light text-brand-blue rounded-xl mb-2 group-hover:bg-brand-blue group-hover:text-white transition-colors">

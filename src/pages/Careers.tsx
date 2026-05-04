@@ -282,10 +282,6 @@ const Careers = () => {
               {filteredJobs.length > 0 ? filteredJobs.map((job, i) => (
                 <div
                   key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: i * 0.05, ease: "easeOut" }}
                   className="w-full lg:w-[598px]"
                 >
                   <Link to="/careers/1" className="flex flex-col justify-between bg-white p-6 rounded-3xl border-2 border-border-accent hover:border-brand-blue/30 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 cursor-pointer min-h-[196px] group w-full">

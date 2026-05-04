@@ -145,10 +145,6 @@ const About = () => {
                   {row.map((step, colIndex) => (
                     <div 
                       key={step.id}
-                      initial={{ opacity: 0, x: colIndex === 0 ? -40 : 40 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.8, delay: colIndex * 0.1, ease: "easeOut" }}
                       className={`flex items-center gap-6 grow p-6 rounded-[32px] border transition-all duration-300 hover:shadow-xl group ${
                         step.dark ? "bg-brand-accent border-transparent text-white" : "bg-white border-border-accent text-brand-blue"
                       }`}
