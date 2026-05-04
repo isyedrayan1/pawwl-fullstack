@@ -56,11 +56,7 @@ const Services = () => {
         <div className="section-container">
           <div className="w-full flex flex-wrap gap-x-6 gap-y-9">
             {/* Top Pawwl Banner */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="w-full h-[320px] sm:h-[420px] md:h-[496px] flex justify-center items-center bg-black/20 rounded-[28px] overflow-hidden relative group"
             >
               <img 
@@ -78,10 +74,7 @@ const Services = () => {
             </div>
 
             {/* Service Grid */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+            <div 
               className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-9"
             >
               {[
@@ -113,11 +106,7 @@ const Services = () => {
       {/* 2. Products Showcase */}
       <section className="bg-white py-24 flex flex-col items-center overflow-hidden">
          <div className="section-container flex flex-col items-center gap-12">
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="flex flex-col items-center gap-3 text-center mb-4"
             >
               <h2 className="font-heading font-black text-[32px] md:text-[51.4px] leading-tight text-brand-dark">Pamper Your Pet with Our Premium Products</h2>
@@ -125,20 +114,12 @@ const Services = () => {
             </div>
             
             <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch overflow-hidden">
-               <motion.div 
-                 initial={{ opacity: 0, x: -40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="rounded-[28px] overflow-hidden shadow-sm h-[500px]"
                >
                  <img src={srv17} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Premium Products" />
                </div>
-               <motion.div 
-                 initial={{ opacity: 0, x: 40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="flex flex-col gap-8"
                >
                   <div className="bg-[#D8FAFF] p-8 rounded-[28px] h-[234px]">

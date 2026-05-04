@@ -18,11 +18,7 @@ const Gallery = () => {
       {/* 1. Precise Hero Section from Figma */}
       <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
+          <div 
             className="w-full flex flex-wrap gap-x-6 gap-y-9"
           >
             {/* Banner Container */}
@@ -43,11 +39,7 @@ const Gallery = () => {
       </section>
 
       <main className="bg-white">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <div 
           className="section-container flex flex-col items-center gap-4 mb-12 mt-4 text-center"
         >
           <div className="w-fit bg-[#e8f7ff] px-4 py-1.5 rounded-full border border-[#c1e8fb] shadow-sm">

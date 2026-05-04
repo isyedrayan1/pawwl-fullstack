@@ -34,11 +34,7 @@ const About = () => {
           <div className="section-container">
             <div className="flex flex-col gap-6 w-full">
               {/* Top Banner Row */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="relative bg-brand-light rounded-[28px] overflow-hidden h-[320px] sm:h-[420px] md:h-[496px] flex items-center justify-center border border-border-design shadow-sm"
               >
                 <img 
@@ -55,11 +51,7 @@ const About = () => {
               {/* Stats & Story Row */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch overflow-hidden">
                 {/* 50K+ Block */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                <div 
                   className="lg:col-span-5 h-auto min-h-[300px] lg:h-[494px] bg-brand-accent p-8 sm:p-12 md:p-14 rounded-[28px] flex flex-col justify-between text-white relative overflow-hidden shadow-2xl"
                 >
                    <div className="opacity-20">
@@ -73,11 +65,7 @@ const About = () => {
                 </div>
 
                 {/* Our Story Block */}
-                <motion.div 
-                  initial={{ opacity: 0, x: 40 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                <div 
                   className="lg:col-span-7 h-auto lg:h-[494px] bg-white rounded-[28px] border border-border-design p-8 md:p-12 flex flex-col gap-6"
                 >
                   <h2 className="font-heading font-black text-[48px] md:text-[56px] leading-[1.05] text-foreground">Our Story</h2>
@@ -107,11 +95,7 @@ const About = () => {
         {/* Section 2: Commitment */}
         <section className="py-24 bg-white overflow-hidden">
           <div className="section-container">
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="max-w-[1000px] mx-auto text-center mb-20 flex flex-col gap-4"
             >
               <h2 className="font-heading font-extrabold text-[40px] md:text-[52px] leading-tight text-brand-blue">
@@ -159,7 +143,7 @@ const About = () => {
               ].map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 self-stretch">
                   {row.map((step, colIndex) => (
-                    <motion.div 
+                    <div 
                       key={step.id}
                       initial={{ opacity: 0, x: colIndex === 0 ? -40 : 40 }}
                       whileInView={{ opacity: 1, x: 0 }}

@@ -25,11 +25,7 @@ const Contact = () => {
         <div className="section-container flex flex-col gap-8">
           
            {/* Top Banner */}
-           <motion.div 
-             initial={{ opacity: 0, scale: 0.95 }}
-             whileInView={{ opacity: 1, scale: 1 }}
-             viewport={{ once: true }}
-             transition={{ duration: 1 }}
+           <div 
              className="w-full flex flex-col gap-6"
            >
              <div className="w-full max-w-[1114px] h-[320px] sm:h-[420px] md:h-[496px] bg-[#4a72ae] rounded-[28px] overflow-hidden relative flex justify-center items-center mx-auto shadow-2xl group">
@@ -46,10 +42,7 @@ const Contact = () => {
               </div>
 
             {/* Quick Contact Cards */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+            <div 
               className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full"
             >
               {[
@@ -107,11 +100,7 @@ const Contact = () => {
       <section className="bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 flex flex-col items-center overflow-hidden">
         <div className="w-full max-w-[1114px] flex flex-col items-center gap-12 bg-white rounded-3xl">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+          <div 
             className="max-w-[700px] flex flex-col items-center gap-4 text-center"
           >
             <h2 className="font-black text-[36px] md:text-[48px] text-brand-dark leading-tight">Need Specific help?</h2>
@@ -138,7 +127,7 @@ const Contact = () => {
                  action: "Contact Vet Support"
                }
              ].map((card, i) => (
-               <motion.div 
+               <div 
                  key={i} 
                  initial={{ opacity: 0, y: 30 }}
                  whileInView={{ opacity: 1, y: 0 }}
@@ -166,11 +155,7 @@ const Contact = () => {
 
       {/* Map Section */}
       <section className="w-full px-6 md:px-12 lg:px-40 pb-24 overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+        <div 
           className="w-full max-w-[1114px] mx-auto overflow-hidden rounded-[32px] border-2 border-border-accent bg-white p-4 shadow-xl"
         >
           <iframe 

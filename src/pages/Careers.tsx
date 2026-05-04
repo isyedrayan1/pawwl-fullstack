@@ -65,11 +65,7 @@ const Careers = () => {
           <div className="w-full flex flex-col gap-6">
             
             {/* Top Pawwl Banner */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="w-full h-[320px] sm:h-[420px] md:h-[496px] flex justify-center items-center bg-black/20 rounded-[28px] overflow-hidden relative group"
             >
               <img src="/assets/images/creershero.webp" className="absolute inset-0 w-full h-full object-cover z-20" alt="Careers Banner" />
@@ -85,11 +81,7 @@ const Careers = () => {
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 w-full overflow-hidden">
               
               {/* Card 2: Careers Text */}
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="col-span-2 lg:col-span-2 h-auto lg:h-[368px] flex flex-col justify-center gap-4 bg-white px-8 md:px-12 py-10 lg:py-0 lg:px-[50px] rounded-[28px] border border-[#c1e8fb] items-start text-left"
               >
                 <div className="flex flex-col items-start text-left">
@@ -104,11 +96,7 @@ const Careers = () => {
               </div>
 
               {/* Card 3: Image Card (was in row 2) */}
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] bg-white rounded-[28px] border border-[#c1e8fb] overflow-hidden relative"
               >
                 <img src={thirdCardImg} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Dog Working" />
@@ -116,11 +104,7 @@ const Careers = () => {
 
               {/* Row 3 equivalent cards (4, 5, 6) */}
               {/* Card 4: Hiring */}
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center items-start gap-2 bg-[#142535] px-6 md:px-10 lg:px-12 py-6 rounded-[28px]"
               >
                 <span className="font-extrabold text-[20px] sm:text-[36px] lg:text-[52px] text-[#00b1e0] leading-none text-left">
@@ -129,22 +113,14 @@ const Careers = () => {
               </div>
 
               {/* Card 5: Image Card */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] rounded-[28px] relative overflow-hidden"
               >
                 <img src={fifthCardImg} loading="lazy" decoding="async" className="w-full h-full object-cover" alt="Dog" />
               </div>
 
               {/* Card 6: Pet Groomers */}
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="col-span-1 lg:col-span-1 h-[180px] sm:h-[240px] lg:h-[368px] flex flex-col justify-center gap-2 bg-[#81c0e3] px-4 sm:px-[27px] rounded-[28px] overflow-hidden"
               >
                 <div className="flex flex-col gap-2 sm:gap-4 self-stretch">
@@ -164,11 +140,7 @@ const Careers = () => {
       {/* Paw-sitive Work Culture */}
       <section className="w-full flex justify-center bg-white py-16 lg:py-24 border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] px-6 md:px-12 lg:px-40 flex flex-col items-center gap-16">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <div 
             className="max-w-[900px] flex flex-col items-center gap-4 text-center"
           >
             <h2 className="font-extrabold text-[36px] md:text-[51.4px] text-[#134e86] leading-tight">
@@ -179,10 +151,7 @@ const Careers = () => {
             </p>
           </div>
 
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+          <div 
             className="w-full max-w-[1114px] grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5"
           >
             {[
@@ -220,11 +189,7 @@ const Careers = () => {
       <section className="w-full flex justify-center bg-white py-16 lg:py-24 overflow-hidden">
         <div className="w-full max-w-[1440px] flex flex-col items-center gap-8 bg-white px-6 lg:px-40 py-12">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <div 
             className="flex flex-col items-center gap-3 self-stretch"
           >
             <div className="w-full lg:w-[900px] flex flex-col items-center gap-3">
@@ -237,11 +202,7 @@ const Careers = () => {
             </div>
           </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          <div 
             className="w-full lg:w-[1216px] flex flex-col gap-6"
           >
             
@@ -300,7 +261,7 @@ const Careers = () => {
 
             <div className="flex flex-wrap gap-4 self-stretch">
               {filteredJobs.length > 0 ? filteredJobs.map((job, i) => (
-                <motion.div
+                <div
                   key={i}
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}

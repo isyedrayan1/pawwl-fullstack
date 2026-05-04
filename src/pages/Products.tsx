@@ -38,11 +38,7 @@ const Products = () => {
           <div className="w-full flex flex-col gap-9">
             
             {/* Top Wide Banner */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+            <div 
               className="w-full max-w-[1114px] h-[320px] sm:h-[420px] md:h-[496px] bg-[#4a72ae] rounded-[28px] relative overflow-hidden flex items-center justify-center mx-auto group shadow-2xl"
             >
                <img src="/assets/images/productsheroimg.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover z-20" alt="Products Banner" />
@@ -55,22 +51,14 @@ const Products = () => {
             {/* Bottom Split Row (Bento Grid) */}
             <div className="w-full max-w-[1114px] mx-auto flex flex-col lg:flex-row gap-9 overflow-hidden">
                {/* Left Large Card */}
-               <motion.div 
-                 initial={{ opacity: 0, x: -40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="w-full lg:w-[604px] h-[300px] sm:h-[400px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg"
                >
                   <img src="/assets/productspage/prdheroimg1.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Pet Model" />
                </div>
 
                {/* Right Stacked Cards */}
-               <motion.div 
-                 initial={{ opacity: 0, x: 40 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true, margin: "-100px" }}
-                 transition={{ duration: 0.8, ease: "easeOut" }}
+               <div 
                  className="w-full lg:w-[474px] flex flex-col gap-[34px]"
                >
                   {/* Top: 20% Off */}
@@ -94,10 +82,7 @@ const Products = () => {
       {/* 2. Categories Row */}
       <section className="w-full flex justify-center bg-white py-[40px] border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] px-6 md:px-12 lg:px-40 flex justify-center">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+          <div 
             className="w-full max-w-[1140px] flex gap-4 md:gap-6 justify-between overflow-x-auto pb-4 no-scrollbar items-center"
           >
             {[
@@ -131,11 +116,7 @@ const Products = () => {
       <section className="w-full flex justify-center bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] flex flex-col items-center gap-12">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          <div 
             className="flex flex-col items-center gap-4 text-center max-w-3xl"
           >
             <h2 className="font-extrabold text-[36px] md:text-[51.4px] leading-tight text-[#134e86]">
@@ -149,11 +130,7 @@ const Products = () => {
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
             <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
               {/* Main Product Card */}
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="w-full lg:w-[606px] flex flex-col bg-white rounded-[28px] border border-[#dce6ee] overflow-hidden group shadow-md relative"
               >
                 <div className="w-full h-[500px] lg:h-full relative overflow-hidden bg-[#e8f0f6]">
@@ -183,11 +160,7 @@ const Products = () => {
               </div>
 
               {/* Side Column items */}
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+              <div 
                 className="w-full lg:w-[502px] flex flex-col gap-8"
               >
                 {sideProducts.map((item, i) => (
@@ -220,10 +193,7 @@ const Products = () => {
             </div>
 
             {/* Bottom Row Grids */}
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+            <div 
               className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
             >
               {gridProducts.map((item, i) => (
