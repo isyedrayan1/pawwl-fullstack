@@ -23,6 +23,34 @@ const Products = () => {
 
   const isMobile = useIsMobile();
 
+
+  useEffect(() => {
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const els = document.querySelectorAll(".gsap-reveal");
+
+    els.forEach((el) => {
+
+      gsap.fromTo(el, 
+
+        { opacity: 0, y: 50 },
+
+        { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+
+          scrollTrigger: { trigger: el, start: "top 88%", once: true }
+
+        }
+
+      );
+
+    });
+
+    return () => { ScrollTrigger.getAll().forEach(st => st.kill()); };
+
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-white text-brand-dark selection:bg-brand-blue selection:text-white overflow-hidden">
       <SEO 
@@ -95,7 +123,7 @@ const Products = () => {
             ].map((cat, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer opacity-0"
+                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer gsap-reveal opacity-0"
               >
                 <div className="w-[100px] md:w-[140px] h-[100px] md:h-[140px] rounded-full overflow-hidden bg-[#e8f0f6] border-4 border-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] group-hover:border-[#5fa8d3] transition-all duration-300 transform group-hover:-translate-y-1">
                   <img src={cat.img} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={cat.title} />
@@ -199,7 +227,7 @@ const Products = () => {
               {gridProducts.map((item, i) => (
                 <div
                   key={i}
-                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative opacity-0"
+                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative gsap-reveal opacity-0"
                 >
                   <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
                     <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>

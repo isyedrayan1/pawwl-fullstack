@@ -11,6 +11,34 @@ import SEO from "@/components/SEO";
 const Contact = () => {
   const isMobile = useIsMobile();
 
+
+  useEffect(() => {
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const els = document.querySelectorAll(".gsap-reveal");
+
+    els.forEach((el) => {
+
+      gsap.fromTo(el, 
+
+        { opacity: 0, y: 50 },
+
+        { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+
+          scrollTrigger: { trigger: el, start: "top 88%", once: true }
+
+        }
+
+      );
+
+    });
+
+    return () => { ScrollTrigger.getAll().forEach(st => st.kill()); };
+
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       <SEO 
@@ -73,7 +101,7 @@ const Contact = () => {
               ].map((info, i) => (
                 <div
                   key={i}
-                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] opacity-0"
+                  className="flex-1 bg-white p-6 rounded-3xl border-2 border-border-accent flex flex-col items-center gap-3 hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer group min-h-[180px] gsap-reveal opacity-0"
                 >
                   <div className="w-12 h-12 flex justify-center items-center bg-brand-blue text-white rounded-xl mb-2 shadow-md group-hover:scale-110 transition-transform">
                     {info.icon}

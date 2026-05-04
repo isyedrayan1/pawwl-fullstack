@@ -6,6 +6,21 @@ import { ImageGallery } from "@/components/ui/image-gallery";
 import SEO from "@/components/SEO";
 
 const Gallery = () => {
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const els = document.querySelectorAll(".gsap-reveal");
+    els.forEach((el) => {
+      gsap.fromTo(el, 
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true }
+        }
+      );
+    });
+    return () => { ScrollTrigger.getAll().forEach(st => st.kill()); };
+  }, []);
+
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       <SEO 

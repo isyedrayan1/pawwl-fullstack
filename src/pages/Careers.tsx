@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
@@ -164,7 +164,7 @@ const Careers = () => {
             ].map((card, i) => (
               <div
                 key={i}
-                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer opacity-0"
+                className="flex flex-col gap-3 sm:gap-4 p-5 sm:p-8 rounded-3xl border-2 border-border-accent bg-transparent hover:-translate-y-1 hover:shadow-xl hover:border-brand-blue/30 transition-all duration-300 cursor-pointer gsap-reveal opacity-0"
               >
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-1 sm:mb-2 bg-brand-dark text-white">
                   <CheckCircle2 size={20} className="sm:hidden" />
@@ -288,7 +288,7 @@ const Careers = () => {
                             </div>
                          </div>
                       </div>
-                      <ArrowUpRight size={16} className="text-[#0071f3] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ArrowUpRight size={16} className="text-[#0071f3] gsap-reveal opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     
                     <span className="font-normal text-[14px] leading-[22px] text-[#555555] mt-4 mb-4 line-clamp-2">
