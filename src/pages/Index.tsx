@@ -21,7 +21,7 @@ const Index = () => (
     <Navbar />
     <Hero />
     <HomeServices />
-    {/* <FeaturedProducts /> */}
+    <FeaturedProducts />
     <IntroVideo />
     <WhyPawwl />
     <Blogs />

@@ -9,7 +9,7 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Services", href: "/services", hasDropdown: true },
   { name: "Gallery", href: "/gallery" },
-  // { name: "Products", href: "/products", hasDropdown: true }, // temporarily hidden
+  { name: "Products", href: "/products", hasDropdown: true },
   { name: "Blogs", href: "/blog" },
   { name: "Careers", href: "/careers" },
 ];
@@ -82,8 +82,6 @@ const Navbar = () => {
 
         {/* Icons and Action Button */}
         <div className="hidden lg:flex items-center gap-4 xl:gap-6">
-          {/* Cart + Favorites icons temporarily hidden — restore by removing the {false && ...} wrapper */}
-          {false && (
             <div className="flex items-center gap-1">
               <button 
                 onClick={() => setCartOpen(true)}
@@ -108,7 +106,6 @@ const Navbar = () => {
                 )}
               </button>
             </div>
-          )}
           <Button asChild className="bg-brand-blue hover:bg-brand-dark text-white px-6 py-2.5 rounded-xl text-[14px] font-bold shadow-sm h-auto transition-all active:scale-95 border-none">
             <Link to="/contact">Contact Us</Link>
           </Button>
@@ -116,8 +113,6 @@ const Navbar = () => {
 
         {/* Mobile Menu Toggle */}
         <div className="xl:hidden flex items-center gap-2">
-          {/* Mobile cart icon temporarily hidden */}
-          {false && (
             <button 
               onClick={() => setCartOpen(true)}
               className="p-2 text-brand-dark relative"
@@ -129,7 +124,6 @@ const Navbar = () => {
                 </span>
               )}
             </button>
-          )}
           <button
             className="p-2 text-brand-dark"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -157,8 +151,6 @@ const Navbar = () => {
                 </Link>
               </li>
             ))}
-            {/* Mobile favorites list item temporarily hidden */}
-            {false && (
               <li className="pt-4 border-t border-[#f0f0f0]">
                  <button 
                   onClick={() => {
@@ -172,7 +164,6 @@ const Navbar = () => {
                    {favorites.length > 0 && <span className="text-[#b1b1b1] text-sm font-medium">({favorites.length})</span>}
                  </button>
               </li>
-            )}
           </ul>
           <Button asChild className="w-full bg-brand-blue text-white py-6 text-lg font-bold mt-8 rounded-xl shadow-lg border-none hover:bg-brand-dark">
             <Link to="/contact" onClick={() => setMobileOpen(false)}>Contact Us</Link>
