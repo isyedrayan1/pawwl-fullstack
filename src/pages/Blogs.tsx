@@ -1,5 +1,5 @@
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
+import { useReveal } from "@/hooks/useGsapReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { blogs } from "@/data/blogData";
@@ -9,33 +9,6 @@ import SEO from "@/components/SEO";
 
 const Blogs = () => {
   const isMobile = useIsMobile();
-
-
-  useEffect(() => {
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const els = document.querySelectorAll(".gsap-reveal");
-
-    els.forEach((el) => {
-
-      gsap.fromTo(el, 
-
-        { opacity: 0, y: 50 },
-
-        { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
-
-          scrollTrigger: { trigger: el, start: "top 88%", once: true }
-
-        }
-
-      );
-
-    });
-
-    return () => { ScrollTrigger.getAll().forEach(st => st.kill()); };
-
-  }, []);
 
 
   return (
