@@ -6,6 +6,8 @@ import { ImageGallery } from "@/components/ui/image-gallery";
 import SEO from "@/components/SEO";
 
 const Gallery = () => {
+  const heroRef = useReveal({ y: 0, scale: 0.96, duration: 1.2, ease: "power4.out" });
+  const headerRef = useReveal({ y: 30 });
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
@@ -20,7 +22,7 @@ const Gallery = () => {
       <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container">
           <div 
-            className="w-full flex flex-wrap gap-x-6 gap-y-9"
+            ref={heroRef} className="w-full flex flex-wrap gap-x-6 gap-y-9 opacity-0"
           >
             {/* Banner Container */}
             <div className="w-full h-[320px] sm:h-[420px] md:h-[496px] rounded-2xl relative overflow-hidden flex items-center justify-center group shadow-2xl">
@@ -41,7 +43,7 @@ const Gallery = () => {
 
       <main className="bg-white">
         <div 
-          className="section-container flex flex-col items-center gap-4 mb-12 mt-4 text-center"
+          ref={headerRef} className="section-container flex flex-col items-center gap-4 mb-12 mt-4 text-center opacity-0"
         >
           <div className="w-fit bg-[#e8f7ff] px-4 py-1.5 rounded-full border border-[#c1e8fb] shadow-sm">
             <span className="font-bold text-[12px] md:text-xs text-[#134e86]">Moments of Joy</span>
