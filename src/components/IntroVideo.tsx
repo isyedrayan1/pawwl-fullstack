@@ -34,7 +34,7 @@ const IntroVideo = () => {
             
             {/* Left: 3v portrait */}
             <div 
-              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0"
+              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0 col-span-1"
             >
                <video 
                   src={vid3} 
@@ -46,7 +46,7 @@ const IntroVideo = () => {
             
             {/* Middle: Stacked 5v (top) & 4v (bottom) */}
             <div 
-              className="vid-item flex flex-col gap-4 md:gap-6 h-[800px] md:h-[600px] opacity-0"
+              className="vid-item grid grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6 h-[300px] lg:h-[600px] opacity-0"
             >
                <div className="rounded-[28px] overflow-hidden shadow-sm flex-1 relative group border border-[#dce6ee]">
                    <video 
@@ -68,7 +68,7 @@ const IntroVideo = () => {
 
             {/* Right: 2v portrait */}
             <div 
-              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0"
+              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0 col-span-1"
             >
                <video 
                   src={vid2} 
