@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,21 +10,6 @@ import SEO from "@/components/SEO";
 
 const Contact = () => {
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
-        gsap.fromTo(el, 
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true }
-          }
-        );
-      });
-    });
-    return () => ctx.revert();
-  }, []);
 
 
 
@@ -179,11 +161,11 @@ const Contact = () => {
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d120617.49138228265!2d72.8124078!3d19.1384897!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b9d45d3f805d%3A0x6577fdc07c82a5d9!2sPawwl%20One%20stop%20pet%20care%20%7C%20Best%20Pet%20clinic%20and%20shop%20in%20Bhandup!5e0!3m2!1sen!2sin!4v1776378473997!5m2!1sen!2sin" 
             width="100%" 
             height="450" 
-            style={{ border: 0 }} 
             allowFullScreen={true} 
             loading="lazy" 
             referrerPolicy="no-referrer-when-downgrade"
             className="rounded-[24px]"
+            title="Pawwl Mumbai location map"
           />
         </div>
       </section>

@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -44,21 +41,6 @@ const servicesTestimonials = [
 
 const Services = () => {
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
-        gsap.fromTo(el, 
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true }
-          }
-        );
-      });
-    });
-    return () => ctx.revert();
-  }, []);
 
 
 

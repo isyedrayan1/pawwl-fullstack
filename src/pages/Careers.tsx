@@ -1,7 +1,5 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -51,21 +49,6 @@ const Careers = () => {
       return matchSearch && matchDept && matchLoc && matchType;
     });
   }, [jobs, search, deptFilter, locFilter, typeFilter]);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
-        gsap.fromTo(el, 
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true }
-          }
-        );
-      });
-    });
-    return () => ctx.revert();
-  }, []);
 
 
 
@@ -240,6 +223,8 @@ const Careers = () => {
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="relative w-full md:w-[170px]">
                     <select 
+                      title="Filter jobs by department"
+                      aria-label="Filter jobs by department"
                       className="w-full appearance-none bg-white px-3 py-2 pr-8 rounded-lg border border-solid border-[#f0f0f0] cursor-pointer font-normal text-[14px] text-[#191919] outline-none hover:border-[#c1e8fb] transition-colors"
                       value={deptFilter}
                       onChange={(e) => setDeptFilter(e.target.value)}
@@ -251,6 +236,8 @@ const Careers = () => {
                   
                   <div className="relative w-full md:w-[170px]">
                     <select 
+                      title="Filter jobs by location"
+                      aria-label="Filter jobs by location"
                       className="w-full appearance-none bg-white px-3 py-2 pr-8 rounded-lg border border-solid border-[#f0f0f0] cursor-pointer font-normal text-[14px] text-[#191919] outline-none hover:border-[#c1e8fb] transition-colors"
                       value={locFilter}
                       onChange={(e) => setLocFilter(e.target.value)}
@@ -262,6 +249,8 @@ const Careers = () => {
 
                   <div className="relative w-full md:w-[140px]">
                     <select 
+                      title="Filter jobs by employment type"
+                      aria-label="Filter jobs by employment type"
                       className="w-full appearance-none bg-white px-3 py-2 pr-8 rounded-lg border border-solid border-[#f0f0f0] cursor-pointer font-normal text-[14px] text-[#191919] outline-none hover:border-[#c1e8fb] transition-colors"
                       value={typeFilter}
                       onChange={(e) => setTypeFilter(e.target.value)}

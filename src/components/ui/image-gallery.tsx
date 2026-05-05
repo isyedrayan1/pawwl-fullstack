@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { useInView } from 'framer-motion';
 
 // Load local files automatically and dynamically via Vite
 const localAssets = import.meta.glob([
@@ -106,9 +106,6 @@ export function ImageGallery() {
 		</div>
 	);
 }
-
-import { useInView } from 'framer-motion';
-
 interface AnimatedAssetProps {
 	alt: string;
 	src: string;
@@ -141,12 +138,8 @@ function AnimatedAsset({ alt, src, onLoaded }: AnimatedAssetProps) {
     }, [isInView, isVideo]);
 
 	return (
-		<motion.div
+		<div
             ref={containerRef}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "50px" }}
-            transition={{ duration: 0.5, ease: "easeOut" }} 
 			className={cn(
                 "bg-[#f8fdff] relative rounded-[20px] border-2 border-[#c1e8fb] overflow-hidden group shadow-sm hover:shadow-xl transition-shadow",
             )}
@@ -183,6 +176,6 @@ function AnimatedAsset({ alt, src, onLoaded }: AnimatedAssetProps) {
                     loading="lazy"
                 />
             )}
-		</motion.div>
+        </div>
 	);
 }

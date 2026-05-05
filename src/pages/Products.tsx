@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,21 +22,6 @@ const Products = () => {
   const gridProducts = products.slice(3);
 
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".gs-reveal").forEach((el) => {
-        gsap.fromTo(el, 
-          { opacity: 0, y: 50 },
-          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out",
-            scrollTrigger: { trigger: el, start: "top 88%", once: true }
-          }
-        );
-      });
-    });
-    return () => ctx.revert();
-  }, []);
 
 
 
@@ -89,7 +71,7 @@ const Products = () => {
 
                   {/* Bottom: Shop Quality Supplies */}
                   <div className="w-full h-[300px] md:h-[433px] bg-[#1e4b66] rounded-3xl p-8 md:p-12 flex flex-col justify-center relative overflow-hidden group shadow-md">
-                     <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_#00b1e0_1px,_transparent_1px)]" style={{backgroundSize: '24px 24px'}}></div>
+                    <div className="absolute inset-0 opacity-10 product-dots-bg"></div>
                      <span className="relative z-10 font-heading font-black text-[50px] md:text-[80px] lg:text-[100px] leading-tight md:leading-[122.85px] text-[#00b1e0] tracking-tighter transform group-hover:scale-[1.02] transition-transform duration-500">
                        Shop<br/>Quality<br/>Supplies
                      </span>
@@ -199,6 +181,7 @@ const Products = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="absolute top-4 right-4 z-20 w-10 h-10 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+                      title={`Order ${item.title} on WhatsApp`}
                     >
                       <ShoppingBag size={18} />
                     </a>
@@ -237,6 +220,7 @@ const Products = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute top-4 right-4 z-20 w-9 h-9 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-md cursor-pointer"
+                      title={`Order ${item.title} on WhatsApp`}
                   >
                     <ShoppingBag size={16} />
                   </a>
@@ -274,19 +258,18 @@ const Products = () => {
           {/* Static Desktop Row / Marquee Mobile Row */}
           <div className="flex shrink-0 items-center justify-between gap-5 w-full min-w-full md:min-w-0 animate-marquee-mobile md:animate-none px-6 md:px-0">
              {[
-               { src: "/assets/sellersimg/sellr1.webp", w: "88px", h: "64px" },
-               { src: "/assets/sellersimg/slr2.webp", w: "114px", h: "114px" },
-               { src: "/assets/sellersimg/slr3.webp", w: "104px", h: "46px" },
-               { src: "/assets/sellersimg/slr4.webp", w: "92px", h: "64px" },
-               { src: "/assets/sellersimg/slr5.webp", w: "92px", h: "92px" },
-               { src: "/assets/sellersimg/slr6.webp", w: "130px", h: "56px" },
-               { src: "/assets/sellersimg/slr7.webp", w: "116px", h: "72px" }
+               { src: "/assets/sellersimg/sellr1.webp", className: "w-[88px] h-[64px]" },
+               { src: "/assets/sellersimg/slr2.webp", className: "w-[114px] h-[114px]" },
+               { src: "/assets/sellersimg/slr3.webp", className: "w-[104px] h-[46px]" },
+               { src: "/assets/sellersimg/slr4.webp", className: "w-[92px] h-[64px]" },
+               { src: "/assets/sellersimg/slr5.webp", className: "w-[92px] h-[92px]" },
+               { src: "/assets/sellersimg/slr6.webp", className: "w-[130px] h-[56px]" },
+               { src: "/assets/sellersimg/slr7.webp", className: "w-[116px] h-[72px]" }
              ].map((logo, i) => (
                <div key={i} className="flex flex-col justify-center items-center gap-2.5 self-stretch grow px-4">
                  <img 
                    src={logo.src} 
-                   className="object-contain" 
-                   style={{ width: logo.w, height: logo.h }}
+                   className={`object-contain ${logo.className}`} 
                    alt={`Seller Logo ${i+1}`} 
                  />
                </div>
@@ -294,19 +277,18 @@ const Products = () => {
              
              {/* Mobile Duplication for Smooth Loop */}
              {[
-               { src: "/assets/sellersimg/sellr1.webp", w: "88px", h: "64px" },
-               { src: "/assets/sellersimg/slr2.webp", w: "114px", h: "114px" },
-               { src: "/assets/sellersimg/slr3.webp", w: "104px", h: "46px" },
-               { src: "/assets/sellersimg/slr4.webp", w: "92px", h: "64px" },
-               { src: "/assets/sellersimg/slr5.webp", w: "92px", h: "92px" },
-               { src: "/assets/sellersimg/slr6.webp", w: "130px", h: "56px" },
-               { src: "/assets/sellersimg/slr7.webp", w: "116px", h: "72px" }
+               { src: "/assets/sellersimg/sellr1.webp", className: "w-[88px] h-[64px]" },
+               { src: "/assets/sellersimg/slr2.webp", className: "w-[114px] h-[114px]" },
+               { src: "/assets/sellersimg/slr3.webp", className: "w-[104px] h-[46px]" },
+               { src: "/assets/sellersimg/slr4.webp", className: "w-[92px] h-[64px]" },
+               { src: "/assets/sellersimg/slr5.webp", className: "w-[92px] h-[92px]" },
+               { src: "/assets/sellersimg/slr6.webp", className: "w-[130px] h-[56px]" },
+               { src: "/assets/sellersimg/slr7.webp", className: "w-[116px] h-[72px]" }
              ].map((logo, i) => (
                <div key={i+"dup"} className="md:hidden flex flex-col justify-center items-center gap-2.5 self-stretch grow px-4">
                  <img 
                    src={logo.src} 
-                   className="object-contain" 
-                   style={{ width: logo.w, height: logo.h }}
+                   className={`object-contain ${logo.className}`} 
                    alt={`Seller Logo ${i+1} dup`} 
                  />
                </div>

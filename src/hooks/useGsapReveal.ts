@@ -1,15 +1,4 @@
 import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Shared defaults for a consistent, premium feel
-const DEFAULTS = {
-  duration: 1,
-  ease: "power3.out",
-  start: "top 88%",
-};
 
 type RevealOptions = {
   y?: number;
@@ -33,35 +22,9 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
     const el = ref.current;
     if (!el) return;
 
-    const { y = 60, x = 0, scale, duration = DEFAULTS.duration, delay = 0, ease = DEFAULTS.ease, start = DEFAULTS.start } = options;
-
-    const fromVars: gsap.TweenVars = { opacity: 0, y, x };
-    if (scale !== undefined) fromVars.scale = scale;
-
-    gsap.fromTo(
-      el,
-      fromVars,
-      {
-        opacity: 1,
-        y: 0,
-        x: 0,
-        scale: 1,
-        duration,
-        delay,
-        ease,
-        scrollTrigger: {
-          trigger: el,
-          start,
-          once: true,
-        },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === el) st.kill();
-      });
-    };
+    el.style.opacity = "1";
+    el.style.transform = "none";
+    el.style.transition = "none";
   }, []);
 
   return ref;
@@ -83,35 +46,13 @@ export function useStaggerReveal<T extends HTMLElement = HTMLDivElement>(
     const children = container.querySelectorAll(childSelector);
     if (!children.length) return;
 
-    const { y = 50, x = 0, scale, duration = 0.8, stagger = 0.1, ease = DEFAULTS.ease, start = DEFAULTS.start } = options;
-
-    const fromVars: gsap.TweenVars = { opacity: 0, y, x };
-    if (scale !== undefined) fromVars.scale = scale;
-
-    gsap.fromTo(
-      children,
-      fromVars,
-      {
-        opacity: 1,
-        y: 0,
-        x: 0,
-        scale: 1,
-        duration,
-        stagger,
-        ease,
-        scrollTrigger: {
-          trigger: container,
-          start,
-          once: true,
-        },
+    children.forEach((child) => {
+      if (child instanceof HTMLElement) {
+        child.style.opacity = "1";
+        child.style.transform = "none";
+        child.style.transition = "none";
       }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === container) st.kill();
-      });
-    };
+    });
   }, []);
 
   return ref;
