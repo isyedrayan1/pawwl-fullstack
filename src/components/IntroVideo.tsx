@@ -10,6 +10,7 @@ import { ArrowRight } from "lucide-react";
 const IntroVideo = () => {
   const headerRef = useReveal({ y: 40 });
   const gridRef = useStaggerReveal(".vid-item", { y: 40, stagger: 0.12 });
+  const mobileGridRef = useStaggerReveal(".vid-item-m", { y: 30, stagger: 0.1 });
   const ctaRef = useReveal({ y: 20, delay: 0.2 });
 
   return (
@@ -30,54 +31,54 @@ const IntroVideo = () => {
           </div>
 
           {/* Video Bento Layout */}
-          <div ref={gridRef} className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-            
+          {/* Desktop / Tablet: 3-col bento (md+) */}
+          <div ref={gridRef} className="w-full hidden md:grid md:grid-cols-3 gap-4 md:gap-6">
             {/* Left: 3v portrait */}
-            <div 
-              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0 col-span-1"
-            >
-               <video 
-                  src={vid3} 
-                  autoPlay loop muted playsInline 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" 
-               />
-               <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+            <div className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[600px] relative group border border-[#dce6ee] opacity-0">
+              <video src={vid3} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+              <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
             </div>
-            
-            {/* Middle: Stacked 5v (top) & 4v (bottom) */}
-            <div 
-              className="vid-item grid grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6 h-[300px] lg:h-[600px] opacity-0"
-            >
-               <div className="rounded-[28px] overflow-hidden shadow-sm flex-1 relative group border border-[#dce6ee]">
-                   <video 
-                      src={vid5} 
-                      autoPlay loop muted playsInline 
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" 
-                   />
-                   <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
-               </div>
-                <div className="rounded-[28px] overflow-hidden shadow-sm flex-1 relative group border border-[#dce6ee]">
-                    <img 
-                       src={vid4} 
-                       alt="Pawwl Gallery"
-                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" 
-                    />
-                    <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
+            {/* Middle: Stacked */}
+            <div className="vid-item grid grid-cols-1 gap-6 h-[600px] opacity-0">
+              <div className="rounded-[28px] overflow-hidden shadow-sm relative group border border-[#dce6ee]">
+                <video src={vid5} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+              <div className="rounded-[28px] overflow-hidden shadow-sm relative group border border-[#dce6ee]">
+                <img src={vid4} alt="Pawwl Gallery" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
             </div>
-
             {/* Right: 2v portrait */}
-            <div 
-              className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[400px] md:h-[600px] relative group border border-[#dce6ee] opacity-0 col-span-1"
-            >
-               <video 
-                  src={vid2} 
-                  autoPlay loop muted playsInline 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" 
-               />
-               <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+            <div className="vid-item rounded-[28px] overflow-hidden shadow-sm h-[600px] relative group border border-[#dce6ee] opacity-0">
+              <video src={vid2} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+              <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
             </div>
+          </div>
 
+          {/* Mobile: portrait → 2 squares → portrait (below md) */}
+          <div ref={mobileGridRef} className="w-full flex flex-col gap-4 md:hidden">
+            {/* 1st: Portrait 9:16 */}
+            <div className="vid-item-m rounded-[28px] overflow-hidden shadow-sm aspect-[9/16] relative group border border-[#dce6ee] opacity-0">
+              <video src={vid3} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+              <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+            {/* 2nd & 3rd: Side by side squares */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="vid-item-m rounded-[28px] overflow-hidden shadow-sm aspect-square relative group border border-[#dce6ee] opacity-0">
+                <video src={vid5} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+              <div className="vid-item-m rounded-[28px] overflow-hidden shadow-sm aspect-square relative group border border-[#dce6ee] opacity-0">
+                <img src={vid4} alt="Pawwl Gallery" className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+            </div>
+            {/* 4th: Portrait 9:16 */}
+            <div className="vid-item-m rounded-[28px] overflow-hidden shadow-sm aspect-[9/16] relative group border border-[#dce6ee] opacity-0">
+              <video src={vid2} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+              <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
           </div>
           
           {/* CTA Button */}
