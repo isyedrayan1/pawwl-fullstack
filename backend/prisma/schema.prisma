@@ -1,0 +1,231 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model address {
+  id         String   @id @default(cuid())
+  userId     String
+  label      String   @default("home")
+  fullName   String
+  phone      String
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  postalCode String
+  country    String   @default("India")
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Address_userId_fkey")
+
+  @@index([userId], map: "Address_userId_idx")
+}
+
+model adminauditlog {
+  id          String   @id @default(cuid())
+  adminUserId String
+  action      String
+  entityType  String
+  entityId    String?
+  metadata    String?  @db.LongText
+  createdAt   DateTime @default(now())
+  user        user     @relation(fields: [adminUserId], references: [id], map: "AdminAuditLog_adminUserId_fkey")
+
+  @@index([adminUserId], map: "AdminAuditLog_adminUserId_idx")
+  @@index([entityType, entityId], map: "AdminAuditLog_entityType_entityId_idx")
+}
+
+model cartitem {
+  id             String         @id @default(cuid())
+  userId         String
+  productId      String
+  variantId      String
+  quantity       Int            @default(1)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime @updatedAt
+  product        product        @relation(fields: [productId], references: [id], onDelete: Cascade, map: "CartItem_productId_fkey")
+  user           user           @relation(fields: [userId], references: [id], onDelete: Cascade, map: "CartItem_userId_fkey")
+  productvariant productvariant @relation(fields: [variantId], references: [id], onDelete: Cascade, map: "CartItem_variantId_fkey")
+
+  @@unique([userId, variantId], map: "CartItem_userId_variantId_key")
+  @@index([productId], map: "CartItem_productId_fkey")
+  @@index([userId], map: "CartItem_userId_idx")
+  @@index([variantId], map: "CartItem_variantId_fkey")
+}
+
+model order {
+  id                String                  @id @default(cuid())
+  orderNumber       String                  @unique(map: "Order_orderNumber_key")
+  userId            String
+  addressSnapshot   String                  @db.LongText
+  subtotal          Decimal                 @db.Decimal(10, 2)
+  deliveryFee       Decimal                 @default(0.00) @db.Decimal(10, 2)
+  total             Decimal                 @db.Decimal(10, 2)
+  paymentStatus     order_paymentStatus     @default(pending)
+  fulfillmentStatus order_fulfillmentStatus @default(pending)
+  notes             String?                 @db.Text
+  createdAt         DateTime                @default(now())
+  updatedAt         DateTime @updatedAt
+  user              user                    @relation(fields: [userId], references: [id], map: "Order_userId_fkey")
+  orderitem         orderitem[]
+  payment           payment[]
+
+  @@index([fulfillmentStatus], map: "Order_fulfillmentStatus_idx")
+  @@index([paymentStatus], map: "Order_paymentStatus_idx")
+  @@index([userId], map: "Order_userId_idx")
+}
+
+model orderitem {
+  id             String         @id @default(cuid())
+  orderId        String
+  productId      String?
+  variantId      String?
+  productName    String
+  variantName    String
+  sku            String?
+  quantity       Int
+  unitPrice      Decimal         @db.Decimal(10, 2)
+  lineTotal      Decimal         @db.Decimal(10, 2)
+  order          order           @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "OrderItem_orderId_fkey")
+  product        product?        @relation(fields: [productId], references: [id], map: "OrderItem_productId_fkey")
+  productvariant productvariant? @relation(fields: [variantId], references: [id], map: "OrderItem_variantId_fkey")
+
+  @@index([orderId], map: "OrderItem_orderId_idx")
+  @@index([productId], map: "OrderItem_productId_fkey")
+  @@index([variantId], map: "OrderItem_variantId_fkey")
+}
+
+model payment {
+  id                String         @id @default(cuid())
+  orderId           String
+  provider          String         @default("manual")
+  amount            Decimal        @db.Decimal(10, 2)
+  status            payment_status @default(pending)
+  providerOrderId   String?
+  providerPaymentId String?
+  rawResponse       String?        @db.LongText
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime @updatedAt
+  order             order          @relation(fields: [orderId], references: [id], onDelete: Cascade, map: "Payment_orderId_fkey")
+
+  @@index([orderId], map: "Payment_orderId_idx")
+  @@index([providerOrderId], map: "Payment_providerOrderId_idx")
+  @@index([providerPaymentId], map: "Payment_providerPaymentId_idx")
+}
+
+model product {
+  id             String           @id @default(cuid())
+  name           String
+  slug           String           @unique(map: "Product_slug_key")
+  description    String?          @db.Text
+  category       String           @default("Uncategorized")
+  brand          String?
+  images         String?          @db.LongText
+  status         product_status   @default(draft)
+  seoTitle       String?
+  seoDescription String?          @db.Text
+  benefits       String?          @db.LongText
+  ingredients    String?          @db.Text
+  usage          String?          @db.Text
+  rating         String?
+  reviewCount    Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime @updatedAt
+  cartitem       cartitem[]
+  orderitem      orderitem[]
+  productvariant productvariant[]
+}
+
+model productvariant {
+  id        String      @id @default(cuid())
+  productId String
+  name      String
+  sku       String?     @unique(map: "ProductVariant_sku_key")
+  price     Decimal     @db.Decimal(10, 2)
+  salePrice Decimal?    @db.Decimal(10, 2)
+  gstPrice  Decimal?    @db.Decimal(10, 2)
+  stock     Int         @default(0)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime @updatedAt
+  cartitem  cartitem[]
+  orderitem orderitem[]
+  product   product     @relation(fields: [productId], references: [id], onDelete: Cascade, map: "ProductVariant_productId_fkey")
+
+  @@index([productId], map: "ProductVariant_productId_idx")
+}
+
+model session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique(map: "Session_tokenHash_key")
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, map: "Session_userId_fkey")
+
+  @@index([expiresAt], map: "Session_expiresAt_idx")
+  @@index([userId], map: "Session_userId_idx")
+}
+
+model user {
+  id            String          @id @default(cuid())
+  name          String
+  username      String?         @unique(map: "User_username_key")
+  email         String          @unique(map: "User_email_key")
+  passwordHash  String
+  role          user_role       @default(customer)
+  status        user_status     @default(active)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime @updatedAt
+  phone         String?         @db.VarChar(15)
+  walletBalance Decimal         @default(0.00) @db.Decimal(10, 2)
+  address       address[]
+  adminauditlog adminauditlog[]
+  cartitem      cartitem[]
+  order         order[]
+  session       session[]
+}
+
+enum payment_status {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum user_role {
+  customer
+  admin
+}
+
+enum user_status {
+  active
+  disabled
+}
+
+enum order_paymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum product_status {
+  draft
+  published
+  archived
+}
+
+enum order_fulfillmentStatus {
+  pending
+  processing
+  out_for_delivery
+  delivered
+  cancelled
+}

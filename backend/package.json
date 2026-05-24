@@ -1,0 +1,21 @@
+{
+  "name": "pawwl-backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/server.js",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --schema prisma/schema.prisma",
+    "prisma:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "seed": "tsx prisma/seed.ts",
+    "import:products": "tsx prisma/import-products.ts"
+  },
+  "devDependencies": {
+    "postcss": "^8.4.49"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^3.3.0"
+  }
+}
