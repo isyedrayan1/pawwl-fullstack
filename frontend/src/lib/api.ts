@@ -99,6 +99,9 @@ export type ApiOrder = {
   paymentStatus: "pending" | "paid" | "failed" | "refunded";
   fulfillmentStatus: "pending" | "processing" | "out_for_delivery" | "delivered" | "cancelled";
   notes?: string | null;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
   createdAt: string;
   items: ApiOrderItem[];
   payments: ApiPayment[];
@@ -151,6 +154,51 @@ export type ApiAdminSummary = {
   recentUsers: ApiAdminUser[];
   lowStockVariants: ApiLowStockVariant[];
   recentAuditLogs: ApiAuditLog[];
+};
+
+export type ApiCoupon = {
+  id: string;
+  code: string;
+  discount: string | number;
+  type: "percentage" | "fixed";
+  minCartAmt?: string | number | null;
+  maxDiscount?: string | number | null;
+  expiresAt: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ApiReturnRequest = {
+  id: string;
+  orderId: string;
+  reason: string;
+  status: "pending" | "approved" | "rejected" | "completed";
+  createdAt: string;
+  updatedAt: string;
+  order: ApiOrder & {
+    user: ApiUser;
+  };
+};
+
+export type ApiReview = {
+  id: string;
+  productId: string;
+  userId: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  product?: {
+    id: string;
+    name: string;
+    images?: string[] | null;
+  } | null;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
 };
 
 export const apiRequest = async <T>(path: string, options: RequestInit = {}): Promise<T> => {

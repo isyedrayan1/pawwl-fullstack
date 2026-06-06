@@ -31,6 +31,9 @@ import AdminProducts from "./pages/AdminProducts.tsx";
 import AdminOrders from "./pages/AdminOrders.tsx";
 import AdminUsers from "./pages/AdminUsers.tsx";
 import AdminAdmins from "./pages/AdminAdmins.tsx";
+import AdminCoupons from "./pages/AdminCoupons.tsx";
+import AdminReturns from "./pages/AdminReturns.tsx";
+import AdminReviews from "./pages/AdminReviews.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -57,6 +60,9 @@ const AppContent = () => {
               <Route path="/" element={<Admin />} />
               <Route path="/products" element={<AdminProducts />} />
               <Route path="/orders" element={<AdminOrders />} />
+              <Route path="/coupons" element={<AdminCoupons />} />
+              <Route path="/returns" element={<AdminReturns />} />
+              <Route path="/reviews" element={<AdminReviews />} />
               <Route path="/users" element={<AdminUsers />} />
               <Route path="/admins" element={<AdminAdmins />} />
               <Route path="/login" element={<Login />} />
@@ -93,6 +99,9 @@ const AppContent = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/products" element={<AdminProducts />} />
               <Route path="/admin/orders" element={<AdminOrders />} />
+              <Route path="/admin/coupons" element={<AdminCoupons />} />
+              <Route path="/admin/returns" element={<AdminReturns />} />
+              <Route path="/admin/reviews" element={<AdminReviews />} />
               <Route path="/admin/users" element={<AdminUsers />} />
               <Route path="/admin/admins" element={<AdminAdmins />} />
               <Route path="*" element={<NotFound />} />

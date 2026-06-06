@@ -8,6 +8,47 @@ import { HttpError } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
 import { uniqueSlug } from "../lib/slug.js";
 import { requireAdmin } from "../middleware/auth.js";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const isDist = __dirname.includes(path.join('dist', 'src')) || __dirname.includes('dist/src') || __dirname.includes('dist\\src');
+const uploadsDir = isDist 
+  ? path.resolve(__dirname, '../../../uploads/products')
+  : path.resolve(__dirname, '../../uploads/products');
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (_req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (_req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|webp/;
+    const mimeType = allowedTypes.test(file.mimetype);
+    const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimeType && extName) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images (.jpg, .jpeg, .png, .webp) are allowed"));
+    }
+  },
+});
 
 const router = Router();
 
@@ -48,6 +89,9 @@ const productSchema = z.object({
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   seoTitle: z.string().optional().nullable(),
   seoDescription: z.string().optional().nullable(),
+  benefits: z.array(z.string()).default([]),
+  ingredients: z.string().optional().nullable(),
+  usage: z.string().optional().nullable(),
   variants: z.array(productVariantSchema).min(1).optional(),
 });
 
@@ -56,6 +100,9 @@ const statusSchema = z.object({
   fulfillmentStatus: z
     .enum(["pending", "processing", "out_for_delivery", "delivered", "cancelled"])
     .optional(),
+  courierName: z.string().optional().nullable(),
+  trackingNumber: z.string().optional().nullable(),
+  trackingUrl: z.string().optional().nullable(),
 });
 
 const logAdminAction = async (
@@ -77,11 +124,25 @@ const logAdminAction = async (
   });
 };
 
-const normalizeProduct = (product: Awaited<ReturnType<typeof prisma.product.findMany>>[number]) => ({
-  ...product,
-  variants: product.productvariant,
-  productvariant: undefined,
-});
+const parseJsonArray = (value: string | null | undefined) => {
+  if (!value) return [] as string[];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [] as string[];
+  }
+};
+
+const normalizeProduct = (product: Awaited<ReturnType<typeof prisma.product.findMany>>[number]) => {
+  const { productvariant, images, benefits, ...rest } = product;
+  return {
+    ...rest,
+    images: parseJsonArray(images),
+    benefits: parseJsonArray(benefits),
+    variants: productvariant,
+  };
+};
 
 const normalizeOrder = (order: Awaited<ReturnType<typeof prisma.order.findMany>>[number]) => ({
   ...order,
@@ -106,6 +167,19 @@ const adminSelect = {
 } as const;
 
 router.use(requireAdmin);
+
+router.post(
+  "/upload",
+  upload.array("images", 10),
+  asyncHandler(async (req, res) => {
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length === 0) {
+      throw new HttpError(400, "No files uploaded");
+    }
+    const filePaths = files.map((file) => `/uploads/products/${file.filename}`);
+    res.json({ urls: filePaths });
+  })
+);
 
 router.get(
   "/summary",
@@ -221,10 +295,13 @@ router.post(
         description: input.description,
         category: input.category,
         brand: input.brand,
-        images: input.images,
+        images: JSON.stringify(input.images),
         status: input.status,
         seoTitle: input.seoTitle,
         seoDescription: input.seoDescription,
+        benefits: JSON.stringify(input.benefits),
+        ingredients: input.ingredients,
+        usage: input.usage,
         productvariant: {
           create:
             input.variants?.map((variant) => ({
@@ -263,10 +340,13 @@ router.patch(
         ...(input.description !== undefined ? { description: input.description } : {}),
         ...(input.category !== undefined ? { category: input.category } : {}),
         ...(input.brand !== undefined ? { brand: input.brand } : {}),
-        ...(input.images !== undefined ? { images: input.images } : {}),
+        ...(input.images !== undefined ? { images: JSON.stringify(input.images) } : {}),
         ...(input.status !== undefined ? { status: input.status } : {}),
         ...(input.seoTitle !== undefined ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription !== undefined ? { seoDescription: input.seoDescription } : {}),
+        ...(input.benefits !== undefined ? { benefits: JSON.stringify(input.benefits) } : {}),
+        ...(input.ingredients !== undefined ? { ingredients: input.ingredients } : {}),
+        ...(input.usage !== undefined ? { usage: input.usage } : {}),
       },
       include: { productvariant: true },
     });
@@ -514,6 +594,228 @@ router.get(
     });
 
     res.json({ logs });
+  }),
+);
+
+// DELETE Product
+router.delete(
+  "/products/:id",
+  asyncHandler(async (req, res) => {
+    const productId = String(req.params.id);
+    const existing = await prisma.product.findUnique({ where: { id: productId } });
+    if (!existing) throw new HttpError(404, "Product not found");
+
+    try {
+      await prisma.product.delete({
+        where: { id: productId },
+      });
+      await logAdminAction(req.user!.id, "delete", "product", productId, { name: existing.name });
+      res.json({ success: true });
+    } catch (error: any) {
+      if (error.code === "P2003" || (error.message && error.message.includes("foreign key constraint"))) {
+        throw new HttpError(
+          400,
+          "Cannot delete this product because it has order history. Please change its status to 'Archived' instead."
+        );
+      }
+      throw error;
+    }
+  }),
+);
+
+// Coupons CRUD
+const couponSchema = z.object({
+  code: z.string().min(1),
+  discount: z.number().positive(),
+  type: z.enum(["percentage", "fixed"]),
+  minCartAmt: z.number().nonnegative().optional().nullable(),
+  maxDiscount: z.number().nonnegative().optional().nullable(),
+  expiresAt: z.string(),
+  isActive: z.boolean().default(true),
+});
+
+router.get(
+  "/coupons",
+  asyncHandler(async (_req, res) => {
+    const coupons = await prisma.coupon.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    res.json({ coupons });
+  }),
+);
+
+router.post(
+  "/coupons",
+  asyncHandler(async (req, res) => {
+    const input = couponSchema.parse(req.body);
+    const existing = await prisma.coupon.findUnique({
+      where: { code: input.code.toUpperCase() },
+    });
+    if (existing) throw new HttpError(400, "A coupon with this code already exists");
+
+    const coupon = await prisma.coupon.create({
+      data: {
+        id: createId(),
+        code: input.code.toUpperCase(),
+        discount: new Prisma.Decimal(input.discount),
+        type: input.type,
+        minCartAmt: input.minCartAmt != null ? new Prisma.Decimal(input.minCartAmt) : null,
+        maxDiscount: input.maxDiscount != null ? new Prisma.Decimal(input.maxDiscount) : null,
+        expiresAt: new Date(input.expiresAt),
+        isActive: input.isActive,
+      },
+    });
+
+    await logAdminAction(req.user!.id, "create", "coupon", coupon.id, { code: coupon.code });
+    res.status(201).json({ coupon });
+  }),
+);
+
+router.put(
+  "/coupons/:id",
+  asyncHandler(async (req, res) => {
+    const input = couponSchema.partial().parse(req.body);
+    const couponId = String(req.params.id);
+    const existing = await prisma.coupon.findUnique({ where: { id: couponId } });
+    if (!existing) throw new HttpError(404, "Coupon not found");
+
+    if (input.code) {
+      const codeDuplicate = await prisma.coupon.findFirst({
+        where: {
+          code: input.code.toUpperCase(),
+          NOT: { id: couponId },
+        },
+      });
+      if (codeDuplicate) throw new HttpError(400, "A coupon with this code already exists");
+    }
+
+    const coupon = await prisma.coupon.update({
+      where: { id: couponId },
+      data: {
+        ...(input.code !== undefined ? { code: input.code.toUpperCase() } : {}),
+        ...(input.discount !== undefined ? { discount: new Prisma.Decimal(input.discount) } : {}),
+        ...(input.type !== undefined ? { type: input.type } : {}),
+        ...(input.minCartAmt !== undefined ? { minCartAmt: input.minCartAmt != null ? new Prisma.Decimal(input.minCartAmt) : null } : {}),
+        ...(input.maxDiscount !== undefined ? { maxDiscount: input.maxDiscount != null ? new Prisma.Decimal(input.maxDiscount) : null } : {}),
+        ...(input.expiresAt !== undefined ? { expiresAt: new Date(input.expiresAt) } : {}),
+        ...(input.isActive !== undefined ? { isActive: input.isActive } : {}),
+      },
+    });
+
+    await logAdminAction(req.user!.id, "update", "coupon", coupon.id, { code: coupon.code });
+    res.json({ coupon });
+  }),
+);
+
+router.delete(
+  "/coupons/:id",
+  asyncHandler(async (req, res) => {
+    const couponId = String(req.params.id);
+    const existing = await prisma.coupon.findUnique({ where: { id: couponId } });
+    if (!existing) throw new HttpError(404, "Coupon not found");
+
+    await prisma.coupon.delete({ where: { id: couponId } });
+    await logAdminAction(req.user!.id, "delete", "coupon", couponId, { code: existing.code });
+    res.json({ success: true });
+  }),
+);
+
+// Return Requests
+router.get(
+  "/returns",
+  asyncHandler(async (_req, res) => {
+    const returns = await prisma.returnrequest.findMany({
+      include: {
+        order: {
+          include: {
+            user: { select: { id: true, name: true, email: true } },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json({ returns });
+  }),
+);
+
+router.patch(
+  "/returns/:id/status",
+  asyncHandler(async (req, res) => {
+    const returnId = String(req.params.id);
+    const statusVal = z.enum(["pending", "approved", "rejected", "completed"]).parse(req.body.status);
+
+    const existing = await prisma.returnrequest.findUnique({
+      where: { id: returnId },
+      include: { order: true },
+    });
+    if (!existing) throw new HttpError(404, "Return request not found");
+
+    const updated = await prisma.returnrequest.update({
+      where: { id: returnId },
+      data: { status: statusVal },
+    });
+
+    if (statusVal === "completed") {
+      await prisma.order.update({
+        where: { id: existing.orderId },
+        data: {
+          paymentStatus: "refunded",
+          fulfillmentStatus: "cancelled",
+        },
+      });
+      await prisma.payment.updateMany({
+        where: { orderId: existing.orderId },
+        data: { status: "refunded" },
+      });
+    }
+
+    await logAdminAction(req.user!.id, "update_return_status", "returnrequest", returnId, { status: statusVal });
+    res.json({ returnRequest: updated });
+  }),
+);
+
+// Reviews Moderation
+router.get(
+  "/reviews",
+  asyncHandler(async (_req, res) => {
+    const reviews = await prisma.review.findMany({
+      include: {
+        product: { select: { id: true, name: true, images: true } },
+        user: { select: { id: true, name: true, email: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json({ reviews });
+  }),
+);
+
+router.delete(
+  "/reviews/:id",
+  asyncHandler(async (req, res) => {
+    const reviewId = String(req.params.id);
+    const existing = await prisma.review.findUnique({
+      where: { id: reviewId },
+    });
+    if (!existing) throw new HttpError(404, "Review not found");
+
+    await prisma.review.delete({ where: { id: reviewId } });
+    
+    const stats = await prisma.review.aggregate({
+      where: { productId: existing.productId },
+      _avg: { rating: true },
+      _count: { id: true },
+    });
+
+    await prisma.product.update({
+      where: { id: existing.productId },
+      data: {
+        rating: stats._avg.rating ? new Prisma.Decimal(stats._avg.rating) : null,
+        reviewCount: stats._count.id,
+      },
+    });
+
+    await logAdminAction(req.user!.id, "delete_review", "review", reviewId, { productId: existing.productId });
+    res.json({ success: true });
   }),
 );
 

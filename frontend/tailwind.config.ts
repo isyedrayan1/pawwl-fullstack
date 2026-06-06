@@ -4,10 +4,15 @@ import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
-  content: [
-    "./src/**/*.{ts,tsx}",
-    "./index.html",
-  ],
+  content: {
+    relative: true,
+    files: [
+      "./src/**/*.{ts,tsx}",
+      "./index.html",
+      "./frontend/src/**/*.{ts,tsx}",
+      "./frontend/index.html",
+    ],
+  },
   prefix: "",
   theme: {
     container: {

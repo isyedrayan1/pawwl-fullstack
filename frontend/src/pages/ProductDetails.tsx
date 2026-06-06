@@ -4,12 +4,13 @@ import CTASection from "@/components/CTASection";
 import { ChevronRight, Star, Plus, Minus, ShieldCheck, HeartPulse, Truck, CheckCircle2, ChevronDown, ShoppingBag, Heart } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { products as fallbackProducts } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 import SEO from "@/components/SEO";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest, ApiProduct } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { useApiProducts } from "@/hooks/useApiProducts";
 
 const parseStringArray = (value: string[] | string | null | undefined) => {
   if (Array.isArray(value)) return value;
@@ -26,7 +27,7 @@ const parseStringArray = (value: string[] | string | null | undefined) => {
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const fallbackProduct = fallbackProducts.find(p => p.id === id || p.slug === id);
+  const { data: catalogProducts = [] } = useApiProducts();
   const { data: apiProduct } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
@@ -36,6 +37,7 @@ const ProductDetails = () => {
     enabled: !!id,
     retry: false,
   });
+  const isProductLoading = Boolean(id) && !apiProduct;
   const product = apiProduct
     ? {
         id: apiProduct.id,
@@ -53,12 +55,59 @@ const ProductDetails = () => {
         sizes: Array.isArray(apiProduct.variants) ? apiProduct.variants.map((variant) => variant.name) : [],
         tag: apiProduct.status === "published" ? "Available" : undefined,
       }
-    : fallbackProduct;
+    : null;
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
   
   const { addToCart, toggleFavorite, isInCart, isFavorite } = useCart();
   const queryClient = useQueryClient();
+
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
+
+  const { data: meData } = useQuery({
+    queryKey: ["me"],
+    queryFn: () => apiRequest<{ user: any }>("/api/auth/me").catch(() => ({ user: null })),
+    retry: false,
+  });
+  const isLoggedIn = Boolean(meData?.user);
+
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  const { data: reviewsData, isLoading: isLoadingReviews, refetch: refetchReviews } = useQuery({
+    queryKey: ["reviews", apiProduct?.id],
+    queryFn: () => apiRequest<{ reviews: any[] }>(`/api/products/${apiProduct!.id}/reviews`),
+    enabled: Boolean(apiProduct?.id),
+    retry: false,
+  });
+
+  const reviewsList = reviewsData?.reviews ?? [];
+
+  const submitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewComment.trim()) return;
+    setSubmittingReview(true);
+    try {
+      await apiRequest(`/api/products/${apiProduct?.id}/reviews`, {
+        method: "POST",
+        body: JSON.stringify({
+          rating: reviewRating,
+          title: "",
+          comment: reviewComment.trim(),
+        }),
+      });
+      toast.success("Review submitted successfully!");
+      setReviewComment("");
+      setReviewRating(5);
+      refetchReviews();
+      queryClient.invalidateQueries({ queryKey: ["product", id] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to submit review");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -66,18 +115,39 @@ const ProductDetails = () => {
     }
   }, [product]);
 
+  const relatedProducts = catalogProducts
+    .filter((item) => item.id !== apiProduct?.id)
+    .slice(0, 4)
+    .map((item) => ({
+      id: item.id,
+      category: item.category,
+      title: item.name,
+      rating: item.rating ?? "0.0",
+      images: parseStringArray(item.images).length ? parseStringArray(item.images) : ["/pawwl-logo-main-croped.webp"],
+    }));
+
+  if (isProductLoading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+        <p className="text-[#134e86] font-bold text-lg">Loading product...</p>
+        <p className="text-[#666] text-sm mt-2">Fetching the latest product details from the database.</p>
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
         <h2 className="text-3xl font-bold text-[#1b4965] mb-4">Product Not Found</h2>
+        <p className="text-[#666] text-sm mb-4 text-center max-w-md">
+          The product could not be loaded from the database. It may not exist, may be archived, or the API may be unavailable.
+        </p>
         <Link to="/products" className="text-brand-blue font-bold hover:underline">Return to Shop</Link>
       </div>
     );
   }
 
   // Filter out current product for "Related" section
-  const relatedProducts = fallbackProducts.filter(p => p.id !== id).slice(0, 4);
-
   const whatsappLink = `https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I would like to order ${quantity}x ${product.title} (Size: ${selectedSize}).`)}`;
   const selectedApiVariant = Array.isArray(apiProduct?.variants)
     ? apiProduct.variants.find((variant) => variant.name === selectedSize) ?? apiProduct.variants[0]
@@ -124,7 +194,7 @@ const ProductDetails = () => {
           {/* Left: Product Images */}
           <div className="w-full lg:w-[500px] flex flex-col gap-4">
             <div className="w-full aspect-square rounded-2xl border border-[#f0f0f0] bg-white relative overflow-hidden flex items-center justify-center p-1 group">
-              <img src={product.images[0]} className="w-full h-full object-cover rounded-xl" alt={product.title} />
+              <img src={product.images[activeImageIdx] || "/pawwl-logo-main-croped.webp"} className="w-full h-full object-cover rounded-xl" alt={product.title} />
               
               {/* Action Buttons Overlay */}
               <div className="absolute top-4 right-4 flex flex-col gap-2.5 z-20">
@@ -152,27 +222,16 @@ const ProductDetails = () => {
                     }
 
                     if (!apiProduct || !selectedApiVariant) {
-                      // Fallback to local cart if variant info missing
-                      addToCart(product.id);
+                      addToCart(product.id, "");
                       toast.success("Added to Cart", { description: product.title });
                       return;
                     }
 
                     try {
-                      await apiRequest(`/api/cart/items`, {
-                        method: "POST",
-                        body: JSON.stringify({ variantId: selectedApiVariant.id, quantity }),
-                      });
-                      // keep local context in sync for immediate UI feedback
-                      addToCart(product.id);
-                      // refresh server-synced cart queries
-                      queryClient.invalidateQueries({ queryKey: ["cart"] });
-                      queryClient.invalidateQueries({ queryKey: ["drawer-products"] });
+                      await addToCart(apiProduct.id, selectedApiVariant.id, quantity);
                       toast.success("Added to Cart", { description: product.title });
                     } catch (err) {
-                      // If API fails (likely unauthenticated), fall back to local cart
-                      addToCart(product.id);
-                      toast.success("Added to Cart (local)", { description: product.title });
+                      toast.error("Could not add to cart");
                     }
                   }}
                   aria-label={isInCart(product.id) ? "Already in cart" : "Add to cart"}
@@ -191,6 +250,21 @@ const ProductDetails = () => {
                 </div>
               )}
             </div>
+            
+            {/* Thumbnails */}
+            {product.images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {product.images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveImageIdx(idx)}
+                    className={`w-16 h-16 rounded-lg overflow-hidden border shrink-0 ${activeImageIdx === idx ? 'border-[#134e86] border-2 shadow-sm' : 'border-gray-200 hover:border-gray-300'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt="thumbnail" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right: Product Details */}
@@ -345,6 +419,129 @@ const ProductDetails = () => {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Product Reviews Section */}
+      <div className="w-full flex justify-center bg-white py-20 border-b border-[#f0f0f0]">
+        <div className="w-full max-w-[1114px] px-6 lg:px-0 grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-12">
+          {/* Left: Overall Rating & Write Form */}
+          <div className="space-y-8">
+            <div>
+              <h3 className="font-extrabold text-[24px] text-[#191919] mb-4">Customer Reviews</h3>
+              <div className="flex items-center gap-4">
+                <span className="text-5xl font-black text-[#191919]">{product.rating}</span>
+                <div>
+                  <div className="flex gap-0.5 mb-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        size={16}
+                        fill={star <= Math.round(Number(product.rating)) ? "#fff200" : "none"}
+                        className={star <= Math.round(Number(product.rating)) ? "text-[#fff200]" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#666] font-medium">Based on {product.reviewCount} reviews</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Review Form */}
+            <div className="border border-[#f0f0f0] rounded-2xl p-6 bg-[#f8fbff] shadow-sm">
+              <h4 className="font-bold text-[16px] text-[#191919] mb-4">Write a Review</h4>
+              {isLoggedIn ? (
+                <form onSubmit={submitReview} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Rating</label>
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewRating(star)}
+                          title={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                          aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                          className="hover:scale-110 transition-transform"
+                        >
+                          <Star
+                            size={24}
+                            fill={star <= reviewRating ? "#fff200" : "none"}
+                            className={star <= reviewRating ? "text-[#fff200]" : "text-gray-300"}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Review Comment</label>
+                    <textarea
+                      placeholder="Share your thoughts about this product..."
+                      required
+                      value={reviewComment}
+                      onChange={(e) => setReviewComment(e.target.value)}
+                      className="w-full min-h-[80px] p-3 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-blue focus:outline-none bg-white"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={submittingReview || !reviewComment.trim()}
+                    className="w-full bg-[#134e86] hover:bg-[#0d365d] text-white rounded-lg h-10 font-bold text-xs uppercase tracking-wider"
+                  >
+                    {submittingReview ? "Submitting..." : "Submit Review"}
+                  </Button>
+                </form>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-sm text-[#666] mb-3">Please log in to share your review.</p>
+                  <Link to="/login">
+                    <Button variant="outline" size="sm" className="rounded-lg">
+                      Log In
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right: Reviews List */}
+          <div className="space-y-6">
+            <h4 className="font-bold text-[18px] text-[#191919] border-b border-[#f0f0f0] pb-3">Reviews Feed</h4>
+            {isLoadingReviews ? (
+              <p className="text-[#666] text-sm animate-pulse">Loading reviews...</p>
+            ) : !reviewsList || reviewsList.length === 0 ? (
+              <div className="py-12 text-center border border-dashed border-gray-200 rounded-2xl">
+                <p className="text-[#999] text-sm">No reviews yet for this product.</p>
+                <p className="text-[#b1b1b1] text-xs mt-1">Be the first to share your experience!</p>
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
+                {reviewsList.map((review) => (
+                  <div key={review.id} className="border border-[#f0f0f0] rounded-xl p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <p className="font-bold text-sm text-[#191919]">{review.user?.name || "Customer"}</p>
+                        <div className="flex gap-0.5 mt-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              size={12}
+                              fill={star <= review.rating ? "#fff200" : "none"}
+                              className={star <= review.rating ? "text-[#fff200]" : "text-gray-200"}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-medium">
+                        {new Date(review.createdAt).toLocaleDateString("en-IN")}
+                      </span>
+                    </div>
+                    <p className="text-sm text-[#555] leading-relaxed">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

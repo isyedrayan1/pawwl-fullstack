@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { LayoutDashboard, LogOut, Menu, Package, ReceiptText, Shield, Users, X } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, Package, ReceiptText, Shield, Users, X, Ticket, RefreshCw, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest, ApiUser } from "@/lib/api";
 import { adminPath } from "@/lib/routes";
@@ -11,6 +11,9 @@ const navItems = [
   { label: "Dashboard", href: adminPath("/"), icon: LayoutDashboard },
   { label: "Products", href: adminPath("/products"), icon: Package },
   { label: "Orders", href: adminPath("/orders"), icon: ReceiptText },
+  { label: "Coupons", href: adminPath("/coupons"), icon: Ticket },
+  { label: "Returns", href: adminPath("/returns"), icon: RefreshCw },
+  { label: "Reviews", href: adminPath("/reviews"), icon: MessageSquare },
   { label: "Users", href: adminPath("/users"), icon: Users },
   { label: "Admins", href: adminPath("/admins"), icon: Shield },
 ];

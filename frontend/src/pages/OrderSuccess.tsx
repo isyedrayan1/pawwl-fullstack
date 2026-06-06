@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, Link } from "react-router-dom";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -93,6 +94,24 @@ const OrderSuccess = () => {
   const estimatedDelivery = new Date(
     new Date(order.createdAt).getTime() + 7 * 24 * 60 * 60 * 1000
   );
+
+  const handleDownloadInvoice = () => {
+    const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    window.open(`${API_BASE}/api/orders/${order.id}/invoice`, "_blank");
+  };
+
+  const handleShareOrder = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `Pawwl Order ${order.orderNumber}`,
+        text: `I just placed an order on Pawwl! Total: ${formatPrice(order.total)}`,
+        url: window.location.origin + `/account/orders`,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(`My Pawwl Order Number is ${order.orderNumber}`);
+      toast.success("Order details copied to clipboard!");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -246,11 +265,11 @@ const OrderSuccess = () => {
 
             {/* Actions */}
             <div className="space-y-3">
-              <Button className="w-full bg-brand-blue flex items-center gap-2">
+              <Button onClick={handleDownloadInvoice} className="w-full bg-brand-blue flex items-center gap-2">
                 <Download size={18} />
                 Download Invoice
               </Button>
-              <Button variant="outline" className="w-full flex items-center gap-2">
+              <Button onClick={handleShareOrder} variant="outline" className="w-full flex items-center gap-2">
                 <Share2 size={18} />
                 Share Order
               </Button>
@@ -292,9 +311,15 @@ const OrderSuccess = () => {
             If you have any questions about your order, please contact our customer support team.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="outline" className="flex items-center gap-2"><Phone size={16} /> Call Support</Button>
-            <Button variant="outline" className="flex items-center gap-2"><Mail size={16} /> Email Support</Button>
-            <Button variant="outline" className="flex items-center gap-2"><MessageCircle size={16} /> Live Chat</Button>
+            <a href="tel:+917208813649" className="flex-1">
+              <Button variant="outline" className="w-full flex items-center gap-2"><Phone size={16} /> Call Support</Button>
+            </a>
+            <a href={`mailto:support@pawwl.com?subject=Order Support - ${order.orderNumber}`} className="flex-1">
+              <Button variant="outline" className="w-full flex items-center gap-2"><Mail size={16} /> Email Support</Button>
+            </a>
+            <a href="https://wa.me/917208813649" target="_blank" rel="noopener noreferrer" className="flex-1">
+              <Button variant="outline" className="w-full flex items-center gap-2"><MessageCircle size={16} /> Live Chat</Button>
+            </a>
           </div>
         </div>
       </main>

@@ -29,6 +29,13 @@ app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use(optionalAuth);
 
+// Statically serve uploaded product images
+const isDist = __dirname.includes(path.join('dist', 'src')) || __dirname.includes('dist/src') || __dirname.includes('dist\\src');
+const uploadsDir = isDist 
+  ? path.resolve(__dirname, '../../uploads')
+  : path.resolve(__dirname, '../uploads');
+app.use("/uploads", express.static(uploadsDir));
+
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "pawwl-api" });
 });

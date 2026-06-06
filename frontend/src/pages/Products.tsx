@@ -11,7 +11,6 @@ import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
 import SEO from "@/components/SEO";
 
-import { products as fallbackProducts } from "@/data/products";
 import { useApiProducts } from "@/hooks/useApiProducts";
 
 import prd13 from "@/assets/gallery/13.webp";
@@ -30,8 +29,8 @@ const parseStringArray = (value: string[] | string | null | undefined) => {
 };
 
 const Products = () => {
-  const { data: apiProducts } = useApiProducts();
-  const products = (apiProducts?.length ? apiProducts : []).map((product) => ({
+  const { data: apiProducts, isLoading, error } = useApiProducts();
+  const products = (apiProducts ?? []).map((product) => ({
     id: product.id,
     slug: product.slug,
     title: product.name,
@@ -47,12 +46,10 @@ const Products = () => {
     sizes: Array.isArray(product.variants) ? product.variants.map((variant) => variant.name) : [],
     tag: product.status === "published" ? "Available" : undefined,
   }));
-  const displayProducts = products.length ? products : fallbackProducts;
-  const heroProduct = displayProducts[0];
-  const sideProducts = displayProducts.slice(1, 3);
-  const gridProducts = displayProducts.slice(3);
-
   const isMobile = useIsMobile();
+
+  const hasCatalogError = Boolean(error);
+  const hasProducts = products.length > 0;
 
 
 
@@ -66,7 +63,7 @@ const Products = () => {
       />
       <Navbar />
 
-      {/* 1. Hero Bento Section */}
+      {/* 1. Hero Section */}
       <section className="bg-white pt-4 md:pt-8 pb-12 overflow-hidden">
         <div className="section-container">
           <div className="w-full flex flex-col gap-9">
@@ -81,72 +78,11 @@ const Products = () => {
                  opacity={1}
                />
             </div>
-
-            {/* Bottom Split Row (Bento Grid) */}
-            <div className="w-full max-w-[1114px] mx-auto flex flex-col lg:flex-row gap-9 overflow-hidden">
-               {/* Left Large Card */}
-               <div 
-                 className="w-full lg:w-[604px] h-[300px] sm:h-[400px] md:h-[900px] bg-[#bbedf4] rounded-3xl relative overflow-hidden group shadow-lg"
-               >
-                  <img src="/assets/productspage/prdheroimg1.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="Pet Model" />
-               </div>
-
-               {/* Right Stacked Cards */}
-               <div 
-                 className="w-full lg:w-[474px] flex flex-col gap-[34px]"
-               >
-                  {/* Top: 20% Off */}
-                  <div className="w-full h-[300px] md:h-[433px] bg-[#c8e9fa] rounded-3xl relative overflow-hidden group shadow-md flex items-center justify-center p-8">
-                     <img src="/assets/productspage/prdhrimg2.webp" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover transition-all duration-700" alt="Discount" />
-                  </div>
-
-                  {/* Bottom: Shop Quality Supplies */}
-                  <div className="w-full h-[300px] md:h-[433px] bg-[#1e4b66] rounded-3xl p-8 md:p-12 flex flex-col justify-center relative overflow-hidden group shadow-md">
-                    <div className="absolute inset-0 opacity-10 product-dots-bg"></div>
-                     <span className="relative z-10 font-heading font-black text-[50px] md:text-[80px] lg:text-[100px] leading-tight md:leading-[122.85px] text-[#00b1e0] tracking-tighter transform group-hover:scale-[1.02] transition-transform duration-500">
-                       Shop<br/>Quality<br/>Supplies
-                     </span>
-                  </div>
-               </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Categories Row */}
-      <section className="w-full flex justify-center bg-white py-[40px] border-t border-[#dce6ee] overflow-hidden">
-        <div className="w-full max-w-[1440px] px-6 md:px-12 lg:px-40 flex justify-center">
-          <div 
-            className="w-full max-w-[1140px] flex gap-4 md:gap-6 justify-between overflow-x-auto pb-4 no-scrollbar items-center"
-          >
-            {[
-              { title: "Food Bowls", count: "12 Products", img: "https://images.unsplash.com/photo-1544568100-847a948585b9?w=150&h=150&fit=crop" },
-              { title: "Pet Toys", count: "34 Products", img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=150&h=150&fit=crop" },
-              { title: "Treats", count: "28 Products", img: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=150&h=150&fit=crop" },
-              { title: "Dry Food", count: "26 Products", img: "https://images.unsplash.com/photo-1583336663277-620dc1996580?w=150&h=150&fit=crop" },
-              { title: "Wet Food", count: "18 Products", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=150&h=150&fit=crop" },
-              { title: "Pet Beds", count: "22 Products", img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=150&h=150&fit=crop" }
-            ].map((cat, i) => (
-              <div
-                key={i}
-                className="flex flex-col items-center gap-4 min-w-[120px] md:min-w-[140px] group cursor-pointer gs-reveal"
-              >
-                <div className="w-[100px] md:w-[140px] h-[100px] md:h-[140px] rounded-full overflow-hidden bg-[#e8f0f6] border-4 border-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] group-hover:border-[#5fa8d3] transition-all duration-300 transform group-hover:-translate-y-1">
-                  <img src={cat.img} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={cat.title} />
-                </div>
-                <div className="flex flex-col items-center gap-1 text-center">
-                  <span className="font-bold text-[14px] md:text-[16px] leading-tight text-[#242424] group-hover:text-[#1b4965] decoration-2 underline-offset-4 group-hover:underline capitalize transition-colors">
-                    {cat.title}
-                  </span>
-                  <span className="font-medium text-[12px] md:text-[13px] text-[#788796]">{cat.count}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Premium Products Section */}
+      {/* 2. Premium Products Section */}
       <section className="w-full flex justify-center bg-white px-6 md:px-12 lg:px-40 py-16 lg:py-24 border-t border-[#dce6ee] overflow-hidden">
         <div className="w-full max-w-[1440px] flex flex-col items-center gap-12">
           
@@ -162,138 +98,157 @@ const Products = () => {
           </div>
 
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
-            <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
-              {/* Main Product Card */}
-              <div 
-                className="w-full lg:w-[606px] flex flex-col bg-white rounded-[28px] border border-[#dce6ee] overflow-hidden group shadow-md relative"
-              >
-                <div className="w-full h-[500px] lg:h-full relative overflow-hidden bg-[#e8f0f6]">
-                  <img src={heroProduct.images[0]} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={heroProduct.title} />
-                  <div className="absolute top-8 left-8 flex gap-2">
-                    <span className="font-bold text-[11px] text-white bg-[#1b4965] px-4 py-2 rounded-full uppercase tracking-wider border border-white/20 shadow-sm">{heroProduct.tag || "Premium"}</span>
-                  </div>
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-transparent p-8 md:p-10">
-                    <span className="font-bold text-[13px] text-[#5fa8d3] uppercase tracking-widest block mb-1">{heroProduct.category}</span>
-                    <h3 className="font-extrabold text-[32px] md:text-[40px] text-white leading-tight mb-4">{heroProduct.title}</h3>
-                    <div className="flex items-center gap-2 mb-4 text-white/90">
-                      <div className="flex items-center gap-1 text-[#fff200]">
-                        <Star size={14} fill="currentColor" />
-                        <span className="font-bold text-sm text-white">{heroProduct.rating}</span>
-                      </div>
-                      <span className="text-xs text-white/70">{heroProduct.reviewCount} reviews</span>
-                    </div>
-                    <Link to={`/products/${heroProduct.id}`} className="inline-flex items-center gap-2 bg-white text-[#134e86] px-6 py-2.5 rounded-full font-bold text-sm shadow-lg hover:scale-105 transition-transform w-fit">
-                        View Details
-                    </Link>
-                  </div>
-
-                  {/* WhatsApp Corner Button */}
-                  <a 
-                    href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${heroProduct.title}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute top-6 right-6 z-30 w-12 h-12 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform cursor-pointer"
-                    title="Order on WhatsApp"
+            {isLoading ? (
+              <div className="w-full min-h-[480px] rounded-[28px] border border-dashed border-[#dce6ee] bg-[#f8fbff] flex flex-col items-center justify-center text-center px-6">
+                <p className="text-[#134e86] font-bold text-lg">Loading products...</p>
+                <p className="text-[#788796] text-sm mt-2">Fetching the latest catalog from the database.</p>
+              </div>
+            ) : hasCatalogError ? (
+              <div className="w-full min-h-[480px] rounded-[28px] border border-dashed border-[#dce6ee] bg-[#fffaf8] flex flex-col items-center justify-center text-center px-6">
+                <p className="text-[#b42318] font-bold text-lg">Unable to load products</p>
+                <p className="text-[#7a7a7a] text-sm mt-2">The product API could not be reached right now. Please try again later.</p>
+              </div>
+            ) : !hasProducts ? (
+              <div className="w-full min-h-[480px] rounded-[28px] border border-dashed border-[#dce6ee] bg-[#f8fbff] flex flex-col items-center justify-center text-center px-6">
+                <p className="text-[#134e86] font-bold text-lg">No products available yet</p>
+                <p className="text-[#788796] text-sm mt-2">Products will appear here once they are created in the admin panel and published.</p>
+              </div>
+            ) : (
+              <>
+                <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
+                  {/* Main Product Card */}
+                  <div 
+                    className="w-full lg:w-[606px] flex flex-col bg-white rounded-[28px] border border-[#dce6ee] overflow-hidden group shadow-md relative"
                   >
-                    <ShoppingBag size={20} />
-                  </a>
-                </div>
-              </div>
-
-              {/* Side Column items */}
-              <div 
-                className="w-full lg:w-[502px] flex flex-col gap-8"
-              >
-                {sideProducts.map((item, i) => (
-                  <div key={i} className="flex-1 bg-white rounded-3xl border-2 border-border-accent overflow-hidden group flex flex-col h-full relative">
-                    <div className="p-6 md:p-8 pb-5 flex flex-col gap-1 z-10 bg-white">
-                      <span className="font-bold text-[10px] md:text-[11px] leading-none text-[#788796] uppercase tracking-widest">{item.category}</span>
-                      <h4 className="font-bold text-[20px] md:text-[22px] text-[#212529] capitalize">{item.title}</h4>
-                      <div className="flex items-center gap-2 text-xs text-[#788796] mt-1">
-                        <div className="flex items-center gap-1 text-[#fff200]">
-                          <Star size={12} fill="currentColor" />
-                          <span className="font-bold text-[#212529]">{item.rating}</span>
-                        </div>
-                        <span>•</span>
-                        <span>{item.reviewCount} reviews</span>
+                    <div className="w-full h-[500px] lg:h-full relative overflow-hidden bg-[#e8f0f6]">
+                      <img src={products[0].images[0]} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={products[0].title} />
+                      <div className="absolute top-8 left-8 flex gap-2">
+                        <span className="font-bold text-[11px] text-white bg-[#1b4965] px-4 py-2 rounded-full uppercase tracking-wider border border-white/20 shadow-sm">{products[0].tag || "Premium"}</span>
                       </div>
-                      <Link to={`/products/${item.id}`} className="mt-2 inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
-                        View Details <ArrowUpRight size={12} />
-                      </Link>
-                    </div>
-                    {/* WhatsApp Corner Button */}
-                    <a 
-                      href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute top-4 right-4 z-20 w-10 h-10 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer"
-                      title={`Order ${item.title} on WhatsApp`}
-                    >
-                      <ShoppingBag size={18} />
-                    </a>
-                    <div className="w-full flex-1 min-h-[160px] md:min-h-[180px] bg-[#e8f0f6] relative overflow-hidden">
-                      <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
-                      {item.tag && (
-                        <span className="absolute top-4 left-6 bg-[#5fa8d3] text-white font-bold text-[11px] px-4 py-1.5 rounded-full z-10 shadow-sm">{item.tag}</span>
-                      )}
+                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-transparent p-8 md:p-10">
+                        <span className="font-bold text-[13px] text-[#5fa8d3] uppercase tracking-widest block mb-1">{products[0].category}</span>
+                        <h3 className="font-extrabold text-[32px] md:text-[40px] text-white leading-tight mb-4">{products[0].title}</h3>
+                        <div className="flex items-center gap-2 mb-4 text-white/90">
+                          <div className="flex items-center gap-1 text-[#fff200]">
+                            <Star size={14} fill="currentColor" />
+                            <span className="font-bold text-sm text-white">{products[0].rating}</span>
+                          </div>
+                          <span className="text-xs text-white/70">{products[0].reviewCount} reviews</span>
+                        </div>
+                        <Link to={`/products/${products[0].id}`} className="inline-flex items-center gap-2 bg-white text-[#134e86] px-6 py-2.5 rounded-full font-bold text-sm shadow-lg hover:scale-105 transition-transform w-fit">
+                            View Details
+                        </Link>
+                      </div>
+
+                      {/* WhatsApp Corner Button */}
+                      <a 
+                        href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${products[0].title}.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-6 right-6 z-30 w-12 h-12 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform cursor-pointer"
+                        title="Order on WhatsApp"
+                      >
+                        <ShoppingBag size={20} />
+                      </a>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Bottom Row Grids */}
-            <div 
-              className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
-            >
-              {gridProducts.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative gs-reveal"
+                  {/* Side Column items */}
+                  <div 
+                    className="w-full lg:w-[502px] flex flex-col gap-8"
+                  >
+                    {products.slice(1, 3).map((item, i) => (
+                      <div key={i} className="flex-1 bg-white rounded-3xl border-2 border-border-accent overflow-hidden group flex flex-col h-full relative">
+                        <div className="p-6 md:p-8 pb-5 flex flex-col gap-1 z-10 bg-white">
+                          <span className="font-bold text-[10px] md:text-[11px] leading-none text-[#788796] uppercase tracking-widest">{item.category}</span>
+                          <h4 className="font-bold text-[20px] md:text-[22px] text-[#212529] capitalize">{item.title}</h4>
+                          <div className="flex items-center gap-2 text-xs text-[#788796] mt-1">
+                            <div className="flex items-center gap-1 text-[#fff200]">
+                              <Star size={12} fill="currentColor" />
+                              <span className="font-bold text-[#212529]">{item.rating}</span>
+                            </div>
+                            <span>•</span>
+                            <span>{item.reviewCount} reviews</span>
+                          </div>
+                          <Link to={`/products/${item.id}`} className="mt-2 inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
+                            View Details <ArrowUpRight size={12} />
+                          </Link>
+                        </div>
+                        {/* WhatsApp Corner Button */}
+                        <a 
+                          href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute top-4 right-4 z-20 w-10 h-10 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+                          title={`Order ${item.title} on WhatsApp`}
+                        >
+                          <ShoppingBag size={18} />
+                        </a>
+                        <div className="w-full flex-1 min-h-[160px] md:min-h-[180px] bg-[#e8f0f6] relative overflow-hidden">
+                          <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
+                          {item.tag && (
+                            <span className="absolute top-4 left-6 bg-[#5fa8d3] text-white font-bold text-[11px] px-4 py-1.5 rounded-full z-10 shadow-sm">{item.tag}</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Row Grids */}
+                <div 
+                  className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
                 >
-                  <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
-                    <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>
-                    <div className="flex flex-col gap-1">
-                      <h4 className="font-bold text-[18px] text-[#212529] line-clamp-1">{item.title}</h4>
-                      <div className="flex items-center gap-2 text-[11px] text-[#788796]">
-                        <div className="flex items-center gap-1 text-[#fff200]">
-                          <Star size={11} fill="currentColor" />
-                          <span className="font-bold text-[#212529]">{item.rating}</span>
+                  {products.slice(3).map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative gs-reveal"
+                    >
+                      <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
+                        <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>
+                        <div className="flex flex-col gap-1">
+                          <h4 className="font-bold text-[18px] text-[#212529] line-clamp-1">{item.title}</h4>
+                          <div className="flex items-center gap-2 text-[11px] text-[#788796]">
+                            <div className="flex items-center gap-1 text-[#fff200]">
+                              <Star size={11} fill="currentColor" />
+                              <span className="font-bold text-[#212529]">{item.rating}</span>
+                            </div>
+                            <span>•</span>
+                            <span>{item.reviewCount} reviews</span>
+                          </div>
+                          <Link to={`/products/${item.id}`} className="inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
+                            View Details <ArrowUpRight size={12} />
+                          </Link>
                         </div>
-                        <span>•</span>
-                        <span>{item.reviewCount} reviews</span>
                       </div>
-                      <Link to={`/products/${item.id}`} className="inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
-                        View Details <ArrowUpRight size={12} />
-                      </Link>
+                      {/* WhatsApp Corner Button */}
+                      <a 
+                        href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute top-4 right-4 z-20 w-9 h-9 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-md cursor-pointer"
+                          title={`Order ${item.title} on WhatsApp`}
+                      >
+                        <ShoppingBag size={16} />
+                      </a>
+                      <div className="flex-1 w-full bg-[#f4f7f9] relative overflow-hidden min-h-[200px]">
+                        <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
+                        {item.tag && (
+                          <div className="absolute top-4 left-4 bg-[#1b4965] px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
+                            <span className="font-bold text-[10px] text-white uppercase tracking-wider">{item.tag}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  {/* WhatsApp Corner Button */}
-                  <a 
-                    href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute top-4 right-4 z-20 w-9 h-9 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-md cursor-pointer"
-                      title={`Order ${item.title} on WhatsApp`}
-                  >
-                    <ShoppingBag size={16} />
-                  </a>
-                  <div className="flex-1 w-full bg-[#f4f7f9] relative overflow-hidden min-h-[200px]">
-                    <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
-                    {item.tag && (
-                      <div className="absolute top-4 left-4 bg-[#1b4965] px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                        <span className="font-bold text-[10px] text-white uppercase tracking-wider">{item.tag}</span>
-                      </div>
-                    )}
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      {/* 4. Partner Sellers Section */}
+      {/* 3. Partner Sellers Section */}
       <section className="flex flex-col justify-center items-center gap-[15px] self-stretch bg-white py-12 md:py-3 overflow-hidden">
         {/* Header container */}
         <div className="w-full max-w-[1140px] px-6 md:px-0 flex justify-between items-center">

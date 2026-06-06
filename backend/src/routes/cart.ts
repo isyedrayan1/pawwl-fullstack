@@ -40,7 +40,7 @@ router.post(
       throw new HttpError(404, "Product variation is not available");
     }
 
-    const item = await prisma.cartItem.upsert({
+    const item = await prisma.cartitem.upsert({
       where: {
         userId_variantId: {
           userId: req.user!.id,
@@ -56,7 +56,7 @@ router.post(
         variantId: input.variantId,
         quantity: input.quantity,
       },
-      include: { product: true, variant: true },
+      include: { product: true, productvariant: true },
     });
 
     res.status(201).json({ item });
@@ -68,7 +68,7 @@ router.patch(
   asyncHandler(async (req, res) => {
     const input = updateSchema.parse(req.body);
     const itemId = String(req.params.id);
-    const item = await prisma.cartItem.updateMany({
+    const item = await prisma.cartitem.updateMany({
       where: { id: itemId, userId: req.user!.id },
       data: { quantity: input.quantity },
     });
@@ -78,15 +78,71 @@ router.patch(
   }),
 );
 
+const mergeSchema = z.object({
+  items: z.array(
+    z.object({
+      variantId: z.string().min(1),
+      quantity: z.number().int().min(1).max(99),
+    })
+  ),
+});
+
 router.delete(
   "/items/:id",
   asyncHandler(async (req, res) => {
     const itemId = String(req.params.id);
-    await prisma.cartItem.deleteMany({
+    await prisma.cartitem.deleteMany({
       where: { id: itemId, userId: req.user!.id },
     });
     res.json({ ok: true });
   }),
+);
+
+router.post(
+  "/merge",
+  asyncHandler(async (req, res) => {
+    const input = mergeSchema.parse(req.body);
+    const userId = req.user!.id;
+
+    const mergedItems = await prisma.$transaction(async (tx) => {
+      for (const item of input.items) {
+        const variant = await tx.productvariant.findUnique({
+          where: { id: item.variantId },
+          include: { product: true },
+        });
+
+        if (!variant || !variant.isActive || variant.product.status !== "published") {
+          continue;
+        }
+
+        await tx.cartitem.upsert({
+          where: {
+            userId_variantId: {
+              userId,
+              variantId: item.variantId,
+            },
+          },
+          update: {
+            quantity: { increment: item.quantity },
+          },
+          create: {
+            userId,
+            productId: variant.productId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+          },
+        });
+      }
+
+      return tx.cartitem.findMany({
+        where: { userId },
+        include: { product: true, productvariant: true },
+        orderBy: { createdAt: "asc" },
+      });
+    });
+
+    res.json({ items: mergedItems });
+  })
 );
 
 router.post(

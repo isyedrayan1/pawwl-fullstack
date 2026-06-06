@@ -11,6 +11,9 @@ import { toast } from "sonner";
 type OrderDraft = {
   paymentStatus: ApiAdminOrder["paymentStatus"];
   fulfillmentStatus: ApiAdminOrder["fulfillmentStatus"];
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
 };
 
 const AdminOrders = () => {
@@ -31,6 +34,9 @@ const AdminOrders = () => {
       nextDrafts[order.id] = {
         paymentStatus: order.paymentStatus,
         fulfillmentStatus: order.fulfillmentStatus,
+        courierName: order.courierName ?? "",
+        trackingNumber: order.trackingNumber ?? "",
+        trackingUrl: order.trackingUrl ?? "",
       };
     }
 
@@ -56,14 +62,20 @@ const AdminOrders = () => {
       id,
       paymentStatus,
       fulfillmentStatus,
+      courierName,
+      trackingNumber,
+      trackingUrl,
     }: {
       id: string;
       paymentStatus: OrderDraft["paymentStatus"];
       fulfillmentStatus: OrderDraft["fulfillmentStatus"];
+      courierName?: string | null;
+      trackingNumber?: string | null;
+      trackingUrl?: string | null;
     }) =>
       apiRequest(`/api/admin/orders/${id}/status`, {
         method: "PATCH",
-        body: JSON.stringify({ paymentStatus, fulfillmentStatus }),
+        body: JSON.stringify({ paymentStatus, fulfillmentStatus, courierName, trackingNumber, trackingUrl }),
       }),
     onSuccess: () => {
       toast.success("Order updated");
@@ -103,6 +115,9 @@ const AdminOrders = () => {
           const draft = drafts[order.id] ?? {
             paymentStatus: order.paymentStatus,
             fulfillmentStatus: order.fulfillmentStatus,
+            courierName: order.courierName ?? "",
+            trackingNumber: order.trackingNumber ?? "",
+            trackingUrl: order.trackingUrl ?? "",
           };
 
           const address = order.addressSnapshot as Record<string, unknown>;
@@ -115,6 +130,18 @@ const AdminOrders = () => {
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold text-slate-950">{order.orderNumber}</h2>
                     <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">{itemCount} items</span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full text-xs h-7 border-slate-200 bg-white hover:bg-slate-100 text-slate-700"
+                      onClick={() => {
+                        const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+                        window.open(`${API_BASE}/api/orders/${order.id}/invoice`, '_blank');
+                      }}
+                    >
+                      Print Invoice
+                    </Button>
                   </div>
                   <p className="mt-1 text-sm text-slate-600">
                     {order.user.name} · {order.user.email}
@@ -191,46 +218,91 @@ const AdminOrders = () => {
                       id: order.id,
                       paymentStatus: draft.paymentStatus,
                       fulfillmentStatus: draft.fulfillmentStatus,
+                      courierName: draft.courierName,
+                      trackingNumber: draft.trackingNumber,
+                      trackingUrl: draft.trackingUrl,
                     })
                   }
                 >
-                  Save status
+                  Save Status & Tracking
                 </Button>
               </div>
 
               <details className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <summary className="cursor-pointer list-none font-medium text-slate-950">Order items and address</summary>
-                <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
-                  <div className="space-y-3">
-                    {order.items.map((item) => (
-                      <div key={item.id} className="rounded-2xl border border-slate-200 bg-white p-4">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-medium text-slate-950">{item.productName}</p>
-                            <p className="text-sm text-slate-600">
-                              {item.variantName}
-                              {item.sku ? ` · ${item.sku}` : ""}
-                            </p>
-                          </div>
-                          <p className="text-sm font-medium text-slate-950">
-                            {item.quantity} × {formatPrice(item.unitPrice)}
-                          </p>
-                        </div>
+                <summary className="cursor-pointer list-none font-medium text-slate-950">Order details, tracking & address</summary>
+                <div className="mt-4 space-y-4">
+                  {/* Courier tracking section */}
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm space-y-3">
+                    <p className="font-semibold text-slate-950">Courier & Tracking Settings</p>
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase">Courier Name</label>
+                        <Input 
+                          placeholder="e.g. FedEx, BlueDart" 
+                          value={draft.courierName ?? ""} 
+                          onChange={(e) => setDrafts(curr => ({
+                            ...curr,
+                            [order.id]: { ...draft, courierName: e.target.value }
+                          }))}
+                        />
                       </div>
-                    ))}
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase">Tracking Number</label>
+                        <Input 
+                          placeholder="e.g. AW1298402" 
+                          value={draft.trackingNumber ?? ""} 
+                          onChange={(e) => setDrafts(curr => ({
+                            ...curr,
+                            [order.id]: { ...draft, trackingNumber: e.target.value }
+                          }))}
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-500 uppercase">Tracking URL</label>
+                        <Input 
+                          placeholder="e.g. https://fedex.com/track..." 
+                          value={draft.trackingUrl ?? ""} 
+                          onChange={(e) => setDrafts(curr => ({
+                            ...curr,
+                            [order.id]: { ...draft, trackingUrl: e.target.value }
+                          }))}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                    <p className="font-medium text-slate-950">Delivery address</p>
-                    <p className="mt-2">{String(address.fullName ?? "")}</p>
-                    <p>{String(address.line1 ?? "")}</p>
-                    {address.line2 && <p>{String(address.line2)}</p>}
-                    <p>
-                      {String(address.city ?? "")}, {String(address.state ?? "")}
-                    </p>
-                    <p>
-                      {String(address.postalCode ?? "")}, {String(address.country ?? "")}
-                    </p>
+                  <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
+                    <div className="space-y-3">
+                      {order.items.map((item) => (
+                        <div key={item.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="font-medium text-slate-950">{item.productName}</p>
+                              <p className="text-sm text-slate-600">
+                                {item.variantName}
+                                {item.sku ? ` · ${item.sku}` : ""}
+                              </p>
+                            </div>
+                            <p className="text-sm font-medium text-slate-950">
+                              {item.quantity} × {formatPrice(item.unitPrice)}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                      <p className="font-medium text-slate-950">Delivery address</p>
+                      <p className="mt-2">{String(address.fullName ?? "")}</p>
+                      <p>{String(address.line1 ?? "")}</p>
+                      {address.line2 && <p>{String(address.line2)}</p>}
+                      <p>
+                        {String(address.city ?? "")}, {String(address.state ?? "")}
+                      </p>
+                      <p>
+                        {String(address.postalCode ?? "")}, {String(address.country ?? "")}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </details>

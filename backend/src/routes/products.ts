@@ -3,6 +3,8 @@ import { z } from "zod";
 import { asyncHandler } from "../lib/async.js";
 import { HttpError } from "../lib/http.js";
 import { prisma } from "../lib/prisma.js";
+import { requireAuth } from "../middleware/auth.js";
+import { createId } from "@paralleldrive/cuid2";
 
 const router = Router();
 
@@ -87,6 +89,66 @@ router.get(
 
     res.json({ product: normalized });
   }),
+);
+
+const reviewSchema = z.object({
+  rating: z.number().int().min(1).max(5),
+  title: z.string().optional().nullable(),
+  comment: z.string().min(5),
+});
+
+router.get(
+  "/:id/reviews",
+  asyncHandler(async (req, res) => {
+    const productId = String(req.params.id);
+    const reviews = await prisma.review.findMany({
+      where: { productId },
+      include: { user: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+    res.json({ reviews });
+  })
+);
+
+router.post(
+  "/:id/reviews",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const productId = String(req.params.id);
+    const input = reviewSchema.parse(req.body);
+
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+    if (!product) throw new HttpError(404, "Product not found");
+
+    const review = await prisma.review.create({
+      data: {
+        id: createId(),
+        productId,
+        userId: req.user!.id,
+        rating: input.rating,
+        title: input.title,
+        comment: input.comment,
+      },
+    });
+
+    const aggregates = await prisma.review.aggregate({
+      where: { productId },
+      _count: true,
+      _avg: { rating: true },
+    });
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        rating: aggregates._avg.rating ? aggregates._avg.rating.toFixed(1) : "0.0",
+        reviewCount: aggregates._count,
+      },
+    });
+
+    res.status(201).json({ review });
+  })
 );
 
 export default router;

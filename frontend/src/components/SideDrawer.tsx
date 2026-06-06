@@ -1,10 +1,9 @@
 import React from 'react';
-import { X, Trash2, ShoppingBag, Heart, MessageCircle } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { products } from '@/data/products';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest, ApiProduct } from '@/lib/api';
+import { apiRequest, ApiProduct, formatPrice } from '@/lib/api';
 
 interface SideDrawerProps {
   type: 'cart' | 'favorites';
@@ -13,7 +12,8 @@ interface SideDrawerProps {
 }
 
 const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
-  const { cart, favorites, removeFromCart, toggleFavorite } = useCart();
+  const { cart, favorites, removeFromCart, toggleFavorite, updateQuantity } = useCart();
+
   const { data: apiProducts } = useQuery({
     queryKey: ['drawer-products'],
     queryFn: () => apiRequest<{ products: ApiProduct[] }>('/api/products'),
@@ -21,26 +21,78 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const itemIds = type === 'cart' ? cart : favorites;
-  const catalog = apiProducts?.products?.length
-    ? apiProducts.products.map((product) => ({
-        id: product.id,
-        title: product.name,
-        category: product.category,
-        images: product.images?.length ? product.images : ["/pawwl-logo-main-croped.webp"],
-      }))
-    : products;
+  const catalog = apiProducts?.products ?? [];
 
-  const catalogById = new Map(catalog.map((item) => [item.id, item]));
-  const items = itemIds.map((id) => catalogById.get(id)).filter(Boolean) as Array<{
-    id: string;
-    title: string;
-    category: string;
-    images: string[];
-  }>;
+  const catalogById = new Map(catalog.map((product) => [product.id, product]));
 
-  const totalItems = itemIds.length;
+  // Resolve Cart Items with variant and quantity details
+  const cartItems = type === 'cart'
+    ? cart.map((item) => {
+        const product = catalogById.get(item.productId);
+        if (!product) return null;
+        const variant = product.variants.find((v) => v.id === item.variantId) || product.variants[0];
+        const price = Number(variant?.salePrice ?? variant?.price ?? 0);
+        return {
+          id: item.variantId,
+          productId: item.productId,
+          title: product.name,
+          category: product.category,
+          variantName: variant?.name ?? 'Standard',
+          image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
+          quantity: item.quantity,
+          price,
+          totalPrice: price * item.quantity,
+        };
+      }).filter(Boolean) as Array<{
+        id: string;
+        productId: string;
+        title: string;
+        category: string;
+        variantName: string;
+        image: string;
+        quantity: number;
+        price: number;
+        totalPrice: number;
+      }>
+    : [];
 
+  // Resolve Favorite Items
+  const favoriteItems = type === 'favorites'
+    ? favorites.map((id) => {
+        const product = catalogById.get(id);
+        if (!product) return null;
+        const defaultVariant = product.variants?.[0];
+        const price = Number(defaultVariant?.salePrice ?? defaultVariant?.price ?? 0);
+        return {
+          id: product.id,
+          productId: product.id,
+          title: product.name,
+          category: product.category,
+          variantName: '',
+          image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
+          quantity: 1,
+          price,
+          totalPrice: price,
+        };
+      }).filter(Boolean) as Array<{
+        id: string;
+        productId: string;
+        title: string;
+        category: string;
+        variantName: string;
+        image: string;
+        quantity: number;
+        price: number;
+        totalPrice: number;
+      }>
+    : [];
+
+  const items = type === 'cart' ? cartItems : favoriteItems;
+  const totalItems = type === 'cart' 
+    ? cart.reduce((sum, item) => sum + item.quantity, 0)
+    : favorites.length;
+
+  const cartSubtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
   if (!isOpen) return null;
 
@@ -65,7 +117,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
               {totalItems}
             </span>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-[#f8f8f8] rounded-full transition-colors">
+          <button onClick={onClose} title="Close drawer" aria-label="Close drawer" className="p-2 hover:bg-[#f8f8f8] rounded-full transition-colors">
             <X size={20} className="text-[#191919]" />
           </button>
         </div>
@@ -93,30 +145,57 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
             items.map((item) => (
               <div key={item.id} className="flex gap-4 group">
                 <div className="w-20 h-20 bg-[#f8fbff] rounded-xl overflow-hidden border border-[#f0f0f0] shrink-0">
-                  <img src={item.images[0]} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 flex flex-col justify-between py-1">
                   <div>
                     <h3 className="font-bold text-[#191919] text-sm leading-tight group-hover:text-[#134e86] transition-colors line-clamp-2">
                        {item.title}
                     </h3>
-                    <p className="text-[#b1b1b1] text-[11px] font-bold uppercase tracking-wider mt-1">{item.category}</p>
+                    <p className="text-[#b1b1b1] text-[10px] font-bold uppercase tracking-wider mt-1">
+                      {item.category} {item.variantName && `| ${item.variantName}`}
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <Link 
-                      to={`/products/${item.id}`} 
-                      onClick={onClose}
-                      className="text-xs font-bold text-[#134e86] hover:underline"
-                    >
-                      View
-                    </Link>
-                    <button 
-                      onClick={() => type === 'cart' ? removeFromCart(item.id) : toggleFavorite(item.id)}
-                      className="p-1.5 text-[#ff4d4d] hover:bg-[#fff5f5] rounded-lg transition-colors"
-                      title="Remove"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                  
+                  {type === 'cart' && (
+                    <div className="flex items-center border border-[#f0f0f0] rounded-lg bg-white mt-2 w-fit">
+                      <button 
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="px-2.5 py-1 text-xs hover:bg-[#f8f8f8] disabled:opacity-50 font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="px-3 text-xs font-bold text-[#191919]">{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="px-2.5 py-1 text-xs hover:bg-[#f8f8f8] font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between mt-2 pt-1">
+                    <span className="text-sm font-bold text-[#134e86]">
+                      {formatPrice(item.totalPrice)}
+                    </span>
+                    <div className="flex gap-2">
+                      <Link 
+                        to={`/products/${item.productId}`} 
+                        onClick={onClose}
+                        className="text-xs font-bold text-[#134e86] hover:underline flex items-center"
+                      >
+                        View
+                      </Link>
+                      <button 
+                        onClick={() => type === 'cart' ? removeFromCart(item.id) : toggleFavorite(item.id)}
+                        className="p-1.5 text-[#ff4d4d] hover:bg-[#fff5f5] rounded-lg transition-colors"
+                        title="Remove"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -127,6 +206,10 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
         {/* Footer */}
         {items.length > 0 && type === 'cart' && (
           <div className="p-6 border-t border-[#f0f0f0] bg-[#fcfcfc]">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-sm font-semibold text-[#555] uppercase tracking-wider">Sub Total</span>
+              <span className="text-xl font-bold text-[#134e86]">{formatPrice(cartSubtotal)}</span>
+            </div>
             <Link 
               to="/checkout"
               onClick={onClose}

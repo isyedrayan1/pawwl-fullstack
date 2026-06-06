@@ -82,10 +82,51 @@ const Checkout = () => {
     });
   }, [buyNowVariant, cartData?.items, isBuyNow, productData?.product, quantity]);
 
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+
   const subtotal = summaryItems.reduce((sum, item) => sum + item.total, 0);
   const shipping = 0; // Free shipping
-  const discount = 0; // No discount for now
-  const total = subtotal + shipping - discount;
+  const total = Math.max(0, subtotal + shipping - couponDiscount);
+
+  // Indian GST Tax Calculations
+  const isIntrastate = useMemo(() => {
+    if (!selectedAddress) return true; // Default to Maharashtra (true)
+    return selectedAddress.state.trim().toLowerCase() === "maharashtra";
+  }, [selectedAddress]);
+
+  const taxableValue = total / 1.18;
+  const gstAmount = total - taxableValue;
+  const cgst = isIntrastate ? gstAmount / 2 : 0;
+  const sgst = isIntrastate ? gstAmount / 2 : 0;
+  const igst = !isIntrastate ? gstAmount : 0;
+
+  const applyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    try {
+      const data = await apiRequest<{ coupon: any }>(`/api/orders/coupons/${couponInput.trim()}/validate`);
+      const coupon = data.coupon;
+      const minCartAmt = Number(coupon.minCartAmt ?? 0);
+      if (subtotal < minCartAmt) {
+        toast.error(`Minimum order value to apply this coupon is ${formatPrice(minCartAmt)}`);
+        return;
+      }
+      setAppliedCoupon(coupon.code);
+      let calculatedDiscount = 0;
+      if (coupon.type === "percentage") {
+        const pctDiscount = subtotal * (Number(coupon.discount) / 100);
+        const maxD = coupon.maxDiscount ? Number(coupon.maxDiscount) : pctDiscount;
+        calculatedDiscount = Math.min(pctDiscount, maxD);
+      } else {
+        calculatedDiscount = Math.min(Number(coupon.discount), subtotal);
+      }
+      setCouponDiscount(calculatedDiscount);
+      toast.success(`Coupon "${coupon.code}" applied successfully!`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Invalid coupon code");
+    }
+  };
 
   useEffect(() => {
     if (!selectedAddressId && addresses.length > 0) {
@@ -122,6 +163,7 @@ const Checkout = () => {
           body: JSON.stringify({
             addressId: selectedAddressId,
             ...(isBuyNow ? { productId, variantId, quantity } : {}),
+            couponCode: appliedCoupon || undefined,
             paymentMethod: "razorpay",
             notes: "Order placed through Pawwl e-commerce platform.",
           }),
@@ -277,10 +319,31 @@ const Checkout = () => {
                   <span className="text-[#666]">Shipping</span>
                   <strong className="text-green-600">FREE!</strong>
                 </div>
-                {discount > 0 && (
+                {couponDiscount > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-[#666]">Discount</span>
-                    <strong className="text-green-600">-{formatPrice(discount)}</strong>
+                    <span className="text-[#666]">Discount {appliedCoupon && `(${appliedCoupon})`}</span>
+                    <strong className="text-green-600">-{formatPrice(couponDiscount)}</strong>
+                  </div>
+                )}
+                <div className="flex justify-between pt-1 border-t border-dashed border-border-design">
+                  <span className="text-[#666]">Taxable Value</span>
+                  <strong className="text-brand-dark">{formatPrice(taxableValue)}</strong>
+                </div>
+                {isIntrastate ? (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-[#666]">CGST (9%)</span>
+                      <strong className="text-brand-dark">{formatPrice(cgst)}</strong>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#666]">SGST (9%)</span>
+                      <strong className="text-brand-dark">{formatPrice(sgst)}</strong>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">IGST (18%)</span>
+                    <strong className="text-brand-dark">{formatPrice(igst)}</strong>
                   </div>
                 )}
                 <div className="flex justify-between pt-3 border-t border-border-design text-base">
@@ -294,9 +357,11 @@ const Checkout = () => {
                 <input
                   type="text"
                   placeholder="Coupon code"
+                  value={couponInput}
+                  onChange={(e) => setCouponInput(e.target.value)}
                   className="flex-1 px-4 py-2 border border-border-design rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 />
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={applyCoupon}>
                   Apply
                 </Button>
               </div>

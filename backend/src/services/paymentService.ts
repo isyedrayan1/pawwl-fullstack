@@ -56,7 +56,7 @@ export const verifyDemoPayment = async (
 ) => {
   const order = await prisma.order.findFirst({
     where: { id: input.orderId, userId },
-    include: { payments: true },
+    include: { payments: true, orderitem: true },
   });
 
   if (!order) throw new HttpError(404, "Order not found");
@@ -66,12 +66,25 @@ export const verifyDemoPayment = async (
 
   const providerPaymentId = input.providerPaymentId ?? `demo_payment_${Date.now()}`;
 
-  const [, updatedPayment] = await prisma.$transaction([
-    prisma.order.update({
+  const [, , updatedPayment] = await prisma.$transaction(async (tx) => {
+    // 1. Update order payment status
+    const oUpdate = tx.order.update({
       where: { id: order.id },
       data: { paymentStatus: "paid" },
-    }),
-    prisma.payment.update({
+    });
+
+    // 2. Decrement stocks for all ordered product variants
+    for (const item of order.orderitem) {
+      if (item.variantId) {
+        await tx.productvariant.update({
+          where: { id: item.variantId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+    }
+
+    // 3. Update payment status
+    const pUpdate = tx.payment.update({
       where: { id: payment.id },
       data: {
         status: "paid",
@@ -85,8 +98,10 @@ export const verifyDemoPayment = async (
           providerPaymentId,
         },
       },
-    }),
-  ]);
+    });
+
+    return Promise.all([oUpdate, Promise.resolve(null), pUpdate]);
+  });
 
   return updatedPayment;
 };

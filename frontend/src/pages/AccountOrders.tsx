@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ShoppingBag, ChevronRight, Package, Truck, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 type Order = {
   id: string;
@@ -13,6 +14,8 @@ type Order = {
   paymentStatus: string;
   fulfillmentStatus: string;
   createdAt: string;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
   items: { id: string; productName: string; quantity: number; lineTotal: string | number }[];
 };
 
@@ -209,18 +212,54 @@ const AccountOrders = () => {
 
                 {/* Actions */}
                 <div className="p-6 bg-gray-50 flex flex-col sm:flex-row gap-3">
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => {
+                      if (order.trackingUrl) {
+                        window.open(order.trackingUrl, "_blank");
+                      } else {
+                        toast.info("Your order is being processed. Tracking details will update soon.");
+                      }
+                    }}
+                  >
                     Track Order
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => {
+                      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+                      window.open(`${API_BASE}/api/orders/${order.id}/invoice`, "_blank");
+                    }}
+                  >
                     Download Invoice
                   </Button>
-                  <Button variant="outline" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    disabled={order.fulfillmentStatus.toLowerCase() !== "delivered"}
+                    onClick={() => {
+                      toast.promise(
+                        apiRequest(`/api/orders/${order.id}/returns`, {
+                          method: "POST",
+                          body: JSON.stringify({ reason: "Customer requested return from dashboard" }),
+                        }),
+                        {
+                          loading: "Submitting return request...",
+                          success: "Return request submitted successfully. Our team will contact you shortly.",
+                          error: (err) => err instanceof Error ? err.message : "Could not submit return request",
+                        }
+                      );
+                    }}
+                  >
                     Return Items
                   </Button>
-                  <Button className="flex-1 bg-brand-blue">
-                    View Details <ChevronRight size={16} className="ml-2" />
-                  </Button>
+                  <Link to={`/order-success?order=${order.id}`} className="flex-1">
+                    <Button className="w-full bg-brand-blue">
+                      View Details <ChevronRight size={16} className="ml-2" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}

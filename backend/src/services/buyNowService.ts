@@ -12,6 +12,7 @@ export const createOrderFromSingleProduct = async (
     quantity: number;
     addressId: string;
     notes?: string;
+    couponCode?: string;
   },
 ) => {
   return prisma.$transaction(async (tx) => {
@@ -32,16 +33,67 @@ export const createOrderFromSingleProduct = async (
     }
 
     const unitPrice = variant.salePrice ?? variant.price;
-    const subtotal = lineTotal(unitPrice, input.quantity);
+    const subtotalValue = Number(lineTotal(unitPrice, input.quantity));
+
+    // 1. Coupon Discount Calculation
+    let discountValue = 0;
+    let validatedCouponCode: string | null = null;
+
+    if (input.couponCode) {
+      const coupon = await tx.coupon.findFirst({
+        where: {
+          code: { equals: input.couponCode },
+          isActive: true,
+          expiresAt: { gt: new Date() },
+        },
+      });
+
+      if (coupon) {
+        const minCartAmt = Number(coupon.minCartAmt ?? 0);
+        if (subtotalValue >= minCartAmt) {
+          validatedCouponCode = coupon.code;
+          if (coupon.type === "percentage") {
+            const calculatedDiscount = subtotalValue * (Number(coupon.discount) / 100);
+            const maxD = coupon.maxDiscount ? Number(coupon.maxDiscount) : calculatedDiscount;
+            discountValue = Math.min(calculatedDiscount, maxD);
+          } else {
+            discountValue = Math.min(Number(coupon.discount), subtotalValue);
+          }
+        }
+      }
+    }
+
+    const subtotal = new Prisma.Decimal(subtotalValue);
+    const discount = new Prisma.Decimal(discountValue);
     const deliveryFee = new Prisma.Decimal(0);
-    const total = subtotal.plus(deliveryFee);
+    const total = subtotal.minus(discount).plus(deliveryFee);
+
+    // 2. GST Indian Tax Split Calculation
+    const storeState = (process.env.STORE_ORIGIN_STATE || "maharashtra").trim().toLowerCase();
+    const customerState = address.state.trim().toLowerCase();
+    const isIntrastate = storeState === customerState;
+
+    const totalValueNum = Number(total);
+    const taxableValueNum = totalValueNum / 1.18; // Backward calculate taxable value assuming standard 18% slab
+    const gstAmountNum = totalValueNum - taxableValueNum;
+
+    let cgstNum = 0;
+    let sgstNum = 0;
+    let igstNum = 0;
+
+    if (isIntrastate) {
+      cgstNum = gstAmountNum / 2;
+      sgstNum = gstAmountNum / 2;
+    } else {
+      igstNum = gstAmountNum;
+    }
 
     return tx.order.create({
       data: {
         id: createId(),
         orderNumber: `PWL-${Date.now()}`,
         userId,
-        addressSnapshot: {
+        addressSnapshot: JSON.stringify({
           label: address.label,
           fullName: address.fullName,
           phone: address.phone,
@@ -51,14 +103,20 @@ export const createOrderFromSingleProduct = async (
           state: address.state,
           postalCode: address.postalCode,
           country: address.country,
-        },
+        }),
         subtotal,
+        discount,
         deliveryFee,
         total,
+        couponCode: validatedCouponCode,
+        taxableValue: new Prisma.Decimal(taxableValueNum),
+        cgst: new Prisma.Decimal(cgstNum),
+        sgst: new Prisma.Decimal(sgstNum),
+        igst: new Prisma.Decimal(igstNum),
         notes: input.notes,
         paymentStatus: "pending",
         fulfillmentStatus: "pending",
-        items: {
+        orderitem: {
           create: {
             id: createId(),
             productId: product.id,
@@ -71,7 +129,7 @@ export const createOrderFromSingleProduct = async (
             lineTotal: subtotal,
           },
         },
-        payments: {
+        payment: {
           create: {
             id: createId(),
             provider: "demo",
@@ -80,7 +138,7 @@ export const createOrderFromSingleProduct = async (
           },
         },
       },
-      include: { items: true, payments: true },
+      include: { orderitem: true, payment: true },
     });
   });
 };
