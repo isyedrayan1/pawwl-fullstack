@@ -36,6 +36,11 @@ const uploadsDir = isDist
   : path.resolve(__dirname, '../uploads');
 app.use("/uploads", express.static(uploadsDir));
 
+const productsDir = isDist
+  ? path.resolve(__dirname, '../../products')
+  : path.resolve(__dirname, '../products');
+app.use("/products", express.static(productsDir));
+
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, service: "pawwl-api" });
 });

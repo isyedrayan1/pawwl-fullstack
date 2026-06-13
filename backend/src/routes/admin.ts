@@ -80,12 +80,19 @@ const productVariantSchema = z.object({
 });
 
 const productSchema = z.object({
+  catalogId: z.coerce.number().int().positive().optional().nullable(),
   name: z.string().min(2),
   slug: z.string().optional(),
   description: z.string().optional().nullable(),
   category: z.string().default("Uncategorized"),
+  animalType: z.string().optional().nullable(),
+  productCategoryId: z.string().optional().nullable(),
+  animalTypeId: z.string().optional().nullable(),
   brand: z.string().optional().nullable(),
   images: z.array(z.string()).default([]),
+  imagePaths: z.array(z.string()).optional(),
+  price: z.coerce.number().min(0).default(0),
+  stock: z.coerce.number().int().min(0).default(0),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   seoTitle: z.string().optional().nullable(),
   seoDescription: z.string().optional().nullable(),
@@ -134,23 +141,85 @@ const parseJsonArray = (value: string | null | undefined) => {
   }
 };
 
-const normalizeProduct = (product: Awaited<ReturnType<typeof prisma.product.findMany>>[number]) => {
+const normalizeProduct = (product: any) => {
   const { productvariant, images, benefits, ...rest } = product;
+  const parsedImages = parseJsonArray(images).length ? parseJsonArray(images) : parseJsonArray(product.imagePaths);
   return {
     ...rest,
-    images: parseJsonArray(images),
+    images: parsedImages,
+    imagePaths: parsedImages,
     benefits: parseJsonArray(benefits),
+    animalType: product.animaltype?.name ?? null,
+    categoryRecord: product.productcategory ?? null,
     variants: productvariant,
   };
 };
 
-const normalizeOrder = (order: Awaited<ReturnType<typeof prisma.order.findMany>>[number]) => ({
+const normalizeOrder = (order: any) => ({
   ...order,
   items: order.orderitem,
   payments: order.payment,
   orderitem: undefined,
   payment: undefined,
 });
+
+const categoryKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+const resolveProductLookups = async (input: {
+  category?: string | null;
+  productCategoryId?: string | null;
+  animalType?: string | null;
+  animalTypeId?: string | null;
+}) => {
+  const [animalTypeRecord, categoryRecord] = await Promise.all([
+    input.animalTypeId
+      ? prisma.animaltype.findUnique({ where: { id: input.animalTypeId } })
+      : input.animalType
+        ? prisma.animaltype.upsert({
+            where: { key: categoryKey(input.animalType) },
+            update: { name: input.animalType },
+            create: { id: createId(), key: categoryKey(input.animalType), name: input.animalType },
+          })
+        : Promise.resolve(null),
+    input.productCategoryId
+      ? prisma.productcategory.findUnique({ where: { id: input.productCategoryId } })
+      : input.category
+        ? prisma.productcategory.upsert({
+            where: { key: categoryKey(input.category) },
+            update: { name: input.category },
+            create: { id: createId(), key: categoryKey(input.category), name: input.category },
+          })
+        : Promise.resolve(null),
+  ]);
+
+  return { animalTypeRecord, categoryRecord };
+};
+
+const syncDefaultVariant = async (productId: string, input: { price: number; stock: number; status: string }) => {
+  const existing = await prisma.productvariant.findFirst({
+    where: { productId },
+    orderBy: { createdAt: "asc" },
+  });
+  const data = {
+    name: "Default",
+    price: new Prisma.Decimal(input.price),
+    gstPrice: new Prisma.Decimal(input.price),
+    stock: input.stock,
+    isActive: input.status === "published",
+  };
+
+  if (existing) {
+    return prisma.productvariant.update({ where: { id: existing.id }, data });
+  }
+
+  return prisma.productvariant.create({
+    data: {
+      id: createId(),
+      productId,
+      ...data,
+    },
+  });
+};
 
 const adminSelect = {
   id: true,
@@ -274,7 +343,7 @@ router.get(
   "/products",
   asyncHandler(async (_req, res) => {
     const products = await prisma.product.findMany({
-      include: { productvariant: true },
+      include: { productvariant: true, animaltype: true, productcategory: true },
       orderBy: { createdAt: "desc" },
     });
     // Normalize field names for frontend compatibility
@@ -287,40 +356,50 @@ router.post(
   "/products",
   asyncHandler(async (req, res) => {
     const input = productSchema.parse(req.body);
+    const { animalTypeRecord, categoryRecord } = await resolveProductLookups(input);
+    const images = input.imagePaths ?? input.images;
+    const variantInput = input.variants?.[0];
+    const price = variantInput?.price ?? input.price;
+    const stock = variantInput?.stock ?? input.stock;
     const product = await prisma.product.create({
       data: {
         id: createId(),
+        catalogId: input.catalogId ?? null,
         name: input.name,
         slug: input.slug ?? uniqueSlug(input.name, Date.now()),
         description: input.description,
-        category: input.category,
+        category: categoryRecord?.name ?? input.category,
         brand: input.brand,
-        images: JSON.stringify(input.images),
+        images: JSON.stringify(images),
+        imagePaths: JSON.stringify(images),
+        price: new Prisma.Decimal(price),
+        stock,
         status: input.status,
         seoTitle: input.seoTitle,
         seoDescription: input.seoDescription,
         benefits: JSON.stringify(input.benefits),
         ingredients: input.ingredients,
         usage: input.usage,
+        animalTypeId: animalTypeRecord?.id ?? null,
+        productCategoryId: categoryRecord?.id ?? null,
         productvariant: {
-          create:
-            input.variants?.map((variant) => ({
-              id: createId(),
-              name: variant.name,
-              sku: variant.sku,
-              price: new Prisma.Decimal(variant.price),
-              salePrice: variant.salePrice == null ? null : new Prisma.Decimal(variant.salePrice),
-              gstPrice: variant.gstPrice == null ? null : new Prisma.Decimal(variant.gstPrice),
-              stock: variant.stock,
-              isActive: variant.isActive,
-            })) ?? [],
+          create: {
+            id: createId(),
+            name: variantInput?.name ?? "Default",
+            sku: variantInput?.sku,
+            price: new Prisma.Decimal(price),
+            salePrice: variantInput?.salePrice == null ? null : new Prisma.Decimal(variantInput.salePrice),
+            gstPrice: new Prisma.Decimal(variantInput?.gstPrice ?? price),
+            stock,
+            isActive: input.status === "published" && (variantInput?.isActive ?? true),
+          },
         },
       },
-      include: { productvariant: true },
+      include: { productvariant: true, animaltype: true, productcategory: true },
     });
 
     await logAdminAction(req.user!.id, "create", "product", product.id, { name: product.name });
-    res.status(201).json({ product });
+    res.status(201).json({ product: normalizeProduct(product) });
   }),
 );
 
@@ -331,62 +410,47 @@ router.patch(
     const productId = String(req.params.id);
     const existing = await prisma.product.findUnique({ where: { id: productId } });
     if (!existing) throw new HttpError(404, "Product not found");
+    const { animalTypeRecord, categoryRecord } = await resolveProductLookups(input);
+    const images = input.imagePaths ?? input.images;
+    const variantInput = input.variants?.[0];
+    const price = variantInput?.price ?? input.price;
+    const stock = variantInput?.stock ?? input.stock;
 
     const product = await prisma.product.update({
       where: { id: productId },
       data: {
+        ...(input.catalogId !== undefined ? { catalogId: input.catalogId } : {}),
         ...(input.name !== undefined ? { name: input.name } : {}),
         ...(input.slug !== undefined ? { slug: input.slug } : {}),
         ...(input.description !== undefined ? { description: input.description } : {}),
-        ...(input.category !== undefined ? { category: input.category } : {}),
+        ...(input.category !== undefined ? { category: categoryRecord?.name ?? input.category } : {}),
         ...(input.brand !== undefined ? { brand: input.brand } : {}),
-        ...(input.images !== undefined ? { images: JSON.stringify(input.images) } : {}),
+        ...(images !== undefined ? { images: JSON.stringify(images), imagePaths: JSON.stringify(images) } : {}),
+        ...(price !== undefined ? { price: new Prisma.Decimal(price) } : {}),
+        ...(stock !== undefined ? { stock } : {}),
         ...(input.status !== undefined ? { status: input.status } : {}),
         ...(input.seoTitle !== undefined ? { seoTitle: input.seoTitle } : {}),
         ...(input.seoDescription !== undefined ? { seoDescription: input.seoDescription } : {}),
         ...(input.benefits !== undefined ? { benefits: JSON.stringify(input.benefits) } : {}),
         ...(input.ingredients !== undefined ? { ingredients: input.ingredients } : {}),
         ...(input.usage !== undefined ? { usage: input.usage } : {}),
+        ...(input.animalType !== undefined || input.animalTypeId !== undefined ? { animalTypeId: animalTypeRecord?.id ?? null } : {}),
+        ...(input.category !== undefined || input.productCategoryId !== undefined ? { productCategoryId: categoryRecord?.id ?? null } : {}),
       },
-      include: { productvariant: true },
+      include: { productvariant: true, animaltype: true, productcategory: true },
     });
 
-    if (input.variants) {
-      for (const variant of input.variants) {
-        if (variant.id) {
-          await prisma.productvariant.update({
-            where: { id: variant.id },
-            data: {
-              name: variant.name,
-              sku: variant.sku,
-              price: new Prisma.Decimal(variant.price),
-              salePrice: variant.salePrice == null ? null : new Prisma.Decimal(variant.salePrice),
-              gstPrice: variant.gstPrice == null ? null : new Prisma.Decimal(variant.gstPrice),
-              stock: variant.stock,
-              isActive: variant.isActive,
-            },
-          });
-        } else {
-          await prisma.productvariant.create({
-            data: {
-              id: createId(),
-              productId: product.id,
-              name: variant.name,
-              sku: variant.sku,
-              price: new Prisma.Decimal(variant.price),
-              salePrice: variant.salePrice == null ? null : new Prisma.Decimal(variant.salePrice),
-              gstPrice: variant.gstPrice == null ? null : new Prisma.Decimal(variant.gstPrice),
-              stock: variant.stock,
-              isActive: variant.isActive,
-            },
-          });
-        }
-      }
+    if (price !== undefined || stock !== undefined || input.status !== undefined || input.variants) {
+      await syncDefaultVariant(product.id, {
+        price: price ?? Number(product.price ?? 0),
+        stock: stock ?? product.stock,
+        status: input.status ?? product.status,
+      });
     }
 
     const updated = await prisma.product.findUnique({
       where: { id: product.id },
-      include: { productvariant: true },
+      include: { productvariant: true, animaltype: true, productcategory: true },
     });
 
     // Normalize field names for frontend compatibility
@@ -809,7 +873,7 @@ router.delete(
     await prisma.product.update({
       where: { id: existing.productId },
       data: {
-        rating: stats._avg.rating ? new Prisma.Decimal(stats._avg.rating) : null,
+        rating: stats._avg.rating ? stats._avg.rating.toFixed(1) : null,
         reviewCount: stats._count.id,
       },
     });

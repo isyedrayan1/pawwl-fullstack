@@ -5,22 +5,22 @@ import { createId } from "@paralleldrive/cuid2";
 export const createDemoPaymentOrder = async (userId: string, orderId: string) => {
   const order = await prisma.order.findFirst({
     where: { id: orderId, userId },
-    include: { payments: true },
+    include: { payment: true },
   });
 
   if (!order) throw new HttpError(404, "Order not found");
 
   const providerOrderId = `demo_order_${order.id}`;
-  const payment = order.payments[0]
+  const payment = order.payment[0]
     ? await prisma.payment.update({
-        where: { id: order.payments[0].id },
+        where: { id: order.payment[0].id },
         data: {
           provider: "demo",
           providerOrderId,
-          rawResponse: {
+          rawResponse: JSON.stringify({
             mode: "demo",
             message: "Razorpay fallback order created locally",
-          },
+          }),
         },
       })
     : await prisma.payment.create({
@@ -31,10 +31,10 @@ export const createDemoPaymentOrder = async (userId: string, orderId: string) =>
           amount: order.total,
           status: "pending",
           providerOrderId,
-          rawResponse: {
+          rawResponse: JSON.stringify({
             mode: "demo",
             message: "Razorpay fallback order created locally",
-          },
+          }),
         },
       });
 
@@ -56,12 +56,12 @@ export const verifyDemoPayment = async (
 ) => {
   const order = await prisma.order.findFirst({
     where: { id: input.orderId, userId },
-    include: { payments: true, orderitem: true },
+    include: { payment: true, orderitem: true },
   });
 
   if (!order) throw new HttpError(404, "Order not found");
 
-  const payment = order.payments[0];
+  const payment = order.payment[0];
   if (!payment) throw new HttpError(404, "Payment not found");
 
   const providerPaymentId = input.providerPaymentId ?? `demo_payment_${Date.now()}`;
@@ -81,6 +81,12 @@ export const verifyDemoPayment = async (
           data: { stock: { decrement: item.quantity } },
         });
       }
+      if (item.productId) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
     }
 
     // 3. Update payment status
@@ -91,12 +97,12 @@ export const verifyDemoPayment = async (
         provider: "demo",
         providerOrderId: input.providerOrderId ?? payment.providerOrderId,
         providerPaymentId,
-        rawResponse: {
+        rawResponse: JSON.stringify({
           mode: "demo",
           verified: true,
           providerOrderId: input.providerOrderId ?? payment.providerOrderId,
           providerPaymentId,
-        },
+        }),
       },
     });
 

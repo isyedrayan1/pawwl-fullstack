@@ -20,7 +20,7 @@ const Cart = () => {
 
   const items = data?.items ?? [];
   const subtotal = items.reduce((sum, item) => {
-    const price = Number(item.variant.salePrice ?? item.variant.price);
+    const price = Number(item.variant.salePrice ?? item.product.price ?? item.variant.price);
     return sum + price * item.quantity;
   }, 0);
 
@@ -38,8 +38,11 @@ const Cart = () => {
                 <img src={item.product.images?.[0] ?? "/pawwl-logo-main-croped.webp"} alt={item.product.name} className="w-20 h-20 rounded-lg object-cover bg-brand-light" />
                 <div className="flex-1">
                   <h2 className="font-bold text-brand-dark">{item.product.name}</h2>
-                  <p className="text-sm text-[#555]">{item.variant.name} | Qty {item.quantity}</p>
-                  <p className="font-bold text-brand-blue mt-2">{formatPrice(Number(item.variant.salePrice ?? item.variant.price) * item.quantity)}</p>
+                  <p className="text-sm text-[#555]">
+                    {[item.product.animalType, item.product.category].filter(Boolean).join(" · ")}
+                    {item.variant.name !== "Default" ? ` · ${item.variant.name}` : ""} | Qty {item.quantity}
+                  </p>
+                  <p className="font-bold text-brand-blue mt-2">{formatPrice(Number(item.variant.salePrice ?? item.product.price ?? item.variant.price) * item.quantity)}</p>
                 </div>
                 <Button variant="outline" onClick={() => removeItem.mutate(item.id)}>Remove</Button>
               </div>

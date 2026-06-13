@@ -38,9 +38,12 @@ const main = async () => {
         slug,
         category: "Uncategorized",
         description: "",
-        images: [],
+        images: JSON.stringify([]),
+        imagePaths: JSON.stringify([]),
+        price: new Prisma.Decimal(gstPrice),
+        stock: 0,
         status: "draft",
-        variants: {
+        productvariant: {
           create: {
             name: "Default",
             price: new Prisma.Decimal(gstPrice),

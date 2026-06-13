@@ -6,6 +6,7 @@ import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/auth.js";
 import { createOrderFromSingleProduct } from "../services/buyNowService.js";
 import { createOrderFromCart } from "../services/orderService.js";
+import { createId } from "@paralleldrive/cuid2";
 
 const router = Router();
 
@@ -22,6 +23,14 @@ const buyNowOrderSchema = createOrderSchema.extend({
 });
 
 router.use(requireAuth);
+
+const normalizeOrder = (order: any) => ({
+  ...order,
+  items: order.orderitem,
+  payments: order.payment,
+  orderitem: undefined,
+  payment: undefined,
+});
 
 router.get(
   "/coupons/:code/validate",
@@ -92,15 +101,20 @@ router.get(
       include: { orderitem: true, payment: true },
       orderBy: { createdAt: "desc" },
     });
-    // Normalize field names for frontend compatibility
-    const normalized = orders.map((o) => ({
-      ...o,
-      items: o.orderitem,
-      payments: o.payment,
-      orderitem: undefined,
-      payment: undefined,
-    }));
-    res.json({ orders: normalized });
+    res.json({ orders: orders.map(normalizeOrder) });
+  }),
+);
+
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const order = await prisma.order.findFirst({
+      where: { id: String(req.params.id), userId: req.user!.id },
+      include: { orderitem: true, payment: true },
+    });
+
+    if (!order) throw new HttpError(404, "Order not found");
+    res.json({ order: normalizeOrder(order) });
   }),
 );
 

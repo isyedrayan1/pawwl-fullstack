@@ -31,13 +31,14 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
         const product = catalogById.get(item.productId);
         if (!product) return null;
         const variant = product.variants.find((v) => v.id === item.variantId) || product.variants[0];
-        const price = Number(variant?.salePrice ?? variant?.price ?? 0);
+        const price = Number(variant?.salePrice ?? product.price ?? variant?.price ?? 0);
         return {
           id: item.variantId,
           productId: item.productId,
+          slug: product.slug,
           title: product.name,
-          category: product.category,
-          variantName: variant?.name ?? 'Standard',
+          category: [product.animalType, product.category].filter(Boolean).join(' · ') || product.category,
+          variantName: variant?.name === 'Default' ? '' : variant?.name ?? '',
           image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
           quantity: item.quantity,
           price,
@@ -46,6 +47,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
       }).filter(Boolean) as Array<{
         id: string;
         productId: string;
+        slug: string;
         title: string;
         category: string;
         variantName: string;
@@ -62,12 +64,13 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
         const product = catalogById.get(id);
         if (!product) return null;
         const defaultVariant = product.variants?.[0];
-        const price = Number(defaultVariant?.salePrice ?? defaultVariant?.price ?? 0);
+        const price = Number(defaultVariant?.salePrice ?? product.price ?? defaultVariant?.price ?? 0);
         return {
           id: product.id,
           productId: product.id,
+          slug: product.slug,
           title: product.name,
-          category: product.category,
+          category: [product.animalType, product.category].filter(Boolean).join(' · ') || product.category,
           variantName: '',
           image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
           quantity: 1,
@@ -77,6 +80,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
       }).filter(Boolean) as Array<{
         id: string;
         productId: string;
+        slug: string;
         title: string;
         category: string;
         variantName: string;
@@ -182,7 +186,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
                     </span>
                     <div className="flex gap-2">
                       <Link 
-                        to={`/products/${item.productId}`} 
+                        to={`/products/${item.slug || item.productId}`} 
                         onClick={onClose}
                         className="text-xs font-bold text-[#134e86] hover:underline flex items-center"
                       >

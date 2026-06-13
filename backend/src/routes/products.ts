@@ -12,6 +12,7 @@ const listSchema = z.object({
   status: z.enum(["draft", "published", "archived"]).optional(),
   q: z.string().optional(),
   category: z.string().optional(),
+  animalType: z.string().optional(),
 });
 
 const productInclude = {
@@ -19,6 +20,8 @@ const productInclude = {
     where: { isActive: true },
     orderBy: { createdAt: "asc" as const },
   },
+  animaltype: true,
+  productcategory: true,
 };
 
 const parseJsonArray = (value: string | null | undefined) => {
@@ -32,16 +35,32 @@ const parseJsonArray = (value: string | null | undefined) => {
   }
 };
 
-const normalizeProduct = (product: Awaited<ReturnType<typeof prisma.product.findMany>>[number]) => {
+const normalizeProduct = (product: any) => {
   const { productvariant, images, benefits, ...rest } = product;
+  const parsedImages = parseJsonArray(images).length ? parseJsonArray(images) : parseJsonArray(product.imagePaths);
 
   return {
     ...rest,
-    images: parseJsonArray(images),
+    images: parsedImages,
+    imagePaths: parsedImages,
     benefits: parseJsonArray(benefits),
+    animalType: product.animaltype?.name ?? null,
+    categoryRecord: product.productcategory ?? null,
     variants: productvariant,
   };
 };
+
+router.get(
+  "/meta",
+  asyncHandler(async (_req, res) => {
+    const [animalTypes, categories] = await Promise.all([
+      prisma.animaltype.findMany({ where: { isActive: true }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
+      prisma.productcategory.findMany({ where: { isActive: true }, orderBy: [{ sortOrder: "asc" }, { name: "asc" }] }),
+    ]);
+
+    res.json({ animalTypes, categories });
+  }),
+);
 
 router.get(
   "/",
@@ -51,6 +70,7 @@ router.get(
       where: {
         status: query.status ?? "published",
         ...(query.category ? { category: query.category } : {}),
+        ...(query.animalType ? { animaltype: { key: query.animalType.toLowerCase() } } : {}),
         ...(query.q
           ? {
               OR: [
@@ -76,7 +96,11 @@ router.get(
     const slugOrId = String(req.params.slug);
     const product = await prisma.product.findFirst({
       where: {
-        OR: [{ slug: slugOrId }, { id: slugOrId }],
+        OR: [
+          { slug: slugOrId },
+          { id: slugOrId },
+          ...(Number.isFinite(Number(slugOrId)) ? [{ catalogId: Number(slugOrId) }] : []),
+        ],
       },
       include: productInclude,
     });

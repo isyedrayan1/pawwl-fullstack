@@ -1,17 +1,18 @@
-import { useIsMobile } from "@/hooks/useMediaQuery";
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PawwlWatermark from "@/components/PawwlWatermark";
-import { ArrowUpRight, ArrowRight, Star, Quote, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
 import DoctorsSection from "@/components/DoctorsSection";
 import PetGallery from "@/components/PetGallery";
 import Testimonials from "@/components/Testimonials";
 import SEO from "@/components/SEO";
 
 import { useApiProducts } from "@/hooks/useApiProducts";
+import { formatPrice, getImageUrl } from "@/lib/api";
 
 import prd13 from "@/assets/gallery/13.webp";
 import prd17 from "@/assets/gallery/17.webp";
@@ -30,26 +31,38 @@ const parseStringArray = (value: string[] | string | null | undefined) => {
 
 const Products = () => {
   const { data: apiProducts, isLoading, error } = useApiProducts();
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [animalFilter, setAnimalFilter] = useState("all");
   const products = (apiProducts ?? []).map((product) => ({
     id: product.id,
     slug: product.slug,
     title: product.name,
-    subtitle: product.brand ?? product.category,
+    subtitle: [product.brand, product.animalType, product.category].filter(Boolean).join(" · ") || product.category,
     category: product.category,
+    animalType: product.animalType ?? "All Pets",
+    price: Number(product.price ?? product.variants?.[0]?.salePrice ?? product.variants?.[0]?.price ?? 0),
+    stock: product.stock ?? product.variants?.[0]?.stock ?? 0,
     description: product.description ?? "",
     benefits: parseStringArray(product.benefits),
     ingredients: product.ingredients ?? undefined,
     usage: product.usage ?? "",
     rating: product.rating ?? "0.0",
     reviewCount: product.reviewCount ?? 0,
-    images: parseStringArray(product.images).length ? parseStringArray(product.images) : ["/pawwl-logo-main-croped.webp"],
+    images: parseStringArray(product.images).length
+      ? parseStringArray(product.images).map((p) => getImageUrl(p))
+      : [getImageUrl("/pawwl-logo-main-croped.webp")],
     sizes: Array.isArray(product.variants) ? product.variants.map((variant) => variant.name) : [],
     tag: product.status === "published" ? "Available" : undefined,
   }));
-  const isMobile = useIsMobile();
-
   const hasCatalogError = Boolean(error);
-  const hasProducts = products.length > 0;
+  const categories = useMemo(() => Array.from(new Set(products.map((product) => product.category))).sort(), [products]);
+  const animalTypes = useMemo(() => Array.from(new Set(products.map((product) => product.animalType).filter(Boolean))).sort(), [products]);
+  const visibleProducts = products.filter((product) => {
+    const categoryMatch = categoryFilter === "all" || product.category === categoryFilter;
+    const animalMatch = animalFilter === "all" || product.animalType === animalFilter;
+    return categoryMatch && animalMatch;
+  });
+  const hasProducts = visibleProducts.length > 0;
 
 
 
@@ -98,6 +111,20 @@ const Products = () => {
           </div>
 
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
+            {!isLoading && !hasCatalogError && products.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button onClick={() => setAnimalFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === "all" ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>All Pets</button>
+                {animalTypes.map((animalType) => (
+                  <button key={animalType} onClick={() => setAnimalFilter(animalType)} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === animalType ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>{animalType}</button>
+                ))}
+                <span className="hidden h-8 w-px bg-[#dce6ee] md:block" />
+                <button onClick={() => setCategoryFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === "all" ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>All Categories</button>
+                {categories.map((category) => (
+                  <button key={category} onClick={() => setCategoryFilter(category)} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === category ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>{category}</button>
+                ))}
+              </div>
+            )}
+
             {isLoading ? (
               <div className="w-full min-h-[480px] rounded-[28px] border border-dashed border-[#dce6ee] bg-[#f8fbff] flex flex-col items-center justify-center text-center px-6">
                 <p className="text-[#134e86] font-bold text-lg">Loading products...</p>
@@ -115,129 +142,63 @@ const Products = () => {
               </div>
             ) : (
               <>
-                <div className="w-full flex flex-col lg:flex-row gap-8 items-stretch overflow-hidden">
-                  {/* Main Product Card */}
-                  <div 
-                    className="w-full lg:w-[606px] flex flex-col bg-white rounded-[28px] border border-[#dce6ee] overflow-hidden group shadow-md relative"
-                  >
-                    <div className="w-full h-[500px] lg:h-full relative overflow-hidden bg-[#e8f0f6]">
-                      <img src={products[0].images[0]} loading="lazy" decoding="async" className="w-full h-full object-cover" alt={products[0].title} />
-                      <div className="absolute top-8 left-8 flex gap-2">
-                        <span className="font-bold text-[11px] text-white bg-[#1b4965] px-4 py-2 rounded-full uppercase tracking-wider border border-white/20 shadow-sm">{products[0].tag || "Premium"}</span>
-                      </div>
-                      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#0e0e0e] via-[#0e0e0e]/80 to-transparent p-8 md:p-10">
-                        <span className="font-bold text-[13px] text-[#5fa8d3] uppercase tracking-widest block mb-1">{products[0].category}</span>
-                        <h3 className="font-extrabold text-[32px] md:text-[40px] text-white leading-tight mb-4">{products[0].title}</h3>
-                        <div className="flex items-center gap-2 mb-4 text-white/90">
-                          <div className="flex items-center gap-1 text-[#fff200]">
-                            <Star size={14} fill="currentColor" />
-                            <span className="font-bold text-sm text-white">{products[0].rating}</span>
-                          </div>
-                          <span className="text-xs text-white/70">{products[0].reviewCount} reviews</span>
-                        </div>
-                        <Link to={`/products/${products[0].id}`} className="inline-flex items-center gap-2 bg-white text-[#134e86] px-6 py-2.5 rounded-full font-bold text-sm shadow-lg hover:scale-105 transition-transform w-fit">
-                            View Details
-                        </Link>
-                      </div>
-
-                      {/* WhatsApp Corner Button */}
-                      <a 
-                        href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${products[0].title}.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="absolute top-6 right-6 z-30 w-12 h-12 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform cursor-pointer"
-                        title="Order on WhatsApp"
-                      >
-                        <ShoppingBag size={20} />
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Side Column items */}
-                  <div 
-                    className="w-full lg:w-[502px] flex flex-col gap-8"
-                  >
-                    {products.slice(1, 3).map((item, i) => (
-                      <div key={i} className="flex-1 bg-white rounded-3xl border-2 border-border-accent overflow-hidden group flex flex-col h-full relative">
-                        <div className="p-6 md:p-8 pb-5 flex flex-col gap-1 z-10 bg-white">
-                          <span className="font-bold text-[10px] md:text-[11px] leading-none text-[#788796] uppercase tracking-widest">{item.category}</span>
-                          <h4 className="font-bold text-[20px] md:text-[22px] text-[#212529] capitalize">{item.title}</h4>
-                          <div className="flex items-center gap-2 text-xs text-[#788796] mt-1">
-                            <div className="flex items-center gap-1 text-[#fff200]">
-                              <Star size={12} fill="currentColor" />
-                              <span className="font-bold text-[#212529]">{item.rating}</span>
-                            </div>
-                            <span>•</span>
-                            <span>{item.reviewCount} reviews</span>
-                          </div>
-                          <Link to={`/products/${item.id}`} className="mt-2 inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
-                            View Details <ArrowUpRight size={12} />
-                          </Link>
-                        </div>
-                        {/* WhatsApp Corner Button */}
-                        <a 
-                          href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="absolute top-4 right-4 z-20 w-10 h-10 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer"
-                          title={`Order ${item.title} on WhatsApp`}
-                        >
-                          <ShoppingBag size={18} />
-                        </a>
-                        <div className="w-full flex-1 min-h-[160px] md:min-h-[180px] bg-[#e8f0f6] relative overflow-hidden">
-                          <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
-                          {item.tag && (
-                            <span className="absolute top-4 left-6 bg-[#5fa8d3] text-white font-bold text-[11px] px-4 py-1.5 rounded-full z-10 shadow-sm">{item.tag}</span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bottom Row Grids */}
-                <div 
-                  className="w-full grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
-                >
-                  {products.slice(3).map((item, i) => (
+                {/* Product Grid — Shopify-style: image first, full card border, full-width CTA */}
+                <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                  {visibleProducts.map((item) => (
                     <div
-                      key={i}
-                      className="flex flex-col bg-white rounded-3xl border-2 border-border-accent group overflow-hidden h-auto relative gs-reveal"
+                      key={item.id}
+                      className="group flex flex-col bg-white rounded-2xl border border-[#e2e8f0] overflow-hidden hover:border-[#134e86]/30 hover:shadow-[0_4px_24px_rgba(19,78,134,0.10)] transition-all duration-200"
                     >
-                      <div className="w-full flex flex-col p-6 gap-1 bg-white z-10">
-                        <span className="font-bold text-[10px] text-[#788796] uppercase tracking-widest">{item.category}</span>
-                        <div className="flex flex-col gap-1">
-                          <h4 className="font-bold text-[18px] text-[#212529] line-clamp-1">{item.title}</h4>
-                          <div className="flex items-center gap-2 text-[11px] text-[#788796]">
-                            <div className="flex items-center gap-1 text-[#fff200]">
-                              <Star size={11} fill="currentColor" />
-                              <span className="font-bold text-[#212529]">{item.rating}</span>
-                            </div>
-                            <span>•</span>
-                            <span>{item.reviewCount} reviews</span>
-                          </div>
-                          <Link to={`/products/${item.id}`} className="inline-flex items-center gap-1 text-[#1b4965] font-bold text-xs hover:underline">
-                            View Details <ArrowUpRight size={12} />
+                      {/* ── Image zone ── */}
+                      <Link
+                        to={`/products/${item.slug}`}
+                        className="relative block w-full bg-[#f4f7fa]"
+                        style={{ aspectRatio: "1 / 1" }}
+                      >
+                        <img
+                          src={item.images[0]}
+                          loading="lazy"
+                          decoding="async"
+                          className="absolute inset-0 w-full h-full object-contain p-5 group-hover:scale-[1.04] transition-transform duration-300"
+                          alt={item.title}
+                        />
+                        {/* Animal / category badge */}
+                        {item.animalType && item.animalType !== "All Pets" && (
+                          <span className="absolute top-2.5 left-2.5 bg-white text-[#134e86] font-bold text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full border border-[#dce6ee] shadow-sm">
+                            {item.animalType}
+                          </span>
+                        )}
+                      </Link>
+
+                      {/* ── Info zone ── */}
+                      <div className="flex flex-col gap-2.5 p-4 pt-3.5 flex-1">
+                      {/* Product name */}
+                        <Link to={`/products/${item.slug}`}>
+                          <h3 className="font-bold text-[13px] sm:text-[14px] text-[#0f172a] leading-snug line-clamp-2 hover:text-[#134e86] transition-colors">
+                            {item.title}
+                          </h3>
+                        </Link>
+
+                        {/* Subtitle — brand · category */}
+                        <p className="text-[11px] text-[#94a3b8] leading-snug line-clamp-1">
+                          {item.subtitle}
+                        </p>
+
+                        {/* Price */}
+                        <p className="font-extrabold text-[15px] text-[#134e86] mt-0.5">
+                          {formatPrice(item.price)}
+                        </p>
+
+                        {/* Full-width CTA button — spacer pushes it to bottom */}
+                        <div className="mt-auto pt-1">
+                          <Link
+                            to={`/products/${item.slug}`}
+                            className="flex w-full items-center justify-center gap-2 h-10 rounded-full bg-[#134e86] hover:bg-[#0d365d] text-white font-bold text-[12px] uppercase tracking-wider transition-colors shadow-sm"
+                          >
+                            <ShoppingBag size={13} strokeWidth={2.5} />
+                            Quick Shop
                           </Link>
                         </div>
-                      </div>
-                      {/* WhatsApp Corner Button */}
-                      <a 
-                        href={`https://wa.me/917208813649?text=${encodeURIComponent(`Hello! I am interested in ${item.title}.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="absolute top-4 right-4 z-20 w-9 h-9 bg-[#134e86] text-white rounded-full flex items-center justify-center shadow-md cursor-pointer"
-                          title={`Order ${item.title} on WhatsApp`}
-                      >
-                        <ShoppingBag size={16} />
-                      </a>
-                      <div className="flex-1 w-full bg-[#f4f7f9] relative overflow-hidden min-h-[200px]">
-                        <img src={item.images[0]} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" alt={item.title} />
-                        {item.tag && (
-                          <div className="absolute top-4 left-4 bg-[#1b4965] px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-                            <span className="font-bold text-[10px] text-white uppercase tracking-wider">{item.tag}</span>
-                          </div>
-                        )}
                       </div>
                     </div>
                   ))}

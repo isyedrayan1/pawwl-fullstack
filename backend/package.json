@@ -10,7 +10,9 @@
     "prisma:migrate": "prisma migrate dev --schema prisma/schema.prisma",
     "prisma:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
     "seed": "tsx prisma/seed.ts",
-    "import:products": "tsx prisma/import-products.ts"
+    "import:products": "tsx prisma/import-products.ts",
+    "catalog:build": "tsx prisma/build-catalog.ts",
+    "catalog:seed": "tsx prisma/seed-catalog.ts"
   },
   "devDependencies": {
     "postcss": "^8.4.49"

@@ -17,13 +17,39 @@ const updateSchema = z.object({
   quantity: z.number().int().min(1).max(99),
 });
 
+const parseJsonArray = (value: string | null | undefined) => {
+  if (!value) return [] as string[];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [] as string[];
+  }
+};
+
+const normalizeProduct = (product: any) => {
+  const images = parseJsonArray(product.images).length ? parseJsonArray(product.images) : parseJsonArray(product.imagePaths);
+  return {
+    ...product,
+    images,
+    imagePaths: images,
+  };
+};
+
+const normalizeCartItem = (item: any) => ({
+  ...item,
+  product: normalizeProduct(item.product),
+  variant: item.productvariant,
+  productvariant: undefined,
+});
+
 router.use(requireAuth);
 
 router.get(
   "/",
   asyncHandler(async (req, res) => {
     const items = await getCart(req.user!.id);
-    res.json({ items });
+    res.json({ items: items.map(normalizeCartItem) });
   }),
 );
 
@@ -59,7 +85,7 @@ router.post(
       include: { product: true, productvariant: true },
     });
 
-    res.status(201).json({ item });
+    res.status(201).json({ item: normalizeCartItem(item) });
   }),
 );
 
@@ -141,7 +167,7 @@ router.post(
       });
     });
 
-    res.json({ items: mergedItems });
+    res.json({ items: mergedItems.map(normalizeCartItem) });
   })
 );
 

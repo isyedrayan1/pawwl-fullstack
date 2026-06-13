@@ -32,13 +32,20 @@ export type ApiVariant = {
 
 export type ApiProduct = {
   id: string;
+  catalogId?: number | null;
   name: string;
   slug: string;
   description?: string | null;
   category: string;
+  animalType?: string | null;
   brand?: string | null;
   images?: string[] | null;
+  imagePaths?: string[] | null;
+  price?: string | number | null;
+  stock?: number | null;
   status: "draft" | "published" | "archived";
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   benefits?: string[] | null;
   ingredients?: string | null;
   usage?: string | null;
@@ -52,6 +59,11 @@ export type ApiCartItem = {
   quantity: number;
   product: ApiProduct;
   variant: ApiVariant;
+};
+
+export type ApiProductMeta = {
+  animalTypes: Array<{ id: string; key: string; name: string; sortOrder?: number; isActive?: boolean }>;
+  categories: Array<{ id: string; key: string; name: string; sortOrder?: number; isActive?: boolean }>;
 };
 
 export type ApiAddress = {
@@ -224,3 +236,15 @@ export const formatPrice = (value: string | number | null | undefined) =>
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(Number(value ?? 0));
+
+/**
+ * Resolves a product image path to a full URL.
+ * Paths like "/products/1001/image.jpg" are served by the backend,
+ * so we prepend the API base URL. Already-absolute URLs pass through unchanged.
+ */
+export const getImageUrl = (path: string | null | undefined, fallback = "/pawwl-logo-main-croped.webp"): string => {
+  if (!path) return fallback;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("/")) return `${API_BASE}${path}`;
+  return path;
+};

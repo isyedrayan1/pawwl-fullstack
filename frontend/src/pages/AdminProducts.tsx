@@ -10,11 +10,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { apiRequest, ApiProduct, formatPrice } from "@/lib/api";
+import { apiRequest, ApiProduct, ApiProductMeta, formatPrice, getImageUrl } from "@/lib/api";
 import { toast } from "sonner";
 
 type ProductFormState = {
+  catalogId: string;
   name: string;
+  animalType: string;
   category: string;
   brand: string;
   description: string;
@@ -23,6 +25,8 @@ type ProductFormState = {
   benefits: string[];
   ingredients: string;
   usage: string;
+  seoTitle: string;
+  seoDescription: string;
   variantName: string;
   price: string;
   salePrice: string;
@@ -34,7 +38,9 @@ type ProductFormState = {
 };
 
 const emptyForm = (): ProductFormState => ({
+  catalogId: "",
   name: "",
+  animalType: "",
   category: "Uncategorized",
   brand: "",
   description: "",
@@ -43,7 +49,9 @@ const emptyForm = (): ProductFormState => ({
   benefits: [],
   ingredients: "",
   usage: "",
-  variantName: "Standard",
+  seoTitle: "",
+  seoDescription: "",
+  variantName: "Default",
   price: "",
   salePrice: "",
   stock: "0",
@@ -93,6 +101,12 @@ const AdminProducts = () => {
     retry: false,
   });
 
+  const { data: metaData } = useQuery({
+    queryKey: ["product-meta"],
+    queryFn: () => apiRequest<ApiProductMeta>("/api/products/meta"),
+    retry: false,
+  });
+
   const filteredProducts = useMemo(() => {
     const products = data?.products ?? [];
     const needle = search.trim().toLowerCase();
@@ -114,7 +128,9 @@ const AdminProducts = () => {
     const variant = product.variants[0];
     setEditingId(product.id);
     setForm({
+      catalogId: product.catalogId == null ? "" : String(product.catalogId),
       name: product.name,
+      animalType: product.animalType ?? "",
       category: product.category,
       brand: product.brand ?? "",
       description: product.description ?? "",
@@ -123,10 +139,12 @@ const AdminProducts = () => {
       benefits: Array.isArray(product.benefits) ? product.benefits : [],
       ingredients: product.ingredients ?? "",
       usage: product.usage ?? "",
-      variantName: variant?.name ?? "Standard",
-      price: String(variant?.price ?? ""),
+      seoTitle: product.seoTitle ?? "",
+      seoDescription: product.seoDescription ?? "",
+      variantName: variant?.name ?? "Default",
+      price: String(product.price ?? variant?.price ?? ""),
       salePrice: variant?.salePrice == null ? "" : String(variant.salePrice),
-      stock: String(variant?.stock ?? 0),
+      stock: String(product.stock ?? variant?.stock ?? 0),
       variantActive: variant?.isActive === false ? "false" : "true",
       variantId: variant?.id ?? "",
       benefitInput: "",
@@ -193,6 +211,8 @@ const AdminProducts = () => {
         method: editingId ? "PATCH" : "POST",
         body: JSON.stringify({
           name: form.name,
+          catalogId: form.catalogId === "" ? null : Number(form.catalogId),
+          animalType: form.animalType || null,
           category: form.category,
           brand: form.brand || null,
           description: form.description || null,
@@ -201,10 +221,14 @@ const AdminProducts = () => {
           benefits: form.benefits,
           ingredients: form.ingredients || null,
           usage: form.usage || null,
+          seoTitle: form.seoTitle || null,
+          seoDescription: form.seoDescription || null,
+          price: Number(form.price || 0),
+          stock: Number(form.stock || 0),
           variants: [
             {
               ...(form.variantId ? { id: form.variantId } : {}),
-              name: form.variantName,
+              name: "Default",
               price: Number(form.price || 0),
               salePrice: form.salePrice === "" ? null : Number(form.salePrice),
               gstPrice: Number(form.price || 0),
@@ -266,14 +290,43 @@ const AdminProducts = () => {
                 {/* Basic Info Tab */}
                 <TabsContent value="basic" className="space-y-4 outline-none">
                   <div className="space-y-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Product Name</label>
-                      <Input placeholder="Product name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required />
+                    <div className="grid gap-4 md:grid-cols-[160px_1fr]">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Catalog ID</label>
+                        <Input placeholder="Auto / optional" type="number" value={form.catalogId} onChange={(event) => setForm({ ...form, catalogId: event.target.value })} />
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Product Name</label>
+                        <Input placeholder="Product name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required />
+                      </div>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Animal Type</label>
+                        <Select value={form.animalType || "none"} onValueChange={(value) => setForm({ ...form, animalType: value === "none" ? "" : value })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Animal type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">Not specified</SelectItem>
+                            {(metaData?.animalTypes ?? []).map((animalType) => (
+                              <SelectItem key={animalType.id} value={animalType.name}>{animalType.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Category</label>
-                        <Input placeholder="Category" value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })} />
+                        <Select value={form.category} onValueChange={(value) => setForm({ ...form, category: value })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {(metaData?.categories?.length ? metaData.categories : [{ id: "uncat", name: "Uncategorized", key: "uncategorized" }]).map((category) => (
+                              <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Brand</label>
@@ -299,13 +352,9 @@ const AdminProducts = () => {
                 {/* Pricing & Stock Tab */}
                 <TabsContent value="pricing" className="space-y-4 outline-none">
                   <div className="space-y-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Default Variant Name</label>
-                      <Input placeholder="Variant name (e.g. 500g, Large)" value={form.variantName} onChange={(event) => setForm({ ...form, variantName: event.target.value })} />
-                    </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Price (INR)</label>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Product Price (INR)</label>
                         <Input placeholder="Price" type="number" value={form.price} onChange={(event) => setForm({ ...form, price: event.target.value })} required />
                       </div>
                       <div className="flex flex-col gap-1.5">
@@ -315,11 +364,11 @@ const AdminProducts = () => {
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Inventory Stock</label>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Product Stock</label>
                         <Input placeholder="Stock" type="number" value={form.stock} onChange={(event) => setForm({ ...form, stock: event.target.value })} required />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Variant Status</label>
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Checkout Availability</label>
                         <Select value={form.variantActive} onValueChange={(value) => setForm({ ...form, variantActive: value as ProductFormState["variantActive"] })}>
                           <SelectTrigger>
                             <SelectValue placeholder="Variant active" />
@@ -364,6 +413,16 @@ const AdminProducts = () => {
                         className="h-20 resize-none"
                       />
                     </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">SEO Title</label>
+                        <Input placeholder="Optional SEO title" value={form.seoTitle} onChange={(event) => setForm({ ...form, seoTitle: event.target.value })} />
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">SEO Description</label>
+                        <Textarea placeholder="Optional SEO description" value={form.seoDescription} onChange={(event) => setForm({ ...form, seoDescription: event.target.value })} className="h-20 resize-none" />
+                      </div>
+                    </div>
                   </div>
                 </TabsContent>
 
@@ -402,7 +461,7 @@ const AdminProducts = () => {
                       <div className="flex flex-wrap gap-3">
                         {form.images.map((img, idx) => (
                           <div key={idx} className="w-20 h-20 rounded-2xl border border-slate-200 relative overflow-hidden group shrink-0">
-                            <img src={img.startsWith('/') ? img : `/${img}`} className="w-full h-full object-cover" alt="product preview" />
+                            <img src={getImageUrl(img)} className="w-full h-full object-cover" alt="product preview" />
                             <button
                               type="button"
                               onClick={() => removeImage(idx)}
@@ -492,8 +551,8 @@ const AdminProducts = () => {
 
         {filteredProducts.map((product) => {
           const variant = product.variants[0];
-          const lowStock = (variant?.stock ?? 0) <= 10;
-          const thumbnail = Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : "/pawwl-logo-main-croped.webp";
+          const lowStock = (product.stock ?? variant?.stock ?? 0) <= 10;
+          const thumbnail = Array.isArray(product.images) && product.images.length > 0 ? getImageUrl(product.images[0]) : "/pawwl-logo-main-croped.webp";
 
           return (
             <div key={product.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -508,7 +567,9 @@ const AdminProducts = () => {
                       <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">{product.status}</span>
                       {lowStock && <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">Low stock</span>}
                     </div>
-                    <p className="mt-1 text-sm text-slate-600">{product.category}{product.brand ? ` · ${product.brand}` : ""}</p>
+                    <p className="mt-1 text-sm text-slate-600">
+                      {[product.catalogId ? `#${product.catalogId}` : null, product.animalType, product.category, product.brand].filter(Boolean).join(" · ")}
+                    </p>
                     {product.description && <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">{product.description}</p>}
                   </div>
                 </div>
@@ -523,15 +584,15 @@ const AdminProducts = () => {
               <div className="mt-4 grid gap-3 md:grid-cols-3">
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Variant</p>
-                  <p className="mt-1 font-medium text-slate-950">{variant?.name ?? "No variant"}</p>
+                  <p className="mt-1 font-medium text-slate-950">{product.animalType ?? "All pets"}</p>
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Price</p>
-                  <p className="mt-1 font-medium text-slate-950">{variant ? formatPrice(variant.price) : "-"}</p>
+                  <p className="mt-1 font-medium text-slate-950">{formatPrice(product.price ?? variant?.price ?? 0)}</p>
                 </div>
                 <div className="rounded-2xl bg-slate-50 p-4">
                   <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Stock</p>
-                  <p className="mt-1 font-medium text-slate-950">{variant?.stock ?? 0}</p>
+                  <p className="mt-1 font-medium text-slate-950">{product.stock ?? variant?.stock ?? 0}</p>
                 </div>
               </div>
             </div>

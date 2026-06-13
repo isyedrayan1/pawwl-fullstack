@@ -56,12 +56,12 @@ const Checkout = () => {
 
   const summaryItems = useMemo(() => {
     if (isBuyNow && productData?.product && buyNowVariant) {
-      const price = Number(buyNowVariant.salePrice ?? buyNowVariant.price);
+      const price = Number(buyNowVariant.salePrice ?? productData.product.price ?? buyNowVariant.price);
       return [
         {
           id: buyNowVariant.id,
           name: productData.product.name,
-          variant: buyNowVariant.name,
+          variant: buyNowVariant.name === "Default" ? productData.product.category : buyNowVariant.name,
           image: productData.product.images?.[0] ?? "/pawwl-logo-main-croped.webp",
           quantity,
           total: price * quantity,
@@ -70,11 +70,11 @@ const Checkout = () => {
     }
 
     return (cartData?.items ?? []).map((item) => {
-      const price = Number(item.variant.salePrice ?? item.variant.price);
+      const price = Number(item.variant.salePrice ?? item.product.price ?? item.variant.price);
       return {
         id: item.id,
         name: item.product.name,
-        variant: item.variant.name,
+        variant: item.variant.name === "Default" ? item.product.category : item.variant.name,
         image: item.product.images?.[0] ?? "/pawwl-logo-main-croped.webp",
         quantity: item.quantity,
         total: price * item.quantity,

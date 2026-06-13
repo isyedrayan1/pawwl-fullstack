@@ -8,13 +8,20 @@ import download1 from "@/assets/home/servbento/download 1.webp";
 import download2 from "@/assets/home/servbento/download 2.webp";
 import superchewer1 from "@/assets/home/servbento/superchewer1.webp";
 import superchewer2 from "@/assets/home/servbento/superchewer2.webp";
-import fr21 from "@/assets/home/servbento/fr2-1.webp";
-import fr22 from "@/assets/home/servbento/fr2-2.webp";
-import row21 from "@/assets/home/servbento/2row-1.webp";
-import row211 from "@/assets/home/servbento/2row-11.webp";
 import lrow1 from "@/assets/home/servbento/lrow-1.webp";
 import lrow11 from "@/assets/home/servbento/lrow-11.webp";
 import bentolast from "@/assets/home/servbento/bentolast.svg";
+
+// Real product images served from backend
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+// Card 3 — Whiskas Tuna & White Fish (1176)
+const card3img = `${API_BASE}/products/1176/1.webp`;
+// Card 4 — Bellotta Shrimp Jelly Pouch (1005)
+const card4img = `${API_BASE}/products/1005/AW_BL37_3D_Bellotta_Tuna_ToppingShrimp_N__Pouch_Front_150D1V7_Revise.webp`;
+// Card 5 — Creamy Treat Bonito Tubes (1011)
+const card5img = `${API_BASE}/products/1011/Frame_344685036_1800x1800.webp`;
+// Card 6 — Crunchy & Tender Chicken Jerky (1018)
+const card6img = `${API_BASE}/products/1018/Gnawlers_23.webp`;
 
 const FeaturedProducts = () => {
   const isMobile = useIsMobile();
@@ -137,10 +144,10 @@ const FeaturedProducts = () => {
                 {/* Images - GROUPED RIGHT */}
                 <div className="absolute right-0 bottom-0 h-full w-[150px] lg:w-[320px] z-0">
                   <div className="absolute left-4 lg:left-20 bottom-0 w-[70px] lg:w-[150px] h-[90px] lg:h-[180px]">
-                    <img src={fr21} alt="" className="w-full h-full object-contain object-bottom" />
+                    <img src={card3img} alt="" className="w-full h-full object-contain object-bottom" />
                   </div>
                   <div className="absolute right-0 top-0 w-[80px] lg:w-[160px] h-full">
-                    <img src={fr22} alt="" className="w-full h-full object-contain object-right-top" />
+                    <img src={card3img} alt="" className="w-full h-full object-contain object-right-top" />
                   </div>
                 </div>
               </div>
@@ -155,9 +162,9 @@ const FeaturedProducts = () => {
               className="grid grid-cols-3 gap-8"
             >
               {[
-                { title: "Adult Cat Dry Food", desc: "Crunchy bites packed with protein for adult cats." },
-                { title: "Puppy Starter Food", desc: "Balanced nutrition to fuel growing puppies daily." },
-                { title: "Chicken Jerky Sticks", desc: "Slow-cooked meaty jerky — perfect training reward." }
+                { title: "Adult Cat Dry Food", desc: "Crunchy bites packed with protein for adult cats.", img: card4img },
+                { title: "Puppy Starter Food", desc: "Balanced nutrition to fuel growing puppies daily.", img: card5img },
+                { title: "Chicken Jerky Sticks", desc: "Slow-cooked meaty jerky — perfect training reward.", img: card6img }
               ].map((item, i) => (
                 <div 
                   key={i} 
@@ -172,11 +179,8 @@ const FeaturedProducts = () => {
                     <ArrowUpRight size={8} className="text-[#fffbf2]" />
                   </div>
                   <div className="absolute right-0 bottom-0 h-full w-[160px] z-0">
-                    <div className="absolute right-0 bottom-0 w-[95px] h-[155px]">
-                      <img src={row211} alt="" className="w-full h-full object-contain object-right-bottom" />
-                    </div>
-                    <div className="absolute right-10 bottom-0 w-[85px] h-[145px]">
-                      <img src={row21} alt="" className="w-full h-full object-contain object-bottom" />
+                    <div className="absolute right-0 bottom-0 w-[155px] h-[155px]">
+                      <img src={item.img} alt="" className="w-full h-full object-contain object-right-bottom" />
                     </div>
                   </div>
                 </div>
@@ -239,15 +243,14 @@ const FeaturedProducts = () => {
             <div ref={mobileGridRef} className="grid grid-cols-2 gap-4">
                {/* 4 Cards: 3 Food + 1 Accessories */}
                {[
-                 { title: "Adult Cat Dry Food", desc: "Crunchy protein bites for cats." },
-                 { title: "Puppy Starter Food", desc: "Balanced nutrition for puppies." },
-                 { title: "Chicken Jerky Sticks", desc: "Meaty jerky training treats." },
-                 { title: "Pet Accessories", desc: "Bowls, collars and more." }
+                 { title: "Adult Cat Dry Food", desc: "Crunchy protein bites for cats.", img: card4img, isAcc: false },
+                 { title: "Puppy Starter Food", desc: "Balanced nutrition for puppies.", img: card5img, isAcc: false },
+                 { title: "Chicken Jerky Sticks", desc: "Meaty jerky training treats.", img: card6img, isAcc: false },
+                 { title: "Pet Accessories", desc: "Bowls, collars and more.", img: null, isAcc: true }
                ].map((item, idx) => {
-                 const i = idx + 1;
                  return (
                  <div 
-                   key={i} 
+                   key={idx} 
                    className="fp-mobile-card w-full h-[230px] bg-white border-2 border-[#c1e8fb] rounded-2xl relative overflow-hidden flex flex-col p-3 opacity-0"
                  >
                    {/* Top Text Related */}
@@ -264,17 +267,16 @@ const FeaturedProducts = () => {
                       </div>
                    </div>
 
-                   {/* Bottom Image Cluster - Moved further Bottom Right */}
+                   {/* Bottom Image Cluster */}
                    <div className="absolute bottom-0 left-0 w-full h-[120px] z-0 flex justify-center items-end bg-[#f8fdff]">
-                     {i === 4 ? (
+                     {item.isAcc ? (
                        <div className="relative w-full h-full">
                           <img src={lrow11} className="w-[70px] h-[60px] object-contain absolute right-2 bottom-0" alt="" />
                           <img src={lrow1} className="w-[80px] h-[55px] object-contain absolute right-12 bottom-0" alt="" />
                        </div>
                      ) : (
-                       <div className="relative w-full h-full">
-                          <img src={row211} className="w-[60px] h-[90px] object-contain absolute right-2 bottom-0" alt="" />
-                          <img src={row21} className="w-[50px] h-[80px] object-contain absolute right-14 bottom-0" alt="" />
+                       <div className="relative w-full h-full flex items-end justify-center">
+                         <img src={item.img!} className="w-[90px] h-[110px] object-contain absolute right-4 bottom-0" alt="" />
                        </div>
                      )}
                    </div>

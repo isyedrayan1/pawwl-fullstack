@@ -41,6 +41,15 @@ model adminauditlog {
   @@index([entityType, entityId], map: "AdminAuditLog_entityType_entityId_idx")
 }
 
+model animaltype {
+  id        String   @id @default(cuid())
+  key       String   @unique(map: "AnimalType_key_key")
+  name      String   @unique(map: "AnimalType_name_key")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  product   product[]
+}
+
 model cartitem {
   id             String         @id @default(cuid())
   userId         String
@@ -57,6 +66,15 @@ model cartitem {
   @@index([productId], map: "CartItem_productId_fkey")
   @@index([userId], map: "CartItem_userId_idx")
   @@index([variantId], map: "CartItem_variantId_fkey")
+}
+
+model productcategory {
+  id        String   @id @default(cuid())
+  key       String   @unique(map: "ProductCategory_key_key")
+  name      String   @unique(map: "ProductCategory_name_key")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  product   product[]
 }
 
 model order {
@@ -131,12 +149,16 @@ model payment {
 
 model product {
   id             String           @id @default(cuid())
+  catalogId      Int?             @unique(map: "Product_catalogId_key")
   name           String
   slug           String           @unique(map: "Product_slug_key")
   description    String?          @db.Text
   category       String           @default("Uncategorized")
   brand          String?
   images         String?          @db.LongText
+  imagePaths     String?          @db.LongText
+  price          Decimal?         @db.Decimal(10, 2)
+  stock          Int              @default(0)
   status         product_status   @default(draft)
   seoTitle       String?
   seoDescription String?          @db.Text
@@ -145,12 +167,21 @@ model product {
   usage          String?          @db.Text
   rating         String?
   reviewCount    Int              @default(0)
+  sourceFolder   String?
+  animalTypeId   String?
+  productCategoryId String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   cartitem       cartitem[]
   orderitem      orderitem[]
   productvariant productvariant[]
   review         review[]
+  animaltype     animaltype?      @relation(fields: [animalTypeId], references: [id], map: "Product_animalTypeId_fkey")
+  productcategory productcategory? @relation(fields: [productCategoryId], references: [id], map: "Product_productCategoryId_fkey")
+
+  @@index([catalogId], map: "Product_catalogId_idx")
+  @@index([animalTypeId], map: "Product_animalTypeId_idx")
+  @@index([productCategoryId], map: "Product_productCategoryId_idx")
 }
 
 model productvariant {
