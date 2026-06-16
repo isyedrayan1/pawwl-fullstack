@@ -71,6 +71,6 @@ if (isProduction) {
 
 app.use(errorHandler);
 
-app.listen(env.port, () => {
-  console.log(`Pawwl API listening on port ${env.port}`);
+app.listen(env.port, "0.0.0.0", () => {
+  console.log(`Pawwl API listening on port ${env.port} (IPv4)`);
 });
