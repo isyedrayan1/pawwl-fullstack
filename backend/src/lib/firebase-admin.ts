@@ -6,11 +6,22 @@ const serviceAccountPath = path.resolve(process.cwd(), '.firebase-service-accoun
 
 let auth: any = null;
 try {
-  initializeApp({
-    credential: cert(serviceAccountPath),
-  });
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    // 1. Enterprise Solution: Parse the JSON string directly from the Environment Variable
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    initializeApp({
+      credential: cert(serviceAccount),
+    });
+    console.log('[auth] Firebase Admin initialized via Environment Variable');
+  } else {
+    // 2. Local Fallback: Look for the file on your local machine
+    initializeApp({
+      credential: cert(serviceAccountPath),
+    });
+    console.log('[auth] Firebase Admin initialized via local JSON file');
+  }
+  
   auth = getAuth();
-  console.log('[auth] Firebase Admin initialized successfully');
 } catch (error: any) {
   console.error('[auth] Failed to initialize Firebase Admin. Auth will be disabled.', error.message);
 }
