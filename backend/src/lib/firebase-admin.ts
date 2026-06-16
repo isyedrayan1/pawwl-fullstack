@@ -2,7 +2,12 @@ import { initializeApp, cert } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import path from 'path';
 
-const serviceAccountPath = path.resolve(process.cwd(), '.firebase-service-account.json');
+import fs from 'fs';
+
+let serviceAccountPath = path.resolve(process.cwd(), '.firebase-service-account.json');
+if (!fs.existsSync(serviceAccountPath)) {
+  serviceAccountPath = path.resolve(process.cwd(), 'backend', '.firebase-service-account.json');
+}
 
 let auth: any = null;
 try {
