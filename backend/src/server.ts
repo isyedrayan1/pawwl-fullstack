@@ -71,6 +71,7 @@ if (isProduction) {
 
 app.use(errorHandler);
 
-app.listen(env.port, () => {
-  console.log(`Pawwl API listening on port ${env.port}`);
+const port: any = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log(`Pawwl API listening on ${port} (raw PORT env: "${process.env.PORT}")`);
 });
