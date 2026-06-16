@@ -11,17 +11,17 @@ import superchewer2 from "@/assets/home/servbento/superchewer2.webp";
 import lrow1 from "@/assets/home/servbento/lrow-1.webp";
 import lrow11 from "@/assets/home/servbento/lrow-11.webp";
 import bentolast from "@/assets/home/servbento/bentolast.svg";
+import card3img from "@/assets/home/servbento/card3_product.webp";
+import card4img from "@/assets/home/servbento/card4_product.webp";
+import card5img from "@/assets/home/servbento/card5_product.webp";
+import card6img from "@/assets/home/servbento/card6_product.webp";
 
 // Real product images served from backend
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
-// Card 3 — Whiskas Tuna & White Fish (1176)
-const card3img = `${API_BASE}/products/1176/1.webp`;
-// Card 4 — Bellotta Shrimp Jelly Pouch (1005)
-const card4img = `${API_BASE}/products/1005/AW_BL37_3D_Bellotta_Tuna_ToppingShrimp_N__Pouch_Front_150D1V7_Revise.webp`;
-// Card 5 — Creamy Treat Bonito Tubes (1011)
-const card5img = `${API_BASE}/products/1011/Frame_344685036_1800x1800.webp`;
-// Card 6 — Crunchy & Tender Chicken Jerky (1018)
-const card6img = `${API_BASE}/products/1018/Gnawlers_23.webp`;
+// Card 3 local import
+// Card 4 local import
+// Card 5 local import
+// Card 6 local import
 
 const FeaturedProducts = () => {
   const isMobile = useIsMobile();
