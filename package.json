@@ -22,7 +22,7 @@
     "prisma:deploy": "prisma migrate deploy --schema backend/prisma/schema.prisma",
     "seed": "tsx backend/prisma/seed.ts",
     "import:products": "tsx backend/prisma/import-products.ts",
-    "postinstall": "npm run build"
+    "postinstall": "npm install --prefix frontend && npm install --prefix backend && npm run build"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
