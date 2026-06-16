@@ -71,16 +71,7 @@ if (isProduction) {
 
 app.use(errorHandler);
 
-// Hostinger uses Phusion Passenger which handles port binding internally.
-// We must NOT call app.listen() in production — just export the app.
-// For local development, we call app.listen() normally.
-if (!isProduction) {
-  const devPort = Number(process.env.PORT) || 4000;
-  app.listen(devPort, () => {
-    console.log(`Pawwl API listening on port ${devPort} (dev mode)`);
-  });
-} else {
-  console.log("[server] Production mode — Express app exported for Passenger");
-}
-
-export default app;
+const port = Number(process.env.PORT) || 4000;
+app.listen(port, () => {
+  console.log(`Pawwl API listening on port ${port}`);
+});
