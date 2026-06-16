@@ -21,9 +21,20 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
+# User Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
 
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# OS generated files
+Thumbs.db# Backup Images
+*-old.webp
 # Environment Variables
 .env
 backend/.env
