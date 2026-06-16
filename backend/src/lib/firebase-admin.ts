@@ -8,17 +8,14 @@ const serviceAccountPath = path.resolve(process.cwd(), '.firebase-service-accoun
 
 let auth: any = null;
 try {
-  if (env.firebaseProjectId && env.firebaseClientEmail && env.firebasePrivateKey) {
-    // 1. Production Mode: Construct the credential from 3 safe Environment Variables
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    // 1. Production Mode: Decode the safe Base64 string back into JSON
+    const jsonString = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8');
+    const serviceAccount = JSON.parse(jsonString);
     initializeApp({
-      credential: cert({
-        projectId: env.firebaseProjectId,
-        clientEmail: env.firebaseClientEmail,
-        // The private key might have literal '\n' characters from the env variable, so we convert them to actual newlines
-        privateKey: env.firebasePrivateKey.replace(/\\n/g, '\n'),
-      }),
+      credential: cert(serviceAccount),
     });
-    console.log('[auth] Firebase Admin initialized via 3 Safe Environment Variables');
+    console.log('[auth] Firebase Admin initialized via Safe Base64 Environment Variable');
   } else {
     // 2. Local Development Mode: Use the file on disk
     initializeApp({
