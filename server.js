@@ -1,4 +1,5 @@
-// Hostinger Entry Point
-// Hostinger requires a server.js file at the root to start the app.
-// This simply redirects to the compiled backend server.
-import './backend/dist/src/server.js';
+// Hostinger Entry Point (Phusion Passenger)
+// Passenger requires the entry file to export the Express app.
+// It handles port binding and process management internally.
+import app from './backend/dist/src/server.js';
+export default app;
