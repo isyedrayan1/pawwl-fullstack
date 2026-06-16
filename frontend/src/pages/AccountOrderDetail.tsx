@@ -217,7 +217,7 @@ const AccountOrderDetail = () => {
                 variant="outline"
                 className="mt-4 w-full sm:w-auto"
                 onClick={() => {
-                  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+                  const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000");
                   window.open(`${API_BASE}/api/orders/${order.id}/invoice`, "_blank");
                 }}
               >

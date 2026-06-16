@@ -162,7 +162,7 @@ const AdminProducts = () => {
 
     setForm((prev) => ({ ...prev, isUploading: true }));
     try {
-      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+      const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000");
       const response = await fetch(`${API_BASE}/api/admin/upload`, {
         method: "POST",
         body: formData,
@@ -266,7 +266,7 @@ const AdminProducts = () => {
             formData.append("file", file);
             const toastId = toast.loading("Importing products...");
             try {
-              const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+              const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000");
               const res = await fetch(`${API_BASE}/api/admin/import/products`, {
                 method: "POST",
                 body: formData,

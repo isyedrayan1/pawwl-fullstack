@@ -17,7 +17,7 @@ import card5img from "@/assets/home/servbento/card5_product.webp";
 import card6img from "@/assets/home/servbento/card6_product.webp";
 
 // Real product images served from backend
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000");
 // Card 3 local import
 // Card 4 local import
 // Card 5 local import

@@ -171,7 +171,7 @@ const AdminOrders = () => {
                       size="sm"
                       className="rounded-full text-xs h-7 border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 text-slate-700"
                       onClick={() => {
-                        const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+                        const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://localhost:4000");
                         window.open(`${API_BASE}/api/orders/${order.id}/invoice`, '_blank');
                       }}
                     >
