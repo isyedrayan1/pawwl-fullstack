@@ -18,11 +18,13 @@ const possiblePaths = [
 
 let serviceAccountPath = possiblePaths[0];
 for (const p of possiblePaths) {
+  console.log(`[auth] Checking path: ${p} → exists: ${fs.existsSync(p)}`);
   if (fs.existsSync(p)) {
     serviceAccountPath = p;
     break;
   }
 }
+console.log(`[auth] Using Firebase credentials from: ${serviceAccountPath}`);
 
 let auth: any = null;
 try {

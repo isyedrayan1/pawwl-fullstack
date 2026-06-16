@@ -39,7 +39,6 @@ Thumbs.db# Backup Images
 .env
 backend/.env
 frontend/.env
-.firebase-service-account.json
 
 # Temporary Agent Scripts
 *.mjs
