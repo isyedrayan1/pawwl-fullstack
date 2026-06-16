@@ -6,7 +6,7 @@ dotenv.config();
 
 export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
-  port: process.env.PORT || 4000,
+  port: Number(process.env.PORT) || 4000,
   databaseUrl: process.env.DATABASE_URL!,
   sessionCookieName: process.env.SESSION_COOKIE_NAME ?? "pawwl_session",
   sessionSecret: process.env.SESSION_SECRET ?? "dev-session-secret-change-me",

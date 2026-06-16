@@ -71,14 +71,6 @@ if (isProduction) {
 
 app.use(errorHandler);
 
-if (typeof env.port === "string" && isNaN(Number(env.port))) {
-  // It's a Unix socket path from Hostinger Passenger
-  app.listen(env.port, () => {
-    console.log(`Pawwl API listening on socket ${env.port}`);
-  });
-} else {
-  // It's a normal port number
-  app.listen(Number(env.port), "0.0.0.0", () => {
-    console.log(`Pawwl API listening on port ${env.port} (IPv4)`);
-  });
-}
+app.listen(env.port, "0.0.0.0", () => {
+  console.log(`Pawwl API listening on port ${env.port}`);
+});
