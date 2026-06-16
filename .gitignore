@@ -40,3 +40,7 @@ Thumbs.db# Backup Images
 backend/.env
 frontend/.env
 .firebase-service-account.json
+
+# Temporary Agent Scripts
+*.mjs
+git_files.txt
