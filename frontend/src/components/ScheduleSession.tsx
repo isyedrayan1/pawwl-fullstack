@@ -17,13 +17,65 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { apiRequest } from "@/lib/api";
 import formImg from "@/assets/formimg.webp";
 
 const ScheduleSession = () => {
   const [date, setDate] = React.useState<Date>();
+  const [name, setName] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [petName, setPetName] = React.useState("");
+  const [petType, setPetType] = React.useState("");
+  const [gender, setGender] = React.useState("");
+  const [age, setAge] = React.useState("");
+  const [service, setService] = React.useState("");
+  const [timeSlot, setTimeSlot] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   const headerRef = useReveal({ y: 40 });
   const imgRef = useReveal({ x: -40, y: 0 });
   const formRef = useReveal({ x: 40, y: 0 });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone || !service || !date || !timeSlot) {
+      toast.error("Please fill in all required fields (Name, Phone, Service, Date, Time).");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await apiRequest("/api/leads/services", {
+        method: "POST",
+        body: JSON.stringify({
+          name,
+          phone,
+          petName,
+          petType,
+          gender,
+          age,
+          service,
+          date: date.toISOString(),
+          timeSlot,
+        }),
+      });
+      toast.success("Booking request sent! We will contact you shortly to confirm.");
+      setName("");
+      setPhone("");
+      setPetName("");
+      setPetType("");
+      setGender("");
+      setAge("");
+      setService("");
+      setTimeSlot("");
+      setDate(undefined);
+    } catch (err: any) {
+      toast.error(err.message || "Could not submit booking request.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="py-24 bg-white overflow-hidden">
@@ -69,40 +121,37 @@ const ScheduleSession = () => {
                 </p>
               </div>
 
-              <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+              <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-4">
                   {/* Row 1: Your Name & Contact */}
                   <div className="flex flex-col sm:flex-row items-center gap-4 self-stretch">
                     <div className="flex-1 w-full flex flex-col gap-1.5 focus-within:text-brand-blue transition-colors">
-                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Your Name</label>
+                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Your Name *</label>
                       <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm">
-                        <input type="text" placeholder="Ex: John Doe" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: John Doe" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" required />
                       </div>
                     </div>
                     <div className="flex-1 w-full flex flex-col gap-1.5 focus-within:text-brand-blue transition-colors">
-                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Contact Info</label>
+                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Contact Info *</label>
                       <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm">
                         <span className="font-bold text-sm text-brand-blue">+91</span>
-                        <input type="tel" placeholder="XXXXX XXXXX" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
+                        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="XXXXX XXXXX" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" required />
                       </div>
                     </div>
                   </div>
-
-                  {/* Row Removed - Email field deleted */}
 
                   {/* Row 3: Pet Name & Type */}
                   <div className="flex flex-col sm:flex-row items-center gap-4 self-stretch">
                     <div className="flex-1 w-full flex flex-col gap-1.5 focus-within:text-brand-blue transition-colors">
                       <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Pet Name</label>
                       <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm">
-                        <input type="text" placeholder="Rocky" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
+                        <input type="text" value={petName} onChange={(e) => setPetName(e.target.value)} placeholder="Rocky" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
                       </div>
                     </div>
                     <div className="flex-1 w-full flex flex-col gap-1.5 ">
                       <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Pet Type & Breed</label>
                       <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm focus-within:text-brand-blue">
-                        <input type="text" placeholder="Cat (Persian)" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
-                        <ChevronDown size={14} className="text-[#939598] transition-colors" />
+                        <input type="text" value={petType} onChange={(e) => setPetType(e.target.value)} placeholder="Cat (Persian)" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
                       </div>
                     </div>
                   </div>
@@ -111,7 +160,7 @@ const ScheduleSession = () => {
                   <div className="flex flex-col sm:flex-row items-center gap-4 self-stretch">
                     <div className="flex-1 w-full flex flex-col gap-1.5">
                       <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Pet Gender</label>
-                      <Select>
+                      <Select value={gender} onValueChange={setGender}>
                         <SelectTrigger className="w-full bg-white px-4 py-3 h-auto rounded-xl border border-solid border-[#f0f0f0] focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/20 transition-all shadow-sm text-sm font-medium text-[#555555]">
                           <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
@@ -124,17 +173,17 @@ const ScheduleSession = () => {
                     <div className="flex-1 w-full flex flex-col gap-1.5 focus-within:text-brand-blue transition-colors">
                       <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Pet Age</label>
                       <div className="flex items-center gap-2 self-stretch bg-white px-4 py-3 rounded-xl border border-solid border-[#f0f0f0] focus-within:border-brand-blue focus-within:ring-1 focus-within:ring-brand-blue/20 transition-all shadow-sm">
-                        <input type="text" placeholder="23 Months" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
+                        <input type="text" value={age} onChange={(e) => setAge(e.target.value)} placeholder="23 Months" className="w-full font-medium text-sm text-[#555555] focus:outline-none placeholder:text-gray-300" />
                       </div>
                     </div>
                   </div>
 
                   {/* Row 5: Select Service */}
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Select Service</label>
-                    <Select>
+                    <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Select Service *</label>
+                    <Select value={service} onValueChange={setService} required>
                       <SelectTrigger className="w-full bg-white px-4 py-3 h-auto rounded-xl border border-solid border-[#f0f0f0] focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/20 transition-all shadow-sm text-sm font-medium text-[#555555]">
-                        <SelectValue placeholder="Super Body Grooming + Vaccination" />
+                        <SelectValue placeholder="Select a service" />
                       </SelectTrigger>
                       <SelectContent className="rounded-xl border-[#c1e8fb] shadow-xl">
                         <SelectItem value="grooming" className="rounded-lg text-sm">Full Body Grooming + Vaccination</SelectItem>
@@ -147,7 +196,7 @@ const ScheduleSession = () => {
                   {/* Row 6: Date & Time */}
                   <div className="flex flex-col sm:flex-row items-center gap-4 self-stretch">
                     <div className="flex-1 w-full flex flex-col gap-1.5">
-                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Desired Date</label>
+                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Desired Date *</label>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -157,7 +206,7 @@ const ScheduleSession = () => {
                               !date && "text-muted-foreground"
                             )}
                           >
-                            {date ? format(date, "PPP") : <span>01 - March - 2026</span>}
+                            {date ? format(date, "PPP") : <span>Select Date</span>}
                             <CalendarIcon className="h-4 w-4 text-[#939598]" />
                           </Button>
                         </PopoverTrigger>
@@ -173,15 +222,15 @@ const ScheduleSession = () => {
                       </Popover>
                     </div>
                     <div className="flex-1 w-full flex flex-col gap-1.5">
-                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Time Slot</label>
-                      <Select>
+                      <label className="font-semibold text-xs text-[#939598] uppercase tracking-wider ml-1">Time Slot *</label>
+                      <Select value={timeSlot} onValueChange={setTimeSlot} required>
                         <SelectTrigger className="w-full bg-white px-4 py-3 h-auto rounded-xl border border-solid border-[#f0f0f0] focus:border-brand-blue focus:ring-1 focus:ring-brand-blue/20 transition-all shadow-sm text-sm font-medium text-[#555555]">
-                          <SelectValue placeholder="13:00 to 13:30" />
+                          <SelectValue placeholder="Select Time" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl border-[#c1e8fb] shadow-xl">
-                          <SelectItem value="1" className="rounded-lg">10:00 - 10:30</SelectItem>
-                          <SelectItem value="2" className="rounded-lg">13:00 - 13:30</SelectItem>
-                          <SelectItem value="3" className="rounded-lg">16:00 - 16:30</SelectItem>
+                          <SelectItem value="10:00 - 10:30" className="rounded-lg">10:00 - 10:30</SelectItem>
+                          <SelectItem value="13:00 - 13:30" className="rounded-lg">13:00 - 13:30</SelectItem>
+                          <SelectItem value="16:00 - 16:30" className="rounded-lg">16:00 - 16:30</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -193,8 +242,8 @@ const ScheduleSession = () => {
                   <span className="font-medium text-[11px] text-[#666666] opacity-70 italic">
                     *Rescheduling? Please inform us a minimum of 2 hours in advance.
                   </span>
-                  <Button className="w-full bg-[#134e86] hover:bg-brand-dark text-white px-5 py-7 rounded-2xl font-bold text-[15px] shadow-lg hover:shadow-brand-blue/20 transition-all active:scale-[0.98]">
-                    Schedule Booking
+                  <Button disabled={isSubmitting} type="submit" className="w-full bg-[#134e86] hover:bg-brand-dark text-white px-5 py-7 rounded-2xl font-bold text-[15px] shadow-lg hover:shadow-brand-blue/20 transition-all active:scale-[0.98]">
+                    {isSubmitting ? "Sending Request..." : "Schedule Booking"}
                   </Button>
                 </div>
               </form>

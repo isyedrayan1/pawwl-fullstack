@@ -6,9 +6,16 @@ export type ApiUser = {
   username?: string | null;
   email: string;
   phone?: string | null;
-  role: "customer" | "admin";
+  role: "customer" | "admin" | "marketing" | "fulfillment";
   status: "active" | "disabled";
   createdAt?: string;
+};
+
+export type ApiAdminRole = {
+  id: string;
+  name: string;
+  permissions: string;
+  _count?: { users: number };
 };
 
 export type ApiAdminUser = ApiUser & {
@@ -16,6 +23,8 @@ export type ApiAdminUser = ApiUser & {
   orderCount?: number;
   addressCount?: number;
   sessionCount?: number;
+  adminRoleId?: string | null;
+  adminRole?: ApiAdminRole | null;
 };
 
 export type ApiVariant = {
@@ -166,6 +175,7 @@ export type ApiAdminSummary = {
   recentUsers: ApiAdminUser[];
   lowStockVariants: ApiLowStockVariant[];
   recentAuditLogs: ApiAuditLog[];
+  revenueTrend: { date: string; revenue: number }[];
 };
 
 export type ApiCoupon = {
@@ -175,6 +185,9 @@ export type ApiCoupon = {
   type: "percentage" | "fixed";
   minCartAmt?: string | number | null;
   maxDiscount?: string | number | null;
+  usageLimit?: number | null;
+  usedCount?: number;
+  order?: any[];
   expiresAt: string;
   isActive: boolean;
   createdAt: string;

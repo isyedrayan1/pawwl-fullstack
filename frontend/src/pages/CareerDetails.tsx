@@ -1,12 +1,51 @@
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ChevronRight, ArrowLeft, Briefcase, MapPin, CheckCircle2, Clock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { apiRequest } from "@/lib/api";
 
 import SEO from "@/components/SEO";
 
 const CareerDetails = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [coverLetter, setCoverLetter] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !email || !phone) return toast.error("Please fill in required fields.");
+
+    setIsSubmitting(true);
+    try {
+      await apiRequest("/api/leads/careers", {
+        method: "POST",
+        body: JSON.stringify({
+          jobTitle: "Senior Veterinarian",
+          jobId: "sen-vet-001",
+          name,
+          email,
+          phone,
+          coverLetter,
+        }),
+      });
+      toast.success("Application submitted successfully! We will be in touch.");
+      setIsModalOpen(false);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setCoverLetter("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to submit application.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-white">
       <SEO 
@@ -93,7 +132,10 @@ const CareerDetails = () => {
                    <p className="text-[#555555] text-sm">Join our mission to bring joy to dogs and their humans.</p>
                  </div>
                  
-                 <Button className="w-full bg-[#0071f3] hover:bg-[#005bb5] text-white py-6 rounded-xl font-bold text-lg shadow-lg hover:-translate-y-0.5 transition-transform">
+                 <Button 
+                   onClick={() => setIsModalOpen(true)}
+                   className="w-full bg-[#0071f3] hover:bg-[#005bb5] text-white py-6 rounded-xl font-bold text-lg shadow-lg hover:-translate-y-0.5 transition-transform"
+                 >
                     Apply Now
                  </Button>
 
@@ -109,6 +151,75 @@ const CareerDetails = () => {
           </div>
         </div>
       </section>
+
+      {/* Application Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl">
+            <h3 className="text-2xl font-bold text-[#012169] mb-6">Apply for Senior Veterinarian</h3>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-[#555]">Full Name *</label>
+                <input 
+                  type="text" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  required 
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#0071f3] outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-[#555]">Email Address *</label>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  required 
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#0071f3] outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-[#555]">Phone Number *</label>
+                <input 
+                  type="tel" 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} 
+                  required 
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#0071f3] outline-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-[#555]">Cover Letter / Notes</label>
+                <textarea 
+                  rows={4}
+                  value={coverLetter} 
+                  onChange={(e) => setCoverLetter(e.target.value)} 
+                  className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#0071f3] outline-none resize-none"
+                  placeholder="Tell us why you're a great fit..."
+                ></textarea>
+              </div>
+              <div className="flex gap-4 mt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => setIsModalOpen(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="flex-1 bg-[#0071f3] text-white"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

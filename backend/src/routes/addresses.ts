@@ -8,7 +8,7 @@ import { requireAuth } from "../middleware/auth.js";
 
 const router = Router();
 
-const normalizeAddressLabel = (label?: string | null) => (label === "work" ? "work" : "home");
+
 
 const resolvePostalCode = async (postalCode: string) => {
   const pin = postalCode.trim();
@@ -36,7 +36,7 @@ const resolvePostalCode = async (postalCode: string) => {
 };
 
 const addressSchema = z.object({
-  label: z.enum(["home", "work"]).default("home"),
+  label: z.string().default("home"),
   fullName: z.string().min(2),
   phone: z.string().min(8),
   line1: z.string().min(3),
@@ -86,7 +86,7 @@ router.post(
     }
 
     const address = await prisma.address.create({
-      data: { id: createId(), ...input, state, label: normalizeAddressLabel(input.label), userId: req.user!.id },
+      data: { id: createId(), ...input, state, label: input.label, userId: req.user!.id },
     });
     res.status(201).json({ address });
   }),
@@ -123,7 +123,7 @@ router.patch(
       data: {
         ...input,
         ...(nextState ? { state: nextState } : {}),
-        ...(input.label ? { label: normalizeAddressLabel(input.label) } : {}),
+        ...(input.label ? { label: input.label } : {}),
       },
     });
     res.json({ address });

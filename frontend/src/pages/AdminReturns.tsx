@@ -27,6 +27,7 @@ const AdminReturns = () => {
       toast.success("Return status updated");
       queryClient.invalidateQueries({ queryKey: ["admin-returns"] });
       queryClient.invalidateQueries({ queryKey: ["admin-summary"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
     },
     onError: (mutationError) => toast.error(mutationError instanceof Error ? mutationError.message : "Update failed"),
   });
@@ -111,7 +112,7 @@ const AdminReturns = () => {
                         <Button
                           type="button"
                           variant="outline"
-                          className="rounded-full border-slate-200 text-xs font-semibold hover:bg-slate-50 flex items-center gap-1 bg-white text-slate-700"
+                          className="rounded-full border-slate-200 text-xs font-semibold hover:bg-slate-50 hover:text-slate-900 flex items-center gap-1 bg-white text-slate-700"
                           disabled={updateStatus.isPending}
                           onClick={() => updateStatus.mutate({ id: req.id, status: "approved" })}
                         >
@@ -121,7 +122,7 @@ const AdminReturns = () => {
                         <Button
                           type="button"
                           variant="outline"
-                          className="rounded-full border-slate-200 text-xs font-semibold hover:bg-slate-50 flex items-center gap-1 bg-white text-rose-600"
+                          className="rounded-full border-slate-200 text-xs font-semibold hover:bg-slate-50 hover:text-slate-900 flex items-center gap-1 bg-white text-rose-600"
                           disabled={updateStatus.isPending}
                           onClick={() => updateStatus.mutate({ id: req.id, status: "rejected" })}
                         >

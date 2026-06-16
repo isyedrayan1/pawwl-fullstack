@@ -82,6 +82,9 @@ model order {
   orderNumber       String                  @unique(map: "Order_orderNumber_key")
   userId            String
   addressSnapshot   String                  @db.LongText
+  shippingAddress   String?                 @db.LongText
+  billingAddress    String?                 @db.LongText
+  isBillingSame     Boolean                 @default(true)
   subtotal          Decimal                 @db.Decimal(10, 2)
   deliveryFee       Decimal                 @default(0.00) @db.Decimal(10, 2)
   total             Decimal                 @db.Decimal(10, 2)
@@ -94,6 +97,7 @@ model order {
   trackingNumber    String?
   trackingUrl       String?
   couponCode        String?
+  couponId          String?
   discount          Decimal                 @default(0.00) @db.Decimal(10, 2)
   taxableValue      Decimal                 @default(0.00) @db.Decimal(10, 2)
   cgst              Decimal                 @default(0.00) @db.Decimal(10, 2)
@@ -103,6 +107,7 @@ model order {
   orderitem         orderitem[]
   payment           payment[]
   returnrequest     returnrequest[]
+  coupon            coupon?                 @relation(fields: [couponId], references: [id])
 
   @@index([fulfillmentStatus], map: "Order_fulfillmentStatus_idx")
   @@index([paymentStatus], map: "Order_paymentStatus_idx")
@@ -158,6 +163,9 @@ model product {
   images         String?          @db.LongText
   imagePaths     String?          @db.LongText
   price          Decimal?         @db.Decimal(10, 2)
+  costPrice      Decimal?         @db.Decimal(10, 2)
+  weight         Decimal?         @db.Decimal(10, 2)
+  dimensions     String?
   stock          Int              @default(0)
   status         product_status   @default(draft)
   seoTitle       String?
@@ -222,6 +230,7 @@ model user {
   email         String          @unique(map: "User_email_key")
   passwordHash  String
   role          user_role       @default(customer)
+  adminRoleId   String?
   status        user_status     @default(active)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -233,6 +242,18 @@ model user {
   order         order[]
   session       session[]
   review        review[]
+  adminRole     adminrole?      @relation(fields: [adminRoleId], references: [id])
+
+  @@index([adminRoleId], map: "User_adminRoleId_fkey")
+}
+
+model adminrole {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  permissions String   @db.LongText
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       user[]
 }
 
 enum payment_status {
@@ -245,6 +266,8 @@ enum payment_status {
 enum user_role {
   customer
   admin
+  fulfillment
+  marketing
 }
 
 enum user_status {
@@ -298,8 +321,11 @@ model coupon {
   maxDiscount Decimal? @db.Decimal(10, 2)
   expiresAt   DateTime
   isActive    Boolean  @default(true)
+  usageLimit  Int?
+  usedCount   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  order       order[]
 }
 
 model returnrequest {
@@ -319,4 +345,41 @@ enum return_status {
   approved
   rejected
   completed
+}
+
+model servicelead {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  petName   String?
+  petType   String?
+  gender    String?
+  age       String?
+  service   String
+  date      DateTime
+  timeSlot  String
+  status    lead_status @default(pending)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model jobapplication {
+  id        String   @id @default(cuid())
+  jobId     String?
+  jobTitle  String
+  name      String
+  email     String
+  phone     String
+  coverLetter String? @db.Text
+  resumeUrl String?
+  status    lead_status @default(pending)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum lead_status {
+  pending
+  contacted
+  resolved
+  rejected
 }

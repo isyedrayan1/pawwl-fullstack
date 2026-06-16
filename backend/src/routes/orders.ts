@@ -14,6 +14,8 @@ const createOrderSchema = z.object({
   addressId: z.string().min(1),
   notes: z.string().optional(),
   couponCode: z.string().optional(),
+  isBillingSame: z.boolean().optional(),
+  billingAddressId: z.string().optional(),
 });
 
 const buyNowOrderSchema = createOrderSchema.extend({
@@ -52,7 +54,14 @@ router.post(
   "/",
   asyncHandler(async (req, res) => {
     const input = createOrderSchema.parse(req.body);
-    const order = await createOrderFromCart(req.user!.id, input.addressId, input.notes, input.couponCode);
+    const order = await createOrderFromCart(
+      req.user!.id,
+      input.addressId,
+      input.notes,
+      input.couponCode,
+      input.isBillingSame,
+      input.billingAddressId
+    );
     res.status(201).json({ order });
   }),
 );
@@ -407,6 +416,68 @@ router.get(
     };
     res.json({ order: normalized });
   }),
+);
+
+router.post(
+  "/:id/reviews",
+  asyncHandler(async (req, res) => {
+    const orderId = String(req.params.id);
+    const { productId, rating, title, comment } = req.body;
+
+    if (!productId || typeof rating !== "number" || rating < 1 || rating > 5) {
+      throw new HttpError(400, "Invalid review data");
+    }
+
+    const order = await prisma.order.findFirst({
+      where: { id: orderId, userId: req.user!.id },
+      include: { orderitem: true },
+    });
+
+    if (!order) throw new HttpError(404, "Order not found");
+    if (order.fulfillmentStatus !== "delivered") {
+      throw new HttpError(400, "You can only review products from delivered orders");
+    }
+
+    const hasProduct = order.orderitem.some((item) => item.productId === productId);
+    if (!hasProduct) {
+      throw new HttpError(400, "Product not found in this order");
+    }
+
+    // Check if review already exists
+    const existingReview = await prisma.review.findFirst({
+      where: { userId: req.user!.id, productId: productId }
+    });
+
+    if (existingReview) {
+      throw new HttpError(400, "You have already reviewed this product");
+    }
+
+    const review = await prisma.review.create({
+      data: {
+        productId,
+        userId: req.user!.id,
+        rating,
+        title,
+        comment,
+      },
+    });
+
+    // Update product review count and rating
+    const allReviews = await prisma.review.findMany({
+      where: { productId },
+    });
+    const avgRating = allReviews.reduce((acc, r) => acc + r.rating, 0) / allReviews.length;
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        rating: avgRating.toFixed(1),
+        reviewCount: allReviews.length,
+      },
+    });
+
+    res.status(201).json({ review });
+  })
 );
 
 export default router;

@@ -13,7 +13,12 @@ export const env = {
   frontendOrigin: process.env.FRONTEND_ORIGIN ?? "http://localhost:8080",
   resendApiKey: process.env.RESEND_API_KEY,
   resendFromEmail: process.env.RESEND_FROM_EMAIL,
+  gmailAppPassword: process.env.GMAIL_APP_PASSWORD,
+  gmailUser: process.env.GMAIL_USER,
   resetPasswordTtlMinutes: Number(process.env.RESET_PASSWORD_TTL_MINUTES ?? 20),
+  razorpayKeyId: process.env.RAZORPAY_KEY_ID,
+  razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET,
+  razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET,
 };
 
 export const isProduction = env.nodeEnv === "production";

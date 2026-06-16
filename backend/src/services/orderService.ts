@@ -8,10 +8,12 @@ export const createOrderFromCart = async (
   userId: string,
   addressId: string,
   notes?: string,
-  couponCode?: string
+  couponCode?: string,
+  isBillingSame: boolean = true,
+  billingAddressId?: string
 ) => {
   return prisma.$transaction(async (tx) => {
-    const [items, address] = await Promise.all([
+    const [items, address, billingAddress] = await Promise.all([
       tx.cartitem.findMany({
         where: { userId },
         include: {
@@ -21,9 +23,14 @@ export const createOrderFromCart = async (
         orderBy: { createdAt: "asc" },
       }),
       tx.address.findFirst({ where: { id: addressId, userId } }),
+      billingAddressId && !isBillingSame 
+        ? tx.address.findFirst({ where: { id: billingAddressId, userId } })
+        : Promise.resolve(null),
     ]);
 
-    if (!address) throw new HttpError(404, "Address not found");
+    if (!address) throw new HttpError(404, "Shipping address not found");
+    const resolvedBillingAddress = isBillingSame ? address : (billingAddress ?? address);
+    if (!resolvedBillingAddress) throw new HttpError(404, "Billing address not found");
     if (items.length === 0) throw new HttpError(400, "Cart is empty");
 
     const issues: string[] = [];
@@ -46,9 +53,9 @@ export const createOrderFromCart = async (
 
     if (issues.length > 0) throw new HttpError(400, issues.join("; "));
 
-    // 1. Coupon Discount Calculation
     let discountValue = 0;
     let validatedCouponCode: string | null = null;
+    let validatedCouponId: string | null = null;
 
     if (couponCode) {
       const coupon = await tx.coupon.findFirst({
@@ -61,8 +68,11 @@ export const createOrderFromCart = async (
 
       if (coupon) {
         const minCartAmt = Number(coupon.minCartAmt ?? 0);
-        if (subtotalValue >= minCartAmt) {
+        const limitReached = coupon.usageLimit != null && coupon.usedCount >= coupon.usageLimit;
+        
+        if (subtotalValue >= minCartAmt && !limitReached) {
           validatedCouponCode = coupon.code;
+          validatedCouponId = coupon.id;
           if (coupon.type === "percentage") {
             const calculatedDiscount = subtotalValue * (Number(coupon.discount) / 100);
             const maxD = coupon.maxDiscount ? Number(coupon.maxDiscount) : calculatedDiscount;
@@ -116,11 +126,15 @@ export const createOrderFromCart = async (
           postalCode: address.postalCode,
           country: address.country,
         }),
+        shippingAddress: JSON.stringify(address),
+        billingAddress: JSON.stringify(resolvedBillingAddress),
+        isBillingSame,
         subtotal,
         discount,
         deliveryFee,
         total,
         couponCode: validatedCouponCode,
+        couponId: validatedCouponId,
         taxableValue: new Prisma.Decimal(taxableValueNum),
         cgst: new Prisma.Decimal(cgstNum),
         sgst: new Prisma.Decimal(sgstNum),
@@ -156,7 +170,6 @@ export const createOrderFromCart = async (
       include: { orderitem: true, payment: true },
     });
 
-    await tx.cartitem.deleteMany({ where: { userId } });
     return order;
   });
 };

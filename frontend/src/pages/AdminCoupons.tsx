@@ -16,6 +16,7 @@ type CouponFormState = {
   type: "percentage" | "fixed";
   minCartAmt: string;
   maxDiscount: string;
+  usageLimit: string;
   expiresAt: string;
   isActive: boolean;
 };
@@ -26,6 +27,7 @@ const emptyForm = (): CouponFormState => ({
   type: "percentage",
   minCartAmt: "",
   maxDiscount: "",
+  usageLimit: "",
   expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
   isActive: true,
 });
@@ -64,6 +66,7 @@ const AdminCoupons = () => {
       type: coupon.type,
       minCartAmt: coupon.minCartAmt == null ? "" : String(coupon.minCartAmt),
       maxDiscount: coupon.maxDiscount == null ? "" : String(coupon.maxDiscount),
+      usageLimit: coupon.usageLimit == null ? "" : String(coupon.usageLimit),
       expiresAt: new Date(coupon.expiresAt).toISOString().split('T')[0],
       isActive: coupon.isActive,
     });
@@ -79,6 +82,7 @@ const AdminCoupons = () => {
           type: form.type,
           minCartAmt: form.minCartAmt === "" ? null : Number(form.minCartAmt),
           maxDiscount: form.maxDiscount === "" ? null : Number(form.maxDiscount),
+          usageLimit: form.usageLimit === "" ? null : Number(form.usageLimit),
           expiresAt: new Date(form.expiresAt).toISOString(),
           isActive: form.isActive,
         }),
@@ -125,14 +129,15 @@ const AdminCoupons = () => {
     <AdminShell
       title="Coupons & Promotions"
       description="Create discount promo codes, active duration dates, min spends, and custom limits."
-      actions={
+    >
+      {error && <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Admin login required.</div>}
+
+      <div className="mb-6">
         <Button className="rounded-full bg-slate-950 text-white hover:bg-slate-800" onClick={() => { resetForm(); setIsDialogOpen(true); }}>
           <Plus size={16} />
           New coupon
         </Button>
-      }
-    >
-      {error && <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Admin login required.</div>}
+      </div>
 
       <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="relative">
@@ -192,6 +197,13 @@ const AdminCoupons = () => {
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Expiration Date</label>
                 <Input type="date" value={form.expiresAt} onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} required />
+              </div>
+            </div>
+
+            <div className="grid gap-3 grid-cols-2">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Usage Limit (Optional)</label>
+                <Input placeholder="e.g. 100" type="number" value={form.usageLimit} onChange={(e) => setForm({ ...form, usageLimit: e.target.value })} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</label>
@@ -257,7 +269,8 @@ const AdminCoupons = () => {
         {filteredCoupons.map((coupon) => {
           const discountStr = coupon.type === "percentage" ? `${coupon.discount}% off` : `${formatPrice(coupon.discount)} off`;
           const expired = new Date(coupon.expiresAt) < new Date();
-          const active = coupon.isActive && !expired;
+          const limitReached = coupon.usageLimit != null && (coupon.usedCount ?? 0) >= coupon.usageLimit;
+          const active = coupon.isActive && !expired && !limitReached;
 
           return (
             <div key={coupon.id} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -271,11 +284,12 @@ const AdminCoupons = () => {
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       active ? "bg-green-50 text-green-700 border border-green-200" : "bg-rose-50 text-rose-700 border border-rose-200"
                     }`}>
-                      {active ? "Active" : expired ? "Expired" : "Disabled"}
+                      {active ? "Active" : limitReached ? "Limit Reached" : expired ? "Expired" : "Disabled"}
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
                     <p><span className="font-semibold text-slate-800">Reward:</span> {discountStr}</p>
+                    <p><span className="font-semibold text-slate-800">Used:</span> {coupon.usedCount ?? 0} {coupon.usageLimit ? `/ ${coupon.usageLimit}` : ""}</p>
                     {coupon.minCartAmt != null && Number(coupon.minCartAmt) > 0 && (
                       <p><span className="font-semibold text-slate-800">Min Spend:</span> {formatPrice(coupon.minCartAmt)}</p>
                     )}

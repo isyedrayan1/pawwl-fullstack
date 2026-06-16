@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Search, Truck } from "lucide-react";
+import { Search, Truck, Download } from "lucide-react";
 import AdminShell from "@/components/AdminShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { apiRequest, ApiAdminOrder, formatPrice } from "@/lib/api";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { adminPath } from "@/lib/routes";
 
 type OrderDraft = {
   paymentStatus: ApiAdminOrder["paymentStatus"];
@@ -14,11 +16,13 @@ type OrderDraft = {
   courierName?: string | null;
   trackingNumber?: string | null;
   trackingUrl?: string | null;
+  notes?: string | null;
 };
 
 const AdminOrders = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
   const [drafts, setDrafts] = useState<Record<string, OrderDraft>>({});
 
   const { data, error } = useQuery({
@@ -37,6 +41,7 @@ const AdminOrders = () => {
         courierName: order.courierName ?? "",
         trackingNumber: order.trackingNumber ?? "",
         trackingUrl: order.trackingUrl ?? "",
+        notes: order.notes ?? "",
       };
     }
 
@@ -47,15 +52,18 @@ const AdminOrders = () => {
     const needle = search.trim().toLowerCase();
     const orders = data?.orders ?? [];
 
-    if (!needle) return orders;
-
     return orders.filter((order) => {
+      if (filterStatus !== "all" && order.fulfillmentStatus.toLowerCase() !== filterStatus) {
+        return false;
+      }
+      if (!needle) return true;
+
       const haystack = [order.orderNumber, order.user.name, order.user.email, order.paymentStatus, order.fulfillmentStatus]
         .join(" ")
         .toLowerCase();
       return haystack.includes(needle);
     });
-  }, [data?.orders, search]);
+  }, [data?.orders, search, filterStatus]);
 
   const updateStatus = useMutation({
     mutationFn: ({
@@ -65,6 +73,7 @@ const AdminOrders = () => {
       courierName,
       trackingNumber,
       trackingUrl,
+      notes,
     }: {
       id: string;
       paymentStatus: OrderDraft["paymentStatus"];
@@ -72,15 +81,17 @@ const AdminOrders = () => {
       courierName?: string | null;
       trackingNumber?: string | null;
       trackingUrl?: string | null;
+      notes?: string | null;
     }) =>
       apiRequest(`/api/admin/orders/${id}/status`, {
         method: "PATCH",
-        body: JSON.stringify({ paymentStatus, fulfillmentStatus, courierName, trackingNumber, trackingUrl }),
+        body: JSON.stringify({ paymentStatus, fulfillmentStatus, courierName, trackingNumber, trackingUrl, notes }),
       }),
     onSuccess: () => {
       toast.success("Order updated");
       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
       queryClient.invalidateQueries({ queryKey: ["admin-summary"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-returns"] });
     },
     onError: (mutationError) => toast.error(mutationError instanceof Error ? mutationError.message : "Update failed"),
   });
@@ -90,10 +101,18 @@ const AdminOrders = () => {
       title="Orders"
       description="Review payments, fulfillment, and order contents with direct status control for the operations team."
       actions={
-        <Button variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100">
-          <Truck size={16} />
-          Fulfillment queue
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100 hover:text-slate-900" onClick={() => window.open("/api/admin/export/orders", "_blank")}>
+            <Download size={16} />
+            Export to Excel
+          </Button>
+          <Button asChild variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100 hover:text-slate-900">
+            <Link to={adminPath("/fulfillment")}>
+              <Truck size={16} />
+              Fulfillment queue
+            </Link>
+          </Button>
+        </div>
       }
     >
       {error && <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Admin login required.</div>}
@@ -108,6 +127,18 @@ const AdminOrders = () => {
             className="pl-10"
           />
         </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {["all", "pending", "processing", "shipped", "delivered", "cancelled"].map((status) => (
+            <Button
+              key={status}
+              variant={filterStatus === status ? "default" : "outline"}
+              onClick={() => setFilterStatus(status)}
+              className={`rounded-full text-xs h-8 ${filterStatus === status ? "bg-slate-950 text-white hover:bg-slate-800" : "text-slate-600 bg-slate-50 border-slate-200 hover:bg-slate-100 hover:text-slate-900"}`}
+            >
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </Button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-6 grid gap-4">
@@ -118,9 +149,13 @@ const AdminOrders = () => {
             courierName: order.courierName ?? "",
             trackingNumber: order.trackingNumber ?? "",
             trackingUrl: order.trackingUrl ?? "",
+            notes: order.notes ?? "",
           };
 
-          const address = order.addressSnapshot as Record<string, unknown>;
+          let address: Record<string, any> = {};
+          try {
+            address = typeof order.addressSnapshot === 'string' ? JSON.parse(order.addressSnapshot) : (order.addressSnapshot || {});
+          } catch (e) {}
           const itemCount = order.items.reduce((total, item) => total + item.quantity, 0);
 
           return (
@@ -134,7 +169,7 @@ const AdminOrders = () => {
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="rounded-full text-xs h-7 border-slate-200 bg-white hover:bg-slate-100 text-slate-700"
+                      className="rounded-full text-xs h-7 border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 text-slate-700"
                       onClick={() => {
                         const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
                         window.open(`${API_BASE}/api/orders/${order.id}/invoice`, '_blank');
@@ -221,6 +256,7 @@ const AdminOrders = () => {
                       courierName: draft.courierName,
                       trackingNumber: draft.trackingNumber,
                       trackingUrl: draft.trackingUrl,
+                      notes: draft.notes,
                     })
                   }
                 >
@@ -271,7 +307,22 @@ const AdminOrders = () => {
                     </div>
                   </div>
 
-                  <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
+                  {/* Status Notes Section */}
+                  <div className="rounded-2xl border border-slate-200 bg-white p-4 text-sm space-y-3 mt-4">
+                    <p className="font-semibold text-slate-950">Status Notes / Cancellation Reason</p>
+                    <div className="space-y-1">
+                      <Input 
+                        placeholder="Add notes for customer (e.g. out of stock, cancelled per request)" 
+                        value={draft.notes ?? ""} 
+                        onChange={(e) => setDrafts(curr => ({
+                          ...curr,
+                          [order.id]: { ...draft, notes: e.target.value }
+                        }))}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 lg:grid-cols-[1.4fr_0.8fr] mt-4">
                     <div className="space-y-3">
                       {order.items.map((item) => (
                         <div key={item.id} className="rounded-2xl border border-slate-200 bg-white p-4">

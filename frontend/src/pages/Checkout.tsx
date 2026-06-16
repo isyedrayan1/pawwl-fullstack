@@ -6,8 +6,23 @@ import AddressSelector from "@/components/AddressSelector";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { apiRequest, ApiAddress, ApiCartItem, ApiOrder, ApiProduct, formatPrice } from "@/lib/api";
+import { apiRequest, ApiAddress, ApiCartItem, ApiOrder, ApiProduct, formatPrice, getImageUrl } from "@/lib/api";
 import { MapPin, CreditCard, ChevronRight, CheckCircle2 } from "lucide-react";
+
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -62,7 +77,7 @@ const Checkout = () => {
           id: buyNowVariant.id,
           name: productData.product.name,
           variant: buyNowVariant.name === "Default" ? productData.product.category : buyNowVariant.name,
-          image: productData.product.images?.[0] ?? "/pawwl-logo-main-croped.webp",
+          image: getImageUrl(productData.product.images?.[0]),
           quantity,
           total: price * quantity,
         },
@@ -75,7 +90,7 @@ const Checkout = () => {
         id: item.id,
         name: item.product.name,
         variant: item.variant.name === "Default" ? item.product.category : item.variant.name,
-        image: item.product.images?.[0] ?? "/pawwl-logo-main-croped.webp",
+        image: getImageUrl(item.product.images?.[0]),
         quantity: item.quantity,
         total: price * item.quantity,
       };
@@ -172,10 +187,113 @@ const Checkout = () => {
 
       return orderResult.order;
     },
-    onSuccess: (order) => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success(`Order placed: ${order.orderNumber}`);
-      navigate(`/order-success?order=${order.id}`);
+    onSuccess: async (order) => {
+      try {
+        toast.loading("Preparing payment gateway...");
+
+        // 1. Fetch Razorpay configuration (Public Key ID)
+        const config = await apiRequest<{ keyId: string | null; mode: string }>("/api/payments/razorpay/config");
+
+        // 2. Request backend to create a Razorpay order
+        const rzpOrder = await apiRequest<{
+          provider: string;
+          orderId: string;
+          amount: number | string;
+          currency: string;
+        }>("/api/payments/razorpay/create-order", {
+          method: "POST",
+          body: JSON.stringify({ orderId: order.id }),
+        });
+
+        toast.dismiss();
+
+        // 3. Fallback check for demo mode
+        if (rzpOrder.provider === "demo") {
+          toast.info("Demo Mode: Completing payment simulation...");
+          const verifyResult = await apiRequest<{ success: boolean }>("/api/payments/razorpay/verify", {
+            method: "POST",
+            body: JSON.stringify({
+              orderId: order.id,
+              providerOrderId: rzpOrder.orderId,
+            }),
+          });
+
+          if (verifyResult.success) {
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            toast.success("Order placed and payment simulated successfully!");
+            navigate(`/order-success?order=${order.id}`);
+          } else {
+            toast.error("Failed to complete demo payment simulation.");
+          }
+          return;
+        }
+
+        // 4. Real Razorpay standard payment modal integration
+        const loaded = await loadRazorpayScript();
+        if (!loaded) {
+          toast.error("Could not load Razorpay SDK. Please check your network connection.");
+          return;
+        }
+
+        const options = {
+          key: config.keyId,
+          amount: Math.round(Number(rzpOrder.amount) * 100), // amount in paise
+          currency: rzpOrder.currency || "INR",
+          name: "Pawwl",
+          description: `Payment for Order #${order.orderNumber}`,
+          order_id: rzpOrder.orderId,
+          handler: async function (response: any) {
+            try {
+              toast.loading("Verifying payment transaction...");
+              const verifyResult = await apiRequest<{ success: boolean }>("/api/payments/razorpay/verify", {
+                method: "POST",
+                body: JSON.stringify({
+                  orderId: order.id,
+                  providerOrderId: response.razorpay_order_id,
+                  providerPaymentId: response.razorpay_payment_id,
+                  signature: response.razorpay_signature,
+                }),
+              });
+              toast.dismiss();
+
+              if (verifyResult.success) {
+                queryClient.invalidateQueries({ queryKey: ["cart"] });
+                toast.success("Payment verified! Order completed successfully.");
+                navigate(`/order-success?order=${order.id}`);
+              } else {
+                toast.error("Payment verification failed. Please try again.");
+              }
+            } catch (err: any) {
+              toast.dismiss();
+              toast.error(err.message || "Payment verification failed.");
+            }
+          },
+          prefill: {
+            name: meData?.user?.name || "",
+            email: meData?.user?.email || "",
+            contact: selectedAddress?.phone || "",
+          },
+          theme: {
+            color: "#134e86",
+          },
+          modal: {
+            ondismiss: function () {
+              toast.warning("Payment cancelled.");
+              navigate(`/order-failure?order=${order.id}`);
+            },
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on("payment.failed", function (response: any) {
+          toast.error(`Payment failed: ${response.error.description}`);
+          navigate(`/order-failure?order=${order.id}`);
+        });
+        rzp.open();
+      } catch (err: any) {
+        toast.dismiss();
+        toast.error(err instanceof Error ? err.message : "Could not initialize checkout");
+      }
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : "Checkout failed");
@@ -260,16 +378,15 @@ const Checkout = () => {
                 <h2 className="text-2xl font-bold text-brand-dark">Payment Method</h2>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-start gap-4 p-4 border border-brand-blue rounded-lg bg-blue-50">
-                  <CheckCircle2 size={20} className="text-brand-blue mt-1" />
-                  <div className="flex-1">
-                    <p className="font-semibold text-brand-dark">Razorpay</p>
-                    <p className="text-sm text-[#666] mt-1">
-                      Demo checkout is configured to complete payment immediately through Razorpay.
-                    </p>
-                  </div>
+              <div className="inline-flex items-center gap-3 px-5 py-3 border-2 border-brand-blue bg-blue-50/50 rounded-xl">
+                <div className="w-5 h-5 rounded-full bg-brand-blue flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-white"></div>
                 </div>
+                <img 
+                  src="/assets/razorpaylogo.png" 
+                  alt="Razorpay" 
+                  className="h-6 object-contain"
+                />
               </div>
             </section>
           </div>

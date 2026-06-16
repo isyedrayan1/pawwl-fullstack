@@ -1,6 +1,6 @@
 import { FormEvent, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Edit3, Plus, Search, Trash2, Upload, X, Trash } from "lucide-react";
+import { Edit3, Plus, Search, Trash2, Upload, X, Trash, Download } from "lucide-react";
 import AdminShell from "@/components/AdminShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -258,10 +258,42 @@ const AdminProducts = () => {
       title="Products"
       description="Create and maintain catalog records, product status, pricing, and stock without leaving the admin workspace."
       actions={
-        <Button className="rounded-full bg-slate-950 text-white hover:bg-slate-800" onClick={() => { resetForm(); setIsDialogOpen(true); }}>
-          <Plus size={16} />
-          New product
-        </Button>
+        <div className="flex items-center gap-2">
+          <input type="file" id="import-excel" accept=".xlsx, .xls" className="hidden" onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append("file", file);
+            const toastId = toast.loading("Importing products...");
+            try {
+              const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
+              const res = await fetch(`${API_BASE}/api/admin/import/products`, {
+                method: "POST",
+                body: formData,
+                credentials: "include"
+              });
+              const data = await res.json();
+              if (!res.ok) throw new Error(data.error || "Import failed");
+              toast.success(`Updated ${data.updated} products`, { id: toastId });
+              queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "Import failed", { id: toastId });
+            }
+            e.target.value = "";
+          }} />
+          <Button variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100 hover:text-slate-900" onClick={() => document.getElementById("import-excel")?.click()}>
+            <Upload size={16} />
+            Import Excel
+          </Button>
+          <Button variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100 hover:text-slate-900" onClick={() => window.open("/api/admin/export/products", "_blank")}>
+            <Download size={16} />
+            Export to Excel
+          </Button>
+          <Button className="rounded-full bg-slate-950 text-white hover:bg-slate-800" onClick={() => { resetForm(); setIsDialogOpen(true); }}>
+            <Plus size={16} />
+            New product
+          </Button>
+        </div>
       }
     >
       {error && <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Admin login required.</div>}
@@ -278,7 +310,7 @@ const AdminProducts = () => {
           </DialogHeader>
 
           <form onSubmit={submit} className="flex-1 flex flex-col overflow-hidden space-y-4">
-            <ScrollArea className="flex-1 pr-4">
+            <div className="flex-1 pr-4 overflow-y-auto min-h-0 scrollbar-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
               <Tabs defaultValue="basic" className="w-full">
                 <TabsList className="grid grid-cols-4 bg-slate-100 p-1 rounded-full mb-6">
                   <TabsTrigger value="basic" className="rounded-full data-[state=active]:bg-white data-[state=active]:text-slate-950 text-slate-500 font-medium">Basic Info</TabsTrigger>
@@ -492,7 +524,7 @@ const AdminProducts = () => {
                   </div>
                 </TabsContent>
               </Tabs>
-            </ScrollArea>
+            </div>
 
             <DialogFooter className="pt-4 border-t border-slate-100 flex flex-row items-center gap-2">
               {editingId && (

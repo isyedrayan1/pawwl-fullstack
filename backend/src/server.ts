@@ -11,8 +11,9 @@ import orderRoutes from "./routes/orders.js";
 import adminRoutes from "./routes/admin.js";
 import paymentRoutes from "./routes/payments.js";
 import webhookRoutes from "./routes/webhooks.js";
+import leadsRoutes from "./routes/leads.js";
 import { env, isProduction } from "./lib/env.js";
-import { optionalAuth } from "./middleware/auth.js";
+import { optionalAuth, optionalAdminAuth } from "./middleware/auth.js";
 import { errorHandler } from "./middleware/error.js";
 
 const app = express();
@@ -28,6 +29,7 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 app.use(optionalAuth);
+app.use(optionalAdminAuth);
 
 // Statically serve uploaded product images
 const isDist = __dirname.includes(path.join('dist', 'src')) || __dirname.includes('dist/src') || __dirname.includes('dist\\src');
@@ -53,6 +55,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/webhooks", webhookRoutes);
+app.use("/api/leads", leadsRoutes);
 
 app.use("/api", (_req, res) => {
   res.status(404).json({ error: "API route not found" });

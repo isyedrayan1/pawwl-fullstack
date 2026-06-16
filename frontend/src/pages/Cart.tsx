@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { apiRequest, ApiCartItem, formatPrice } from "@/lib/api";
+import { apiRequest, ApiCartItem, formatPrice, getImageUrl } from "@/lib/api";
 
 const Cart = () => {
   const queryClient = useQueryClient();
@@ -35,7 +35,7 @@ const Cart = () => {
           <div className="flex flex-col gap-4">
             {items.map((item) => (
               <div key={item.id} className="border border-border-design rounded-xl p-4 flex gap-4">
-                <img src={item.product.images?.[0] ?? "/pawwl-logo-main-croped.webp"} alt={item.product.name} className="w-20 h-20 rounded-lg object-cover bg-brand-light" />
+                <img src={getImageUrl(item.product.images?.[0])} alt={item.product.name} className="w-20 h-20 rounded-lg object-cover bg-brand-light" />
                 <div className="flex-1">
                   <h2 className="font-bold text-brand-dark">{item.product.name}</h2>
                   <p className="text-sm text-[#555]">

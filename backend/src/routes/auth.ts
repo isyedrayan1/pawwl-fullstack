@@ -6,7 +6,6 @@ import { createId } from "@paralleldrive/cuid2";
 import { asyncHandler } from "../lib/async.js";
 import { env } from "../lib/env.js";
 import { HttpError } from "../lib/http.js";
-import { sendPasswordResetEmail } from "../lib/mailer.js";
 import { prisma } from "../lib/prisma.js";
 import {
   clearSessionCookie,
@@ -14,52 +13,17 @@ import {
   destroyCurrentSession,
   requireAuth,
   setSessionCookie,
+  setAdminSessionCookie,
+  clearAdminSessionCookie,
+  destroyAdminSession,
+  requireAdmin,
 } from "../middleware/auth.js";
+
+import { auth } from "../lib/firebase-admin.js";
 
 const router = Router();
 
-const hashPasswordFingerprint = (passwordHash: string) =>
-  crypto.createHash("sha256").update(passwordHash).digest("hex");
 
-const createResetToken = (userId: string, passwordHash: string) => {
-  const payload = {
-    userId,
-    passwordFingerprint: hashPasswordFingerprint(passwordHash),
-    exp: Date.now() + env.resetPasswordTtlMinutes * 60 * 1000,
-  };
-
-  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
-  const signature = crypto.createHmac("sha256", env.sessionSecret).update(encodedPayload).digest("base64url");
-
-  return `${encodedPayload}.${signature}`;
-};
-
-const verifyResetToken = (token: string): { userId: string; passwordFingerprint: string; exp: number } => {
-  const parts = token.split(".");
-  if (parts.length !== 2) throw new HttpError(400, "Invalid or expired reset token");
-
-  const [encodedPayload, signature] = parts;
-  const expected = crypto.createHmac("sha256", env.sessionSecret).update(encodedPayload).digest("base64url");
-
-  const signatureBuffer = Buffer.from(signature);
-  const expectedBuffer = Buffer.from(expected);
-  if (signatureBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(signatureBuffer, expectedBuffer)) {
-    throw new HttpError(400, "Invalid or expired reset token");
-  }
-
-  let payload: { userId: string; passwordFingerprint: string; exp: number };
-  try {
-    payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString("utf8"));
-  } catch {
-    throw new HttpError(400, "Invalid or expired reset token");
-  }
-
-  if (!payload.userId || !payload.passwordFingerprint || !payload.exp || payload.exp <= Date.now()) {
-    throw new HttpError(400, "Invalid or expired reset token");
-  }
-
-  return payload;
-};
 
 const registerSchema = z.object({
   name: z.string().min(2),
@@ -74,14 +38,7 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email().transform((value) => value.toLowerCase()),
-});
 
-const resetPasswordSchema = z.object({
-  token: z.string().min(10),
-  newPassword: z.string().min(8),
-});
 
 const publicUser = {
   id: true,
@@ -96,33 +53,70 @@ const publicUser = {
 } as const;
 
 router.post(
-  "/register",
+  "/firebase-login",
   asyncHandler(async (req, res) => {
-    const input = registerSchema.parse(req.body);
-    const existing = await prisma.user.findUnique({ where: { email: input.email } });
-    if (existing) throw new HttpError(409, "Email is already registered");
+    const { idToken } = req.body;
+    if (!idToken) throw new HttpError(400, "Missing idToken");
 
-    const passwordHash = await bcrypt.hash(input.password, 12);
-    const user = await prisma.user.create({
-      data: {
-        id: createId(),
-        name: input.name,
-        username: input.username?.trim() || null,
-        email: input.email,
-        passwordHash,
-        role: "customer",
-      },
-      select: publicUser,
-    });
+    // Verify token
+    const decodedToken = await auth.verifyIdToken(idToken);
+    const { uid, email, name } = decodedToken;
+    if (!email) throw new HttpError(400, "Email is required from Firebase");
 
+    // Find or create user
+    let user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          id: createId(),
+          name: name || email.split("@")[0],
+          username: email.split("@")[0],
+          email: email,
+          passwordHash: "firebase", // Not used since we rely on Firebase
+          role: "customer",
+        },
+      });
+    }
+
+    if (user.status !== "active") throw new HttpError(401, "Account disabled");
+
+    // Create custom session cookie so existing backend logic works identically
     const session = await createSession(user.id);
     setSessionCookie(res, session.token, session.expiresAt);
-    res.status(201).json({ user });
+
+    res.json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
+    });
   }),
 );
 
 router.post(
-  "/login",
+  "/logout",
+  asyncHandler(async (req, res) => {
+    await destroyCurrentSession(req);
+    clearSessionCookie(res);
+    res.json({ ok: true });
+  }),
+);
+
+router.get("/me", requireAuth, (req, res) => {
+  const adminRoles = ["admin", "fulfillment", "marketing"];
+  if (adminRoles.includes(req.user!.role)) {
+    // If an admin somehow has a consumer session, clear it.
+    clearSessionCookie(res);
+    return res.status(401).json({ error: "Staff must use the Admin Portal" });
+  }
+  res.json({ user: req.user });
+});
+
+router.post(
+  "/admin/login",
   asyncHandler(async (req, res) => {
     const input = loginSchema.parse(req.body);
     const identifier = (input.identifier ?? input.email ?? "").trim().toLowerCase();
@@ -137,8 +131,13 @@ router.post(
     const valid = await bcrypt.compare(input.password, user.passwordHash);
     if (!valid) throw new HttpError(401, "Invalid email or password");
 
+    const adminRoles = ["admin", "fulfillment", "marketing"];
+    if (!adminRoles.includes(user.role)) {
+      throw new HttpError(403, "Not authorized to access the admin portal");
+    }
+
     const session = await createSession(user.id);
-    setSessionCookie(res, session.token, session.expiresAt);
+    setAdminSessionCookie(res, session.token, session.expiresAt);
     res.json({
       user: {
         id: user.id,
@@ -153,60 +152,16 @@ router.post(
 );
 
 router.post(
-  "/forgot-password",
+  "/admin/logout",
   asyncHandler(async (req, res) => {
-    const input = forgotPasswordSchema.parse(req.body);
-    const user = await prisma.user.findUnique({ where: { email: input.email } });
-
-    if (user && user.status === "active") {
-      const token = createResetToken(user.id, user.passwordHash);
-      const resetLink = `${env.frontendOrigin}/reset-password?token=${encodeURIComponent(token)}`;
-      await sendPasswordResetEmail(user.email, resetLink);
-    }
-
-    res.json({
-      ok: true,
-      message: "If an account exists for this email, a password reset link has been sent.",
-    });
-  }),
-);
-
-router.post(
-  "/reset-password",
-  asyncHandler(async (req, res) => {
-    const input = resetPasswordSchema.parse(req.body);
-    const payload = verifyResetToken(input.token);
-
-    const user = await prisma.user.findUnique({ where: { id: payload.userId } });
-    if (!user || user.status !== "active") throw new HttpError(400, "Invalid or expired reset token");
-
-    const currentFingerprint = hashPasswordFingerprint(user.passwordHash);
-    if (currentFingerprint !== payload.passwordFingerprint) {
-      throw new HttpError(400, "Invalid or expired reset token");
-    }
-
-    const newHash = await bcrypt.hash(input.newPassword, 12);
-    await prisma.$transaction([
-      prisma.user.update({ where: { id: user.id }, data: { passwordHash: newHash } }),
-      prisma.session.deleteMany({ where: { userId: user.id } }),
-    ]);
-
-    clearSessionCookie(res);
+    await destroyAdminSession(req);
+    clearAdminSessionCookie(res);
     res.json({ ok: true });
   }),
 );
 
-router.post(
-  "/logout",
-  asyncHandler(async (req, res) => {
-    await destroyCurrentSession(req);
-    clearSessionCookie(res);
-    res.json({ ok: true });
-  }),
-);
-
-router.get("/me", requireAuth, (req, res) => {
-  res.json({ user: req.user });
+router.get("/admin/me", requireAdmin, (req, res) => {
+  res.json({ user: req.adminUser });
 });
 
 router.patch(
@@ -227,24 +182,6 @@ router.patch(
   }),
 );
 
-router.post(
-  "/me/password",
-  requireAuth,
-  asyncHandler(async (req, res) => {
-    const input = z
-      .object({ currentPassword: z.string().min(1), newPassword: z.string().min(8) })
-      .parse(req.body);
 
-    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
-    if (!user) throw new HttpError(404, "User not found");
-
-    const valid = await bcrypt.compare(input.currentPassword, user.passwordHash);
-    if (!valid) throw new HttpError(401, "Current password is incorrect");
-
-    const newHash = await bcrypt.hash(input.newPassword, 12);
-    await prisma.user.update({ where: { id: user.id }, data: { passwordHash: newHash } });
-    res.json({ ok: true });
-  }),
-);
 
 export default router;

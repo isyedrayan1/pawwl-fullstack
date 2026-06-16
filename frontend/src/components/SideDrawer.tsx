@@ -3,7 +3,7 @@ import { X, Trash2, ShoppingBag, Heart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { apiRequest, ApiProduct, formatPrice } from '@/lib/api';
+import { apiRequest, ApiProduct, formatPrice, getImageUrl } from '@/lib/api';
 
 interface SideDrawerProps {
   type: 'cart' | 'favorites';
@@ -39,7 +39,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
           title: product.name,
           category: [product.animalType, product.category].filter(Boolean).join(' · ') || product.category,
           variantName: variant?.name === 'Default' ? '' : variant?.name ?? '',
-          image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
+          image: getImageUrl(product.images?.[0]),
           quantity: item.quantity,
           price,
           totalPrice: price * item.quantity,
@@ -72,7 +72,7 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ type, isOpen, onClose }) => {
           title: product.name,
           category: [product.animalType, product.category].filter(Boolean).join(' · ') || product.category,
           variantName: '',
-          image: product.images?.[0] ?? '/pawwl-logo-main-croped.webp',
+          image: getImageUrl(product.images?.[0]),
           quantity: 1,
           price,
           totalPrice: price,

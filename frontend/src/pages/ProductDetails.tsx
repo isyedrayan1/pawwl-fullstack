@@ -484,13 +484,19 @@ const ProductDetails = () => {
                       {formatPrice(item.price)}
                     </p>
                     <div className="mt-auto pt-1">
-                      <Link
-                        to={`/products/${item.slug}`}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const originalProduct = catalogProducts?.find((p) => p.id === item.id);
+                          const variantId = originalProduct?.variants?.[0]?.id ?? "";
+                          addToCart(item.id, variantId, 1);
+                          toast.success("Added to Cart", { description: item.title });
+                        }}
                         className="flex w-full items-center justify-center gap-2 h-9 rounded-full bg-[#134e86] hover:bg-[#0d365d] text-white font-bold text-[11px] uppercase tracking-wider transition-colors"
                       >
                         <ShoppingBag size={12} strokeWidth={2.5} />
-                        Quick Shop
-                      </Link>
+                        Add to Cart
+                      </button>
                     </div>
                   </div>
                 </div>

@@ -13,6 +13,8 @@ import SEO from "@/components/SEO";
 
 import { useApiProducts } from "@/hooks/useApiProducts";
 import { formatPrice, getImageUrl } from "@/lib/api";
+import { useCart } from "@/context/CartContext";
+import { toast } from "sonner";
 
 import prd13 from "@/assets/gallery/13.webp";
 import prd17 from "@/assets/gallery/17.webp";
@@ -31,8 +33,10 @@ const parseStringArray = (value: string[] | string | null | undefined) => {
 
 const Products = () => {
   const { data: apiProducts, isLoading, error } = useApiProducts();
+  const { addToCart } = useCart();
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [animalFilter, setAnimalFilter] = useState("all");
+  const [searchFilter, setSearchFilter] = useState("");
   const products = (apiProducts ?? []).map((product) => ({
     id: product.id,
     slug: product.slug,
@@ -60,7 +64,8 @@ const Products = () => {
   const visibleProducts = products.filter((product) => {
     const categoryMatch = categoryFilter === "all" || product.category === categoryFilter;
     const animalMatch = animalFilter === "all" || product.animalType === animalFilter;
-    return categoryMatch && animalMatch;
+    const searchMatch = !searchFilter || product.title.toLowerCase().includes(searchFilter.toLowerCase()) || product.description.toLowerCase().includes(searchFilter.toLowerCase());
+    return categoryMatch && animalMatch && searchMatch;
   });
   const hasProducts = visibleProducts.length > 0;
 
@@ -112,16 +117,33 @@ const Products = () => {
 
           <div className="w-full max-w-[1144px] flex flex-col gap-8">
             {!isLoading && !hasCatalogError && products.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <button onClick={() => setAnimalFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === "all" ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>All Pets</button>
-                {animalTypes.map((animalType) => (
-                  <button key={animalType} onClick={() => setAnimalFilter(animalType)} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === animalType ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>{animalType}</button>
-                ))}
-                <span className="hidden h-8 w-px bg-[#dce6ee] md:block" />
-                <button onClick={() => setCategoryFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === "all" ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>All Categories</button>
-                {categories.map((category) => (
-                  <button key={category} onClick={() => setCategoryFilter(category)} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === category ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>{category}</button>
-                ))}
+              <div className="flex flex-col items-center gap-4 w-full">
+                {/* Search Bar */}
+                <div className="relative w-full max-w-md">
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#134e86] focus:border-transparent"
+                    id="product-search-input"
+                  />
+                </div>
+                {/* Filters */}
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button onClick={() => setAnimalFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === "all" ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>All Pets</button>
+                  {animalTypes.map((animalType) => (
+                    <button key={animalType} onClick={() => setAnimalFilter(animalType)} className={`rounded-full border px-4 py-2 text-sm font-bold ${animalFilter === animalType ? "bg-[#134e86] text-white border-[#134e86]" : "bg-white text-[#134e86] border-[#dce6ee]"}`}>{animalType}</button>
+                  ))}
+                  <span className="hidden h-8 w-px bg-[#dce6ee] md:block" />
+                  <button onClick={() => setCategoryFilter("all")} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === "all" ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>All Categories</button>
+                  {categories.map((category) => (
+                    <button key={category} onClick={() => setCategoryFilter(category)} className={`rounded-full border px-4 py-2 text-sm font-bold ${categoryFilter === category ? "bg-[#191919] text-white border-[#191919]" : "bg-white text-[#191919] border-[#dce6ee]"}`}>{category}</button>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -189,15 +211,20 @@ const Products = () => {
                           {formatPrice(item.price)}
                         </p>
 
-                        {/* Full-width CTA button — spacer pushes it to bottom */}
                         <div className="mt-auto pt-1">
-                          <Link
-                            to={`/products/${item.slug}`}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              const originalProduct = apiProducts?.find((p) => p.id === item.id);
+                              const variantId = originalProduct?.variants?.[0]?.id ?? "";
+                              addToCart(item.id, variantId, 1);
+                              toast.success("Added to Cart", { description: item.title });
+                            }}
                             className="flex w-full items-center justify-center gap-2 h-10 rounded-full bg-[#134e86] hover:bg-[#0d365d] text-white font-bold text-[12px] uppercase tracking-wider transition-colors shadow-sm"
                           >
                             <ShoppingBag size={13} strokeWidth={2.5} />
-                            Quick Shop
-                          </Link>
+                            Add to Cart
+                          </button>
                         </div>
                       </div>
                     </div>

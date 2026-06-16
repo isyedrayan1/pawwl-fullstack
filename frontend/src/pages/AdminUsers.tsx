@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ShieldCheck, ShieldOff, Search } from "lucide-react";
+import { ShieldCheck, ShieldOff, Search, Download } from "lucide-react";
 import AdminShell from "@/components/AdminShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +45,12 @@ const AdminUsers = () => {
     <AdminShell
       title="Users"
       description="Inspect customer accounts, activity counts, and quickly disable or restore access when needed."
+      actions={
+        <Button variant="outline" className="rounded-full border-slate-200 bg-white text-slate-800 hover:bg-slate-100 hover:text-slate-900" onClick={() => window.open("/api/admin/export/users", "_blank")}>
+          <Download size={16} />
+          Export to Excel
+        </Button>
+      }
     >
       {error && <div className="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">Admin login required.</div>}
 
@@ -92,7 +98,7 @@ const AdminUsers = () => {
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Button
                   variant={canDisable ? "destructive" : "secondary"}
-                  className="rounded-full"
+                  className={`rounded-full ${!canDisable ? "text-black" : ""}`}
                   disabled={toggleStatus.isPending}
                   onClick={() => toggleStatus.mutate({ id: user.id, status: canDisable ? "disabled" : "active" })}
                 >

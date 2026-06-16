@@ -15,9 +15,12 @@
     "catalog:seed": "tsx prisma/seed-catalog.ts"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.1",
     "postcss": "^8.4.49"
   },
   "dependencies": {
-    "@paralleldrive/cuid2": "^3.3.0"
+    "@paralleldrive/cuid2": "^3.3.0",
+    "firebase-admin": "^14.0.0",
+    "nodemailer": "^8.0.11"
   }
 }

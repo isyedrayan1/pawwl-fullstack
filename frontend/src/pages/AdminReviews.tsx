@@ -5,7 +5,8 @@ import AdminShell from "@/components/AdminShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { apiRequest, ApiReview } from "@/lib/api";
+import { formatDistanceToNow } from "date-fns";
+import { apiRequest, ApiReview, formatPrice, getImageUrl } from "@/lib/api";
 import { toast } from "sonner";
 
 const AdminReviews = () => {
@@ -95,7 +96,7 @@ const AdminReviews = () => {
       <div className="mt-6 grid gap-4">
         {filteredReviews.map((review) => {
           const thumbnail = Array.isArray(review.product?.images) && review.product!.images!.length > 0
-            ? review.product!.images![0]
+            ? getImageUrl(review.product!.images![0])
             : "/pawwl-logo-main-croped.webp";
           const formattedDate = new Intl.DateTimeFormat("en-IN", {
             dateStyle: "medium",
@@ -133,7 +134,7 @@ const AdminReviews = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="rounded-full border-slate-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold bg-white flex items-center gap-1"
+                    className="rounded-full border-slate-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 text-xs font-semibold bg-white flex items-center gap-1"
                     disabled={deleteMutation.isPending}
                     onClick={() => confirmDelete(review.id)}
                   >

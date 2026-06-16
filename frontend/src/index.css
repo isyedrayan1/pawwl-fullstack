@@ -58,10 +58,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body overflow-x-hidden w-full;
+    @apply bg-background text-foreground font-body overflow-x-clip w-full;
   }
   html {
-    @apply overflow-x-hidden w-full;
+    @apply overflow-x-clip w-full;
     scroll-behavior: auto;
   }
   h1,

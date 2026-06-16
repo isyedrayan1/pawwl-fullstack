@@ -183,6 +183,7 @@ const Footer = () => (
       <div className="section-container flex flex-col md:flex-row justify-between items-center gap-4 py-4 lg:h-[60px] border-t border-white/20 text-[12px]">
         <p className="opacity-60 font-normal">© 2026 Pawwl Pet Services. All Rights Reserved.</p>
         <div className="flex gap-10">
+          <Link to="/admin/login" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Admin Login</Link>
           <a href="#" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Privacy Policy</a>
           <a href="#" className="opacity-60 hover:opacity-100 transition-opacity underline-offset-4 hover:underline">Terms of Use</a>
         </div>

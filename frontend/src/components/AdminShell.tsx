@@ -1,21 +1,25 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { LayoutDashboard, LogOut, Menu, Package, ReceiptText, Shield, Users, X, Ticket, RefreshCw, MessageSquare } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, Package, ReceiptText, Shield, Users, X, Ticket, RefreshCw, MessageSquare, Calendar, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest, ApiUser } from "@/lib/api";
 import { adminPath } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 
-const navItems = [
-  { label: "Dashboard", href: adminPath("/"), icon: LayoutDashboard },
-  { label: "Products", href: adminPath("/products"), icon: Package },
-  { label: "Orders", href: adminPath("/orders"), icon: ReceiptText },
-  { label: "Coupons", href: adminPath("/coupons"), icon: Ticket },
-  { label: "Returns", href: adminPath("/returns"), icon: RefreshCw },
-  { label: "Reviews", href: adminPath("/reviews"), icon: MessageSquare },
-  { label: "Users", href: adminPath("/users"), icon: Users },
-  { label: "Admins", href: adminPath("/admins"), icon: Shield },
+const ALL_NAV_ITEMS = [
+  { label: "Dashboard", href: adminPath("/"), icon: LayoutDashboard, scopes: [] }, // Super Admin only
+  { label: "Reports", href: adminPath("/reports"), icon: LayoutDashboard, scopes: [] }, // Super Admin only
+  { label: "Orders", href: adminPath("/orders"), icon: ReceiptText, scopes: ["manage_orders"] },
+  { label: "Queue", href: adminPath("/fulfillment"), icon: Package, scopes: ["manage_orders", "manage_fulfillment"] },
+  { label: "Returns", href: adminPath("/returns"), icon: RefreshCw, scopes: ["manage_returns"] },
+  { label: "Products", href: adminPath("/products"), icon: Package, scopes: ["manage_products"] },
+  { label: "Coupons", href: adminPath("/coupons"), icon: Ticket, scopes: ["manage_coupons"] },
+  { label: "Reviews", href: adminPath("/reviews"), icon: MessageSquare, scopes: ["manage_reviews"] },
+  { label: "Bookings", href: adminPath("/service-leads"), icon: Calendar, scopes: ["manage_orders"] },
+  { label: "Careers", href: adminPath("/job-applications"), icon: Briefcase, scopes: ["manage_users"] },
+  { label: "Users", href: adminPath("/users"), icon: Users, scopes: ["manage_users"] },
+  { label: "Admins", href: adminPath("/admins"), icon: Shield, scopes: [] }, // Super Admin only
 ];
 
 type AdminShellProps = {
@@ -31,28 +35,43 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const auth = useQuery({
-    queryKey: ["me"],
-    queryFn: () => apiRequest<{ user: ApiUser }>("/api/auth/me"),
+    queryKey: ["admin-me"],
+    queryFn: () => apiRequest<{ user: ApiUser }>("/api/auth/admin/me"),
     retry: false,
   });
 
-  const currentUser = auth.data?.user;
-  const isAdmin = currentUser?.role === "admin";
+  const currentUser = auth.data?.user as ApiUser & { adminRole?: { permissions: string } | null } | undefined;
+  const isStaff = currentUser && currentUser.role !== "customer";
+  
+  const navItems = useMemo(() => {
+    if (currentUser?.role === "admin") return ALL_NAV_ITEMS; // Super admin sees all
 
-  const activeNav = useMemo(() => navItems.find((item) => location.pathname === item.href), [location.pathname]);
+    const perms = currentUser?.adminRole?.permissions?.split(",").map(s => s.trim()) || [];
+    
+    // Fallback for hardcoded roles
+    if (currentUser?.role === "marketing") perms.push("manage_products", "manage_coupons", "manage_reviews");
+    if (currentUser?.role === "fulfillment") perms.push("manage_orders", "manage_returns", "manage_fulfillment");
+
+    return ALL_NAV_ITEMS.filter(item => {
+      if (perms.includes("*")) return true;
+      return item.scopes.some(scope => perms.includes(scope));
+    });
+  }, [currentUser]);
+
+  const activeNav = useMemo(() => navItems.find((item) => location.pathname === item.href), [location.pathname, navItems]);
 
   useEffect(() => {
     setMobileNavOpen(false);
   }, [location.pathname]);
 
   const logout = async () => {
-    await apiRequest("/api/auth/logout", { method: "POST" });
+    await apiRequest("/api/auth/admin/logout", { method: "POST" });
     try {
-      window.dispatchEvent(new Event("pawwl:auth-changed"));
+      window.dispatchEvent(new Event("pawwl:admin-auth-changed"));
     } catch {
       // ignore
     }
-    navigate("/login");
+    navigate("/admin/login");
   };
 
   if (auth.isLoading) {
@@ -67,7 +86,7 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
     );
   }
 
-  if (!isAdmin) {
+  if (!isStaff) {
     return (
       <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(19,78,134,0.12),_rgba(255,255,255,0)_40%),linear-gradient(180deg,_#f8fbfd_0%,_#ffffff_100%)] px-4 py-10 text-brand-dark sm:px-6 lg:px-8">
         <div className="mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-2xl items-center justify-center">
@@ -79,7 +98,7 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild className="rounded-full bg-brand-blue px-5 text-white hover:bg-brand-dark">
-                <Link to="/login">Go to login</Link>
+                <Link to="/admin/login">Go to Admin Login</Link>
               </Button>
               <Button variant="outline" className="rounded-full border-border-design bg-white text-brand-dark hover:bg-brand-light" onClick={() => navigate(0)}>
                 Refresh
@@ -94,48 +113,44 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(19,78,134,0.08),_rgba(255,255,255,0)_34%),linear-gradient(180deg,_#f8fbfd_0%,_#ffffff_100%)] text-brand-dark">
       <div className="mx-auto grid min-h-screen max-w-[1680px] lg:grid-cols-[288px_minmax(0,1fr)]">
-        <aside className="hidden min-h-screen flex-col border-r border-border-design bg-brand-dark px-5 py-6 text-white lg:flex">
-          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/55">Admin Console</p>
-            <h2 className="mt-3 text-2xl font-bold tracking-tight">Pawwl</h2>
-            <p className="mt-2 text-sm leading-6 text-white/65">
-              Clean control for catalog, orders, users, and admin operations.
-            </p>
+        <aside className="hidden sticky top-0 h-screen flex-col border-r border-border-design bg-brand-dark px-4 py-5 text-white lg:flex">
+          <div className="shrink-0 rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">Admin Console</p>
+              <h2 className="mt-1 text-xl font-bold tracking-tight">Pawwl</h2>
+            </div>
+            <div className="border-t border-white/10 pt-3">
+              <p className="truncate text-sm font-medium text-white">{currentUser?.name}</p>
+              <p className="truncate text-[11px] text-white/55">{currentUser?.username ?? currentUser?.email}</p>
+            </div>
           </div>
 
-          <nav className="mt-6 flex flex-1 flex-col gap-2">
+          <nav className="mt-5 flex flex-1 flex-col gap-1.5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => {
               const Icon = item.icon;
               const active = location.pathname === item.href;
-
               return (
                 <Link
                   key={item.href}
                   to={item.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors",
-                    active ? "bg-white text-brand-dark" : "text-white/75 hover:bg-white/10 hover:text-white",
+                    "flex items-center gap-3 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors",
+                    active ? "bg-white text-brand-dark shadow-sm" : "text-white/75 hover:bg-white/10 hover:text-white"
                   )}
                 >
-                  <Icon size={18} />
+                  <Icon size={16} />
                   {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="rounded-[1.75rem] border border-white/10 bg-white/5 p-4 text-sm text-white/70">
-            <p className="font-medium text-white">Signed in as</p>
-            <p className="mt-1 break-all text-white/85">{currentUser?.name}</p>
-            <p className="mt-1 text-xs text-white/55">{currentUser?.username ?? currentUser?.email}</p>
-          </div>
-
           <Button
             variant="outline"
-            className="mt-4 rounded-full border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
+            className="shrink-0 mt-3 rounded-full border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
             onClick={logout}
           >
-            <LogOut size={16} />
+            <LogOut size={16} className="mr-2" />
             Logout
           </Button>
         </aside>
@@ -153,6 +168,7 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
                 {mobileNavOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
               <div className="text-sm font-bold text-brand-dark">Pawwl Admin</div>
+              {actions && <div className="ml-auto">{actions}</div>}
             </div>
 
             {/* Desktop header: full info (hidden on mobile) */}
@@ -170,7 +186,8 @@ const AdminShell = ({ title, description, actions, children }: AdminShellProps) 
                 {description && <p className="mt-2 max-w-3xl text-sm leading-6 text-[#666]">{description}</p>}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                {actions && <div className="flex items-center mr-2">{actions}</div>}
                 <div className="rounded-full border border-border-design bg-brand-light px-4 py-2 text-sm font-medium text-brand-dark">
                   {currentUser?.username ?? currentUser?.email}
                 </div>

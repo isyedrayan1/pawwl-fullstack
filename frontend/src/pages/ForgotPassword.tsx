@@ -4,8 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { apiRequest } from "@/lib/api";
 import { toast } from "sonner";
+import { auth } from "@/lib/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -15,14 +16,11 @@ const ForgotPassword = () => {
     event.preventDefault();
     setLoading(true);
     try {
-      await apiRequest<{ ok: true; message: string }>("/api/auth/forgot-password", {
-        method: "POST",
-        body: JSON.stringify({ email }),
-      });
+      await sendPasswordResetEmail(auth, email);
       toast.success("If the email exists, we sent a reset link.");
       setEmail("");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to process request");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to process request");
     } finally {
       setLoading(false);
     }

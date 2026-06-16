@@ -18,15 +18,125 @@ type Order = {
   trackingUrl?: string | null;
   items: { id: string; productName: string; quantity: number; lineTotal: string | number }[];
 };
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 const AccountOrders = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: () => apiRequest<{ orders: Order[] }>("/api/orders"),
     retry: false,
   });
 
   const [filterStatus, setFilterStatus] = useState("all");
+
+  const initiatePayment = async (orderId: string, orderNumber: string, amount: string | number) => {
+    try {
+      toast.loading("Preparing payment gateway...");
+
+      // 1. Fetch Razorpay configuration
+      const config = await apiRequest<{ keyId: string | null; mode: string }>("/api/payments/razorpay/config");
+
+      // 2. Request backend to create/fetch Razorpay order
+      const rzpOrder = await apiRequest<{
+        provider: string;
+        orderId: string;
+        amount: number | string;
+        currency: string;
+      }>("/api/payments/razorpay/create-order", {
+        method: "POST",
+        body: JSON.stringify({ orderId }),
+      });
+
+      toast.dismiss();
+
+      // Demo Mode Fallback
+      if (rzpOrder.provider === "demo") {
+        toast.info("Demo Mode: Completing payment simulation...");
+        const verifyResult = await apiRequest<{ success: boolean }>("/api/payments/razorpay/verify", {
+          method: "POST",
+          body: JSON.stringify({
+            orderId,
+            providerOrderId: rzpOrder.orderId,
+          }),
+        });
+
+        if (verifyResult.success) {
+          toast.success("Order payment simulated successfully!");
+          refetch();
+        } else {
+          toast.error("Failed to complete demo payment simulation.");
+        }
+        return;
+      }
+
+      // Real Mode
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        toast.error("Could not load Razorpay SDK.");
+        return;
+      }
+
+      const options = {
+        key: config.keyId,
+        amount: Math.round(Number(rzpOrder.amount) * 100),
+        currency: rzpOrder.currency || "INR",
+        name: "Pawwl",
+        description: `Payment for Order #${orderNumber}`,
+        order_id: rzpOrder.orderId,
+        handler: async function (response: any) {
+          try {
+            toast.loading("Verifying payment...");
+            const verifyResult = await apiRequest<{ success: boolean }>("/api/payments/razorpay/verify", {
+              method: "POST",
+              body: JSON.stringify({
+                orderId,
+                providerOrderId: response.razorpay_order_id,
+                providerPaymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            });
+            toast.dismiss();
+
+            if (verifyResult.success) {
+              toast.success("Payment verified successfully!");
+              refetch();
+            } else {
+              toast.error("Payment verification failed.");
+            }
+          } catch (err: any) {
+            toast.dismiss();
+            toast.error(err.message || "Payment verification failed.");
+          }
+        },
+        theme: {
+          color: "#134e86",
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        toast.error(`Payment failed: ${response.error.description}`);
+      });
+      rzp.open();
+    } catch (err: any) {
+      toast.dismiss();
+      toast.error(err.message || "Could not start payment flow");
+    }
+  };
+
 
   const orders = data?.orders || [];
   const filteredOrders =
@@ -100,6 +210,13 @@ const AccountOrders = () => {
           >
             Delivered
           </Button>
+          <Button
+            variant={filterStatus === "cancelled" ? "default" : "outline"}
+            onClick={() => setFilterStatus("cancelled")}
+            className={filterStatus === "cancelled" ? "bg-brand-blue" : ""}
+          >
+            Cancelled
+          </Button>
         </div>
 
         {/* Orders List */}
@@ -164,33 +281,35 @@ const AccountOrders = () => {
                   </div>
 
                   {/* Status Timeline */}
-                  <div className="flex items-center justify-between text-xs">
-                    <div className="text-center">
-                      <CheckCircle size={16} className="mx-auto text-green-500 mb-1" />
-                      <p className="text-[#666]">Confirmed</p>
-                    </div>
-                    <div className="flex-1 h-1 bg-border-design mx-2"></div>
-                    <div className="text-center">
-                      <div className={`mx-auto mb-1 ${order.fulfillmentStatus.toLowerCase() !== "processing" ? "text-green-500" : "text-gray-400"}`}>
-                        <Package size={16} />
+                  {order.fulfillmentStatus.toLowerCase() !== "cancelled" && (
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="text-center">
+                        <CheckCircle size={16} className="mx-auto text-green-500 mb-1" />
+                        <p className="text-[#666]">Confirmed</p>
                       </div>
-                      <p className="text-[#666]">Processing</p>
-                    </div>
-                    <div className="flex-1 h-1 bg-border-design mx-2"></div>
-                    <div className="text-center">
-                      <div className={`mx-auto mb-1 ${["shipped", "delivered"].includes(order.fulfillmentStatus.toLowerCase()) ? "text-green-500" : "text-gray-400"}`}>
-                        <Truck size={16} />
+                      <div className="flex-1 h-1 bg-border-design mx-2"></div>
+                      <div className="text-center">
+                        <div className={`mx-auto mb-1 ${order.fulfillmentStatus.toLowerCase() !== "processing" ? "text-green-500" : "text-gray-400"}`}>
+                          <Package size={16} />
+                        </div>
+                        <p className="text-[#666]">Processing</p>
                       </div>
-                      <p className="text-[#666]">Shipped</p>
-                    </div>
-                    <div className="flex-1 h-1 bg-border-design mx-2"></div>
-                    <div className="text-center">
-                      <div className={`mx-auto mb-1 ${order.fulfillmentStatus.toLowerCase() === "delivered" ? "text-green-500" : "text-gray-400"}`}>
-                        <CheckCircle size={16} />
+                      <div className="flex-1 h-1 bg-border-design mx-2"></div>
+                      <div className="text-center">
+                        <div className={`mx-auto mb-1 ${["shipped", "delivered"].includes(order.fulfillmentStatus.toLowerCase()) ? "text-green-500" : "text-gray-400"}`}>
+                          <Truck size={16} />
+                        </div>
+                        <p className="text-[#666]">Shipped</p>
                       </div>
-                      <p className="text-[#666]">Delivered</p>
+                      <div className="flex-1 h-1 bg-border-design mx-2"></div>
+                      <div className="text-center">
+                        <div className={`mx-auto mb-1 ${order.fulfillmentStatus.toLowerCase() === "delivered" ? "text-green-500" : "text-gray-400"}`}>
+                          <CheckCircle size={16} />
+                        </div>
+                        <p className="text-[#666]">Delivered</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
                 {/* Order Items */}
@@ -212,9 +331,18 @@ const AccountOrders = () => {
 
                 {/* Actions */}
                 <div className="p-6 bg-gray-50 flex flex-col sm:flex-row gap-3">
+                  {(order.paymentStatus.toLowerCase() === "pending" || order.paymentStatus.toLowerCase() === "failed") && order.fulfillmentStatus.toLowerCase() !== "cancelled" && (
+                    <Button 
+                      onClick={() => initiatePayment(order.id, order.orderNumber, order.total)}
+                      className="flex-1 bg-brand-blue hover:bg-brand-blue/90 text-white font-semibold"
+                    >
+                      Pay Now
+                    </Button>
+                  )}
                   <Button 
                     variant="outline" 
                     className="flex-1"
+                    disabled={order.fulfillmentStatus.toLowerCase() === "cancelled"}
                     onClick={() => {
                       if (order.trackingUrl) {
                         window.open(order.trackingUrl, "_blank");
@@ -255,7 +383,7 @@ const AccountOrders = () => {
                   >
                     Return Items
                   </Button>
-                  <Link to={`/order-success?order=${order.id}`} className="flex-1">
+                  <Link to={`/account/orders/${order.id}`} className="flex-1">
                     <Button className="w-full bg-brand-blue">
                       View Details <ChevronRight size={16} className="ml-2" />
                     </Button>
