@@ -14,28 +14,12 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { uploadToR2 } from "../lib/r2.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isDist = __dirname.includes(path.join('dist', 'src')) || __dirname.includes('dist/src') || __dirname.includes('dist\\src');
-const uploadsDir = isDist 
-  ? path.resolve(__dirname, '../../../uploads/products')
-  : path.resolve(__dirname, '../../uploads/products');
-
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (_req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname));
-  },
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,
@@ -53,6 +37,7 @@ const upload = multer({
 });
 
 const router = Router();
+
 
 const userFilterSchema = z.object({
   q: z.string().optional(),
@@ -257,8 +242,11 @@ router.post(
     if (!files || files.length === 0) {
       throw new HttpError(400, "No files uploaded");
     }
-    const filePaths = files.map((file) => `/uploads/products/${file.filename}`);
-    res.json({ urls: filePaths });
+    const uploadPromises = files.map((file) =>
+      uploadToR2(file.buffer, file.originalname, file.mimetype)
+    );
+    const fileUrls = await Promise.all(uploadPromises);
+    res.json({ urls: fileUrls });
   })
 );
 

@@ -19,6 +19,7 @@
     "postcss": "^8.4.49"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1072.0",
     "@paralleldrive/cuid2": "^3.3.0",
     "firebase-admin": "^14.0.0",
     "nodemailer": "^8.0.11"

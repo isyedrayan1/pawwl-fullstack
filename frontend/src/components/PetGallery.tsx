@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { useReveal } from "@/hooks/useGsapReveal";
 import { ArrowUpRight, GraduationCap, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import defaultGal1 from "@/assets/gallery/6.webp";
-import defaultGal2 from "@/assets/gallery/11.webp";
+const defaultGal1 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/gallery/6.webp";
+const defaultGal2 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/gallery/11.webp";
 
 interface PetGalleryProps {
   img1?: string;

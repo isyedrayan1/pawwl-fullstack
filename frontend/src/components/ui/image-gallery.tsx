@@ -5,53 +5,8 @@ import { cn } from '@/lib/utils';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useInView } from 'framer-motion';
+import galleryAssetsPaths from '@/data/gallery-links.json';
 
-// Load local files automatically and dynamically via Vite
-const localAssets = import.meta.glob([
-  '@/assets/gallery/**/*.{jpeg,jpg,png,webp,mp4,webm,gif}',
-  '@/assets/Newgallery/**/*.{jpeg,jpg,png,webp,mp4,webm,gif}',
-  '!@/assets/**/*-old.webp' // Explicitly exclude heavy backup files from the build
-], { eager: true });
-
-const galleryAssetsPaths = Object.values(localAssets)
-  .map((module: any) => module.default as string)
-  .sort((a, b) => {
-    // Sort alphabetically by filename to keep the layout stable
-    const nameA = a.split('/').pop() || '';
-    const nameB = b.split('/').pop() || '';
-    return nameA.localeCompare(nameB, undefined, { numeric: true, sensitivity: 'base' });
-  })
-  .filter((src, index, self) => {
-    // Exclude original backup files
-    if (src.toLowerCase().endsWith('-old.webp')) return false;
-
-    // If it's a webp, we keep it.
-    if (src.toLowerCase().endsWith('.webp')) return true;
-    
-    // For other image types, check if a webp version exists
-    const isImage = src.match(/\.(jpeg|jpg|png)$/i);
-    if (isImage) {
-      // Get the base path without extension
-      const basePath = src.split('.').slice(0, -1).join('.');
-      const hasWebp = self.some(other => 
-        other.toLowerCase().endsWith('.webp') && 
-        other.startsWith(basePath)
-      );
-      return !hasWebp;
-    }
-    
-    // For videos, check if an mp4 version exists if this is a MOV
-    if (src.toLowerCase().endsWith('.mov')) {
-      const basePath = src.split('.').slice(0, -1).join('.');
-      const hasMp4 = self.some(other => 
-        other.toLowerCase().endsWith('.mp4') && 
-        other.startsWith(basePath)
-      );
-      return !hasMp4;
-    }
-
-    return true;
-  });
 
 export function ImageGallery() {
     const [loadedCount, setLoadedCount] = React.useState(0);

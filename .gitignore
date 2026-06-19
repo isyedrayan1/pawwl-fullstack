@@ -25,6 +25,14 @@ dist-ssr
 # User Uploads
 backend/uploads/*
 !backend/uploads/.gitkeep
+backend/products/*
+!backend/products/.gitkeep
+
+# Frontend Gallery Assets
+frontend/src/assets/gallery/*
+!frontend/src/assets/gallery/.gitkeep
+frontend/src/assets/Newgallery/*
+!frontend/src/assets/Newgallery/.gitkeep
 
 # Databases
 *.sqlite
@@ -43,3 +51,4 @@ frontend/.env
 # Temporary Agent Scripts
 *.mjs
 git_files.txt
+.firebase-service-account-BACKUP.json

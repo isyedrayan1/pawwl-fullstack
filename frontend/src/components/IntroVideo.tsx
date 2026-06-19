@@ -1,8 +1,8 @@
 import { useReveal, useStaggerReveal } from "@/hooks/useGsapReveal";
-import vid2 from "@/assets/gallery/2v.mp4";
-import vid3 from "@/assets/Newgallery/IMG_3620.mp4";
-import vid4 from "@/assets/Newgallery/products/IMG_5021.JPG.webp";
-import vid5 from "@/assets/gallery/5v.mp4";
+const vid2 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/gallery/2v.mp4";
+const vid3 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/Newgallery/IMG_3620.mp4";
+const vid4 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/Newgallery/products/IMG_5021.JPG.webp";
+const vid5 = "https://pub-5d58ad108d93401eaa1c5d97111289f7.r2.dev/gallery/5v.mp4";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
