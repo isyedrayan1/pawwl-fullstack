@@ -11,7 +11,8 @@
     "backend:dev": "tsx backend/src/server.ts",
     "backend:build": "tsc -p backend/tsconfig.json",
     "backend:start": "node backend/dist/src/server.js",
-    "build": "npm run frontend:build && npm run backend:build",
+    "build": "npm run backend:build",
+    "deploy": "node scripts/deploy.js",
     "start": "npm run backend:start",
     "build:dev": "vite build --mode development --config frontend/vite.config.ts",
     "lint": "eslint frontend backend --ext .ts,.tsx",
@@ -22,7 +23,7 @@
     "prisma:deploy": "prisma migrate deploy --schema backend/prisma/schema.prisma",
     "seed": "tsx backend/prisma/seed.ts",
     "import:products": "tsx backend/prisma/import-products.ts",
-    "postinstall": "npm install --prefix frontend --include=dev && npm install --prefix backend --include=dev && npm run prisma:generate && npm run build"
+    "postinstall": "npm install --prefix backend --include=dev && npm run prisma:generate && npm run build"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
